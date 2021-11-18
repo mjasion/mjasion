@@ -24,7 +24,7 @@
     "gatsby-remark-smartypants": "^5.1.0",
     "gatsby-redirect-from": "^0.4.2",
     "gatsby-source-filesystem": "^4.1.0",
-    "gatsby-transformer-remark": "^5.1.1",
+    "gatsby-transformer-remark": "^5.2.0",
     "gatsby-transformer-sharp": "^4.1.0",
     "prismjs": "^1.25.0",
     "react": "^17.0.2",
