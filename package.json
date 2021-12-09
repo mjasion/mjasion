@@ -34,7 +34,7 @@
     "typeface-montserrat": "1.1.13"
   },
   "devDependencies": {
-    "prettier": "^2.5.0"
+    "prettier": "^2.5.1"
   },
   "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
   "keywords": [
