@@ -44,8 +44,6 @@ To automatically add labels in Gmail you have to create a filter. However, it do
 
 Google provides a special service called Google Apps Scripts. It allows you to write short scripts in TypeScript language, where you can extend default Gmail filtering.
 
-OBRAZEK
-
 ## ⌨️ How can I add a label to message by headers?
 
 Firstly you have to begin with function, which will be scheduled to query for new emails in the inbox and will execute further message processing:
