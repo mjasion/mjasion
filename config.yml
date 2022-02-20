@@ -18,8 +18,12 @@ markup:
     endLevel: 6
     ordered: false
 
+# Enable Google Analytics
+googleAnalytics: UA-138593455-1
+
 # Enable global emoji support
 enableEmoji: true
+
 
 # Site parameters
 params:
@@ -36,3 +40,6 @@ params:
   background: images/network_background.png
   logo:
     favicon: images/mjasion.jpg
+
+  topNavbar:
+    maxVisibleSections: 5
