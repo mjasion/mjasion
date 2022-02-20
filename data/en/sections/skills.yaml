@@ -1,0 +1,39 @@
+section:
+  name: Skills # Title of section (default: "")
+  id: skills # url id/slug of section *Required*
+  enable: true # Boolean to determine if this section is enabled (default: false)
+  weight: 2 # Order to display section in (default: alphabetical followed by weight)
+  showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
+  template: sections/skills.html # allows you to point to a specific template.
+skills:
+- name: Kubernetes
+  logo: "images/sections/skills/kubernetes.png"
+  summary: "Capable of deploying, managing and monitoring applications running on Kubernetes. Also experienced in deploying administraging clusters."
+  url: "https://kubernetes.io/"
+
+- name: Go Development
+  logo: "images/sections/skills/go.png"
+  summary: "Using as the main language for professional development. Capable of writing scalable, testable, and maintainable program."
+  url: "https://golang.org/"
+
+- name: Cloud Computing
+  logo: "images/sections/skills/aws.png"
+  summary: "Experienced with AWS Cloud. Also worked with the major clouds such as GCP, DigitalOcean"
+  url: https://aws.amazon.com/
+
+- name: Docker
+  logo: "images/sections/skills/docker.svg"
+  summary: "Write most of the programs as dockerized container. Experienced with multi-stage, multi-arch build process."
+  url: "https://www.docker.com/"
+
+- name: Prometheus
+  logo: "images/sections/skills/prometheus.png"
+  summary: "Capable of setup, configure Prometheus metrics. Experienced with PromQL, AlertManager. Also, experienced with writing metric exporters."
+
+- name: Linux
+  logo: "images/sections/skills/linux.png"
+  summary: "Using Ubuntu as the main operating system. Capable of writing bash/shell scripts."
+
+- name: Git
+  logo: "images/sections/skills/git.png"
+  summary: "Experienced with git-based development. Mostly, use Github and GitLab"
