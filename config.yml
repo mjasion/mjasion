@@ -34,7 +34,6 @@ params:
   # Currently, you can just hide it from the footer.
   newsletter:
     enable: false
+  background: images/network_background.png
   logo:
-    # main: images/main-logo.png
-    # inverted: images/inverted-logo.png
     favicon: images/mjasion.jpg

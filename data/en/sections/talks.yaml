@@ -1,0 +1,37 @@
+section:
+  name: Talks # Title of section (default: "")
+  id: talks # url id/slug of section *Required*
+  enable: true # Boolean to determine if this section is enabled (default: false)
+  weight: 3 # Order to display section in (default: alphabetical followed by weight)
+  showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
+  template: sections/education.html # allows you to point to a specific template.
+
+degrees:
+- name: GitOps - Czyli konfigurowanie Kubernetesa Gitem
+  icon: fab fa-github
+  timeframe: 27.02.2020
+  institution:
+    name: "SysOps/DevOps Warszawa MeetUp #48"
+    url: "https://www.sysopspolska.pl/multimedia/warszawa-meetup-48/"
+  publications: #(optional)
+  - title: Youtube
+    url: "https://www.youtube.com/watch?v=Co-S25sBTEQ"
+- name: GitOps - Czyli konfigurowanie Kubernetesa Gitem
+  icon: fab fa-github
+  institution:
+    name: Confitura 2019
+    url: "https://2019.confitura.pl/#home"
+  timeframe: 29.06.2019
+  publications: #(optional)
+  - title: Youtube
+    url: "https://www.youtube.com/watch?v=IJYxvyzHp8A"
+- name: Autoscaling GitLab CI
+  icon: fab fa-github
+  institution:
+    name: "SysOps/DevOps Warszawa MeetUp #42"
+    url: "https://www.sysopspolska.pl/multimedia/warszawa-meetup-42/"
+  timeframe: 29.06.2019
+  publications: #(optional)
+  - title: Youtube
+    url: "https://youtu.be/u2hFb1ZpXYk"
+
