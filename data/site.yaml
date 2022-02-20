@@ -1,0 +1,7 @@
+description: Personal Site
+
+customMenus:
+- name: Notes
+  url: https://mjasion.pl/notes/
+  hideFromNavbar: false
+  showOnFooter: false
