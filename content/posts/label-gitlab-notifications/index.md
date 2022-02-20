@@ -2,20 +2,10 @@
 title: How to label GitLab notification in Gmail by headers?
 date: "2020-04-17T10:00:00.000Z"
 description: "You can label emails by headers in Gmail. To do this you have to create a script that periodically scans for new emails in your inbox. To demonstrate it I will use Gitlab notifications and we will add labels to messages basing on their headers"
-featuredImage: gitlab_mails_labeled.png
-redirect_from: 
-  - /2020/how-to-label-gitlab-notification-in-gmail-by-headers/
+hero:  gitlab_mails_labeled.png
+author:
+  name: Marcin Jasion
 ---
-
-<!-- ---
-title: 'How to label GitLab notification in Gmail by headers?'
-description: "You can label emails by headers in Gmail. To do this you have to create a script that periodically scans for new emails in your inbox. To demonstrate it I will use Gitlab notifications and we will add labels to messages basing on their headers"
-publishDate: 'Tuesday, April 17 2020'
-author: 'Marcin'
-heroImage: '/uploads/2020/04/gitlab_mails_labeled.png'
-alt: 'GMail Labels'
-layout: '../../layouts/BlogPost.astro'
---- -->
 
 ## 📨 How GitLab sends notifications?
 
@@ -140,7 +130,7 @@ function processMessage(message) {
 6. When there is no errors, create a custom trigger. Find button: ![Trigger](google_script_trigger_button.png)
 
 7. Click “Add trigger” button at the bottom of the page.
-8. Select function `processInbox` and configure the time source. The execution frequency depends is your choice. If you receive a lot of messages and you will run this script every 1 minute you can hit the limits. In the above script, I am scanning for emails from the last hour so the script can be executed at least once an hour.
+8. Select function `processInbox` and configure the time source. The execution frequency depends is your choice. If you receive a lot of messages and you will run this script every 1 minute you can hit the limits. In the above script, I am scanning for emails from the last hour so the script can be executed at least once an hour.  
 ![GAS Trigger](google_script_new_trigger.png)
 
 ## 🏁And that’s it!
