@@ -1,0 +1,12 @@
+name: "Marcin Jasion"
+image: "images/mjasion.jpg"
+
+# give your contact information. they will be used in the footer
+contactInfo:
+  email: "hello@mjasion.pl"
+
+# a summary of what you do
+summary:
+- I am a DevOps 
+- I am SRE
+- I Kubernetes user
