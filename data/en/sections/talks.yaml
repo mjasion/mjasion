@@ -6,32 +6,32 @@ section:
   showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
   template: sections/presentations.html # allows you to point to a specific template.
 
-degrees:
+presentations:
 - name: GitOps - Czyli konfigurowanie Kubernetesa Gitem
   icon: fab fa-github
   timeframe: 27.02.2020
-  institution:
+  meetup:
     name: "SysOps/DevOps Warszawa MeetUp #48"
     url: "https://www.sysopspolska.pl/multimedia/warszawa-meetup-48/"
-  publications: #(optional)
+  assets: #(optional)
   - title: Youtube
     url: "https://www.youtube.com/watch?v=Co-S25sBTEQ"
 - name: GitOps - Czyli konfigurowanie Kubernetesa Gitem
   icon: fab fa-github
-  institution:
+  meetup:
     name: Confitura 2019
     url: "https://2019.confitura.pl/#home"
   timeframe: 29.06.2019
-  publications: #(optional)
+  assets: #(optional)
   - title: Youtube
     url: "https://www.youtube.com/watch?v=IJYxvyzHp8A"
 - name: Autoscaling GitLab CI
   icon: fab fa-gitlab
-  institution:
+  meetup:
     name: "SysOps/DevOps Warszawa MeetUp #42"
     url: "https://www.sysopspolska.pl/multimedia/warszawa-meetup-42/"
-  timeframe: 29.06.2019
-  publications: #(optional)
+  timeframe: 27.06.2019
+  assets: #(optional)
   - title: Youtube
     url: "https://youtu.be/u2hFb1ZpXYk"
 
