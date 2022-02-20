@@ -3,6 +3,11 @@ languageCode: en-us
 title: "Marcin Jasion - Pragmatic DevOps"
 theme: "toha"
 enableRobotsTXT: true
+rssLimit: 20
+timeZone: Europe/Warsaw
+author:
+  name: Marcin Jasion
+languageCode: en-us
 
 # Manage languages
 # For any more details, you can check the official documentation: https://gohugo.io/content-management/multilingual/
@@ -43,3 +48,16 @@ params:
 
   topNavbar:
     maxVisibleSections: 5
+  features:
+   # Enable and configure blog posts
+    blog:
+      enable: true
+      # Share post on different social media
+      shareButtons:
+        facebook: true
+        twitter: true
+        linkedin: true
+        reddit: true
+        whatsapp: true
+        email: true
+        # tumblr: true
