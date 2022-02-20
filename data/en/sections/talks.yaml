@@ -1,8 +1,8 @@
 section:
-  name: Talks # Title of section (default: "")
-  id: talks # url id/slug of section *Required*
+  name: Presentations # Title of section (default: "")
+  id: presentations # url id/slug of section *Required*
   enable: true # Boolean to determine if this section is enabled (default: false)
-  weight: 3 # Order to display section in (default: alphabetical followed by weight)
+  weight: 4 # Order to display section in (default: alphabetical followed by weight)
   showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
   template: sections/education.html # allows you to point to a specific template.
 
