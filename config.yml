@@ -1,4 +1,3 @@
-baseURL: https://mjasion.pl
 
 languageCode: en-us
 title: "Marcin Jasion - Pragmatic DevOps"
@@ -25,7 +24,7 @@ enableEmoji: true
 # Site parameters
 params:
   # specify whether you want to write some blog posts or not
-  enableBlogPost: true
+  enableBlogPost: false
 
   # specify whether you want to show Table of Contents in reading page
   enableTOC: true
