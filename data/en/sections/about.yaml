@@ -1,0 +1,71 @@
+section:
+  name: About # Title of section (default: "")
+  id: about # url id/slug of section *Required*
+  enable: true # Boolean to determine if this section is enabled (default: false)
+  weight: 1 # Order to display section in (default: alphabetical followed by weight)
+  showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
+  template: sections/about.html # allows you to point to a specific template.
+
+designation: Senior DevOps Engineer
+company:
+  name: Equinix
+  url: "https://www.equinix.com"
+
+
+# your resume. this file path should be relative to you "static" directory
+# resume: "files/resume.pdf"
+
+# a summary about you
+summary: 'I am a passionate DevOps Engineer, Site Reliability Engineer and Developer with 8 years of working experience.'
+
+# your social links
+# give as many as you want. use font-awesome for the icons.
+socialLinks:
+- name: Email
+  icon: "fas fa-envelope"
+  url: "hello@mjasion.pl"
+
+- name: Github
+  icon: "fab fa-github"
+  url: "https://www.github.com/mjasion"
+
+- name: Gitlab
+  icon: "fab fa-gitlab"
+  url: "https://www.gitlab.com/mjasion"
+
+- name: LinkedIn
+  icon: "fab fa-linkedin"
+  url: "https://www.linkedin.com/in/marcinjasion"
+
+- name: Twitter
+  icon: "fab fa-twitter"
+  url: "https://twitter.com/marcinjasion"
+
+# your soft skills
+# give the percentage between 50 to 100 with 5 intervals.
+# currently supported colors: blue, yellow, pink, green, sky, orange
+softSkills:
+# - name: Leadership
+#   percentage: 85
+#   color: blue
+- name: Team Work
+  percentage: 90
+  color: yellow
+- name: Communication
+  percentage: 85
+  color: pink
+- name: Hard Working
+  percentage: 90
+  color: green
+- name: Fast Learner
+  percentage: 80
+  color: sky
+- name: Problem Solving
+  percentage: 90
+  color: orange
+- name: Architecture design
+  percentage: 75
+  color: blue
+# - name: Example 2
+#   percentage: 65
+#   color: "#8b8383"
