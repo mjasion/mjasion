@@ -16,7 +16,12 @@ company:
 # resume: "files/resume.pdf"
 
 # a summary about you
-summary: 'I am a passionate DevOps Engineer, Site Reliability Engineer and Developer with 8 years of working experience. I started my career as a Java Developer, where I go experience about architectures and processes.'
+summary: |
+  I am a passionate DevOps Engineer, Site Reliability Engineer, and Developer with 8 years of working experience. 
+
+  I started my career as a Java Developer, where I got experience with applications architectures, clean code, and the software development lifecycle. 
+  
+  After 2 years I switched to a DevOps role where I am responsible for keeping running up and safe the infrastructure delivering automation for daily work. In daily work, I am sharing my knowledge with other teams, by developer mentoring from used tools or by presenting the PoC of tools that are addressing met problems around work.
 
 # your social links
 # give as many as you want. use font-awesome for the icons.
@@ -54,18 +59,18 @@ softSkills:
 - name: Communication
   percentage: 85
   color: pink
-- name: Hard Working
-  percentage: 90
+- name: Mentoring
+  percentage: 85
+  color: blue
+- name: Architecture design
+  percentage: 80
   color: green
+- name: Problem Solving
+  percentage: 95
+  color: orange
 - name: Fast Learner
   percentage: 80
   color: sky
-- name: Problem Solving
-  percentage: 90
-  color: orange
-- name: Architecture design
-  percentage: 75
-  color: blue
 # - name: Example 2
 #   percentage: 65
 #   color: "#8b8383"
