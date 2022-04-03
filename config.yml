@@ -22,12 +22,22 @@ markup:
     startLevel: 2
     endLevel: 6
     ordered: false
-
+  goldmark:
+    renderer:
+      unsafe: true
 # Enable Google Analytics
 googleAnalytics: UA-138593455-1
 
 # Enable global emoji support
 enableEmoji: true
+
+# At least HTML and JSON are required for the main HTML content and
+# client-side JavaScript search
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
 
 
 # Site parameters
@@ -61,3 +71,5 @@ params:
         whatsapp: true
         email: true
         # tumblr: true
+    notes:
+      enable: true
