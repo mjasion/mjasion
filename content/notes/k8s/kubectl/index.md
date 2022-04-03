@@ -1,7 +1,7 @@
 ---
-title: Kubectl
+title: Merging multipe Kubernetes configs
 weight: 1
-date: "2022-04-01T12:00:00.000Z"
+date: "2022-04-01T1:00:00.000Z"
 menu:
   notes:
     name: kubectl
