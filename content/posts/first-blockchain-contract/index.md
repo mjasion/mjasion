@@ -2,7 +2,7 @@
 title: Deploy first contract to blockchain on Ethereum
 date: "2022-04-09T10:00:00.000Z"
 description: "Step by step guide to deploy first contract on Ethereum blockchain"
-hero:  ethereum-logo-landscape-black.png
+hero:  solidity.png
 author:
   name: Marcin Jasion
 tags:
@@ -18,7 +18,7 @@ menu:
     weight: 1
 ---
 
-## First contract
+## First contract - Pet owners
 
 I am learning blockchain and smarcontract. This post will be my note how I am starting my journey to blockchain technology.
 
@@ -83,7 +83,7 @@ And at the end we can check if `petOwner` field contains our definition:
 ![](rinkeby-data-confirmation.png)
 
 ---
-_This is an example of Blockchain development inspired by [this](https://www.youtube.com/watch?v=M576WGiDBdQ) tutorial_
+_This post are my notes from Blockchain development tutorial availale [here](https://www.youtube.com/watch?v=M576WGiDBdQ)._
 
 
 
