@@ -2,7 +2,7 @@
 {{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
 {{- $pages := slice -}}
 {{- if $.IsHome -}}
-{{- $pages = $pctx.RegularPages -}}
+{{- $pages = sort $pctx.RegularPages "Date" "desc" -}}
 {{- else if $.IsSection -}}
 {{- $pages = $pctx.RegularPagesRecursive -}}
 {{- else -}}
@@ -27,7 +27,7 @@
     {{- with .OutputFormats.Get "RSS" -}}
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end -}}
-    {{ range sort $pages "Date" "desc" }}
+    {{ range $pages }}
     {{- if ne .RelPermalink "/search/" -}}
     <item>
       <title>{{ .Title }}</title>
