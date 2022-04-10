@@ -12,7 +12,6 @@ menu:
 
 <!-- Variable -->
 {{< note title="Merging multipe Kubernetes configs" >}}
-
-```bash
+{{< highlight bash "lineNos=false" >}}
 KUBECONFIG=$(ls ~/.kube/*.config | tr "\n" ":") kubectl config view --merge --flatten > ~/.kube/config
-```
+{{< /highlight >}}

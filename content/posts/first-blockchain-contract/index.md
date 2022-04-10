@@ -26,7 +26,7 @@ In this example I will create a contract for storing who is owning a Pet.
 
 ## Development
 
-```solidity
+{{< highlight solidity >}}
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0; //build contract on top of Solidity >=0.8.0 and <0.9.0
 
@@ -43,7 +43,7 @@ contract PetOwner {
     }
 
 }
-```
+{{< /highlight >}}
 
 Put it to the Remix IDE: https://remix.ethereum.org/. It should compile and we can deploy it on local environment:
 

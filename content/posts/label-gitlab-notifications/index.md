@@ -38,7 +38,7 @@ Google provides a special service called Google Apps Scripts. It allows you to w
 
 Firstly you have to begin with function, which will be scheduled to query for new emails in the inbox and will execute further message processing:
 
-```js
+{{< highlight javascript "style=github"   >}}
 function processInbox() {
    // process all recent threads in the Inbox
    var threads = GmailApp.search("newer_than:1h"); // search query is exactly same as in Gmail search box
@@ -51,23 +51,25 @@ function processInbox() {
       }
    }
 }
-```
+{{< / highlight >}}
+
 
 As you see, the code is pretty simple. It uses `search()` function from [GmailApp](https://developers.google.com/apps-script/reference/gmail) which allows you to interact with Gmail service. The result of the function is a list of threads from the last hour. After that we have to get the message content. We can do it by writing a loop to get every message from a thread. The `getMessages()` function returns a list o [Gmail Messages](https://developers.google.com/apps-script/reference/gmail/gmail-message) objects. Having them we can implement our actions basing on the content.
 
 To do that you have to call `getRawContent()` function on the message object and check if the message contains a string that you are looking for. For example to check that this is a message send by GitLab find in the body string `"X-GitLab"`:
 
-```js
+{{< highlight javascript "style=github"   >}}
 var gitlabLabel = GmailApp.getUserLabelByName("GitLab"); 
 var body = message.getRawContent(); 
 if (body.indexOf("X-GitLab") > -1) { 
   message.getThread().addLabel(gitlabLabel); 
 }
-```
+{{< / highlight >}}
+
 
 Now we can implement the `processMessage(message)` function adding other conditions and putting it below `processInbox()`. As a result, we will get a full script, which will look like this:
 
-```js
+{{< highlight javascript "style=github"   >}}
 function processInbox() {
    // process all recent threads in the Inbox (see comment to this answer)
   var threads = GmailApp.search("newer_than:1h");
@@ -112,7 +114,8 @@ function processMessage(message) {
     message.getThread().addLabel(buildLabel)
   }
 }
-```
+{{< / highlight >}}
+
 
 > You have to create labels before running the function. Otherwise, your script will throw an error.
 
