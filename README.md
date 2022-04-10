@@ -18,7 +18,7 @@ After 2 years I switched to a DevOps role where I am responsible for keeping run
 
 - 📝 I regularly write articles on [https://mjasion.pl/blog](https://mjasion.pl/blog)
 
-- 📄 Know about my experiences [https://www.linkedin.com/in/marcinjasion/](https://www.linkedin.com/in/marcinjasion/)
+- 📄 Know about my experiences [https://mjasion.pl/](https://mjasion.pl)
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
