@@ -3,7 +3,7 @@ languageCode: en-us
 title: "Marcin Jasion - Pragmatic DevOps"
 theme: "toha"
 enableRobotsTXT: true
-rssLimit: 20
+rssLimit: 10
 timeZone: Europe/Warsaw
 author:
   name: Marcin Jasion
