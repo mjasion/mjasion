@@ -76,7 +76,7 @@ params:
     comment:
       enable: true
       giscus:
-        repo: mjasion/mjasion.pl
+        repo: mjasion/mjasion
         repoID: R_kgDOGQ6lZQ
         category: General
         categoryID: DIC_kwDOGQ6lZc4COgAu
