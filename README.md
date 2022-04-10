@@ -26,7 +26,7 @@ After 2 years I switched to a DevOps role where I am responsible for keeping run
 <a href="https://gitlab.com/mjasion" target="blank"><img align="center" src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg" alt="marcinjasion" height="30" width="40" /></a> 
 <a href="https://twitter.com/marcinjasion" target="blank"><img align="center" src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/twitter.svg" alt="marcinjasion" height="30" width="40" /></a>
 <a href="https://linkedin.com/in/marcinjasion" target="blank"><img align="center" src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/linkedin.svg" alt="marcinjasion" height="30" width="40" /></a>
-<a href="/https://mjasion.pl/index.xml" target="blank"><img align="center" src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/rss.svg" alt="https://mjasion.pl/index.xml" height="30" width="40" /></a>
+<a href="https://mjasion.pl/index.xml" target="blank"><img align="center" src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/rss.svg" alt="https://mjasion.pl/index.xml" height="30" width="40" /></a>
 </p>
 <!-- 
 <h3 align="left">Languages and Tools:</h3>
