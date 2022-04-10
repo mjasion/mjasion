@@ -73,3 +73,11 @@ params:
         # tumblr: true
     notes:
       enable: true
+    comment:
+      enable: true
+      giscus:
+        repo: mjasion/mjasion.pl
+        repoID: R_kgDOGQ6lZQ
+        category: General
+        categoryID: DIC_kwDOGQ6lZc4COgAu
+        metadata: 1
