@@ -157,26 +157,13 @@
       <hr />
 
       <!----- Add comment support  ----->
-      {{ with site.Params.features.comment }}
-        {{ if .enable }}
-          <!-- Add Disqus forum  -->
-          {{ if .disqus.shortName }}
-              {{ partial "disqus.html" . }}
-          <!-- Add valine -->
-          {{ else if .valine }}
-              {{ partial "valine.html" . }}
-          <!-- Add utteranc -->
-          {{ else if .utteranc }}
-              {{ partial "utteranc.html" . }}
-          <!-- Add giscus -->
-          {{ else if .giscus }}
-              {{ partial "giscus.html" . }}
-          {{ end }}
-        {{ end }}
+      {{ if site.Params.features.comment.enable }}
+        {{ partial "comments.html" site.Params.features.comment }}
       {{ end }}
+
       <!-- Keep backward compatibility with old config.yaml -->
       {{ if site.DisqusShortname }}
-        {{ partial "disqus.html" . }}
+        {{ partial "comments/disqus.html" (dict (slice "disqus" "shortName")  site.DisqusShortname) }}
       {{ end }}
 
       </div>
@@ -192,7 +179,7 @@
 
 {{ define "toc" }}
   <section class="toc-section" id="toc-section">
-    {{ if site.Params.enableTOC }}
+    {{ if and site.Params.enableTOC ( .Params.enableTOC | default true ) }}
     <div class="toc-holder">
       <h5 class="text-center pl-3">{{ i18n "toc_heading" }}</h5>
       <hr>
