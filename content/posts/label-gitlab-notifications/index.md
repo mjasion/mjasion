@@ -5,6 +5,11 @@ description: "You can label emails by headers in Gmail. To do this you have to c
 hero:  gitlab_mails_labeled.png
 author:
   name: Marcin Jasion
+tags:
+- gitlab
+- google apps scripts
+- gmail
+- gmail labels
 ---
 
 ## 📨 How GitLab sends notifications?
@@ -38,7 +43,7 @@ Google provides a special service called Google Apps Scripts. It allows you to w
 
 Firstly you have to begin with function, which will be scheduled to query for new emails in the inbox and will execute further message processing:
 
-{{< highlight javascript "style=github"   >}}
+{{< highlight javascript >}}
 function processInbox() {
    // process all recent threads in the Inbox
    var threads = GmailApp.search("newer_than:1h"); // search query is exactly same as in Gmail search box
@@ -58,7 +63,7 @@ As you see, the code is pretty simple. It uses `search()` function from [GmailAp
 
 To do that you have to call `getRawContent()` function on the message object and check if the message contains a string that you are looking for. For example to check that this is a message send by GitLab find in the body string `"X-GitLab"`:
 
-{{< highlight javascript "style=github"   >}}
+{{< highlight javascript >}}
 var gitlabLabel = GmailApp.getUserLabelByName("GitLab"); 
 var body = message.getRawContent(); 
 if (body.indexOf("X-GitLab") > -1) { 
@@ -69,7 +74,7 @@ if (body.indexOf("X-GitLab") > -1) {
 
 Now we can implement the `processMessage(message)` function adding other conditions and putting it below `processInbox()`. As a result, we will get a full script, which will look like this:
 
-{{< highlight javascript "style=github"   >}}
+{{< highlight javascript >}}
 function processInbox() {
    // process all recent threads in the Inbox (see comment to this answer)
   var threads = GmailApp.search("newer_than:1h");

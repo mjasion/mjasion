@@ -16,7 +16,7 @@ menu:
 By default Kind uses system `/etc/resolv.conf`. This points to `systemd-resolved`  service and some queries might fail. You can mount your network DNS configuration.
 
 Save below config in `kind-cluster.yaml`: 
-```yaml
+{{<highlight yaml "lineNos=yes">}}
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -24,10 +24,11 @@ nodes:
   extraMounts:
   - hostPath: /run/systemd/resolve/resolv.conf
     containerPath: /etc/resolv.conf
-```
+{{</highlight>}}
 
 and run the `kind`:
-```bash
+{{<highlight bash "lineNos=false">}}
 $ kind create cluster --config kind-cluster.yaml
-```
+{{</highlight>}}
+
 Control-plane node should use your network DNS now.
