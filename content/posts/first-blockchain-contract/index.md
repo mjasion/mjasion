@@ -76,7 +76,7 @@ Now I can test my contract. I fill the data
 And we will be asked again for confirming the transaction  
 ![](metamask-example-contract.png).
 
-When everything will be done, our transaction should be visible on Etherscan: https://rinkeby.etherscan.io/tx/0x5d53899e2cfc1ce5afa597f5073792d06fbceeaa0d3c9d78ccde57e714f28b7d  
+When everything will be done, our transaction should be visible on [Etherscan](https://rinkeby.etherscan.io/tx/0x5d53899e2cfc1ce5afa597f5073792d06fbceeaa0d3c9d78ccde57e714f28b7d)
 ![Etherscan](etherscan.png)
 
 And at the end we can check if `petOwner` field contains our definition:  
