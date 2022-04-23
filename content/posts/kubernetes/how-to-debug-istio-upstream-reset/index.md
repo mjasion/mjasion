@@ -1,18 +1,21 @@
 ---
-title: How to debug Istio upstream response reset error 
-date: "2022-04-21T10:00:00.000Z"
+title: How to debug Istio Upstream Reset 502 UPE (old 503 UC)
+date: "2022-04-25"
 description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs does not help"
-hero:  gitlab_mails_labeled.png
+hero:  service_mesh.png
 author:
   name: Marcin Jasion
+draft: true
 tags:
-- kubernetes
 - istio
-- debug
-- wireshark
+- 502 UPE
+- kubernetes
 - tcpdump
 - upe
+- 503 UC
 - upstream_reset_before_response_started 
+- Upstream connection termination
+- wireshark
 menu:
   sidebar:
     name: Istio
