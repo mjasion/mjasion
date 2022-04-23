@@ -31,6 +31,11 @@ googleAnalytics: UA-138593455-1
 # Enable global emoji support
 enableEmoji: true
 
+imaging:
+  exif:
+    disableDate: false
+    disableLatLong: false
+
 # At least HTML and JSON are required for the main HTML content and
 # client-side JavaScript search
 outputs:
@@ -38,7 +43,6 @@ outputs:
     - HTML
     - RSS
     - JSON
-
 
 # Site parameters
 params:
