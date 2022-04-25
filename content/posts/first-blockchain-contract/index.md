@@ -15,7 +15,7 @@ menu:
   sidebar:
     name: Blockchain
     identifier: first-contract
-    weight: 1
+    weight: 2
 ---
 
 ## First contract - Pet owners
