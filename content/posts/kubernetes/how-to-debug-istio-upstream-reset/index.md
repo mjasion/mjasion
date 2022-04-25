@@ -5,7 +5,6 @@ description: "Istio can reset processing the request. This blog post shows how t
 hero:  service_mesh.png
 author:
   name: Marcin Jasion
-draft: true
 tags:
 - istio
 - 502 UPE
