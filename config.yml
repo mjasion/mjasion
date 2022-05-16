@@ -58,7 +58,9 @@ params:
   background: images/network_background.png
   logo:
     favicon: images/mjasion.jpg
-
+  feedSections:
+    - posts
+    - notes
   topNavbar:
     maxVisibleSections: 5
   features:
