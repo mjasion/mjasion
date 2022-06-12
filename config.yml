@@ -55,6 +55,11 @@ params:
   # Currently, you can just hide it from the footer.
   newsletter:
     enable: false
+  darkMode:
+    provider: darkreader
+    enable: true
+    default: system
+
   background: images/network_background.png
   logo:
     favicon: images/mjasion.jpg
