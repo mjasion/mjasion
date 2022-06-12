@@ -14,8 +14,8 @@ tags:
 - how to
 menu:
   sidebar:
-    name: Terraform
-    identifier: Terraform
+    name: Terraform Logs
+    identifier: Logs
     parent: Cloud
     weight: 1
 ---
