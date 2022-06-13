@@ -1,4 +1,4 @@
 /feed/ /index.xml 302
 /rss.xml /index.xml 302
-/talks /#presentations 302
+/talks* /\#presentations 302
 /label-gitlab-notifications/ /posts/label-gitlab-notifications/ 301
