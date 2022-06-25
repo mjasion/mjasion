@@ -56,9 +56,7 @@ params:
   newsletter:
     enable: false
   darkMode:
-    provider: darkreader
-    enable: true
-    default: system
+    enable: false
 
   background: images/network_background.png
   logo:
