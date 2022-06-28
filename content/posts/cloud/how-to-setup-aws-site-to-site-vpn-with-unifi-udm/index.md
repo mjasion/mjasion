@@ -2,7 +2,7 @@
 title: How to setup AWS Site-to-Site VPN with Unifi UDM 
 date: "2022-06-28"
 description: "Site-to-Site VPN allows to connect local network with AWS VPC. This blogs is an instruction step by step to establish connection"
-hero:  
+hero:  aws-unifi.png
 author:
   name: Marcin Jasion
 tags:
@@ -23,7 +23,7 @@ By default resources you launch on cloud (EC2, RDS and others) cannot communicat
 
 Creating VPN between networks is [well documented](https://docs.aws.amazon.com/vpn/latest/s2svpn/SetUpVPNConnections.html). However you can have issues configuring your home router. At home I have Unifi Dream Machine router, which is designed for small networks, but have features which are matching advanced routers for offices. One of them is Site-to-Site VPN using IPSec protocol.
 
-## Setup VPN on AWS
+## Setup VPN on AWS ☁️
 
 First step is to create a VPN connection on AWS. For this blog I will use... the default VPC 🙂. To configure it AWS requires to define 3 components: Customer Gateway, Virtual Private Gateway and VPN connnection
 
@@ -79,4 +79,66 @@ Previously I mentioned that Virtual Private Gateway state is not attached to any
 
 To attach go back to **Virtual Private Gateway** and select your VPG and in **Actions** button find **Attach to VPC**. Select your VPC and your VPG should be available to configure routing on VPC.
 ![](virtual_gateway_assigned.png.png)
+
+On VPC left last thing to configure: routes. As we have assigned VPG, and networks from our home are known(are configured on VPN, with static routes), we can configure automated propagation of those rules to VPC route tables. To configure this perform:
+
+1. Go to **Route tables**
+2. Select routes assigned to VPC, or those which should have access to your home.
+3. Select **Actions** button, and choose **Edit route propagation**,
+4. Select Virtual private gateway
+
+After a few seconds the new route should be added
+![](vpc_routes.png)
+As you can see, the last route is "Propagated", and it's target is my virtual private gateway.
+
+## Setup VPN on Unifi Dream Machine 🏠
+Having configured AWS VPC, left the part to configure our router. In my home I have Unifi Dream Machine, with latest software (Network 7.1). 
+
+To create VPN connection:
+* go to **Settings** > **Teleport & VPN**,
+* Scroll down to **Site-to-Site VPN** and click  **Create**,
+![](udm-ipsec.png)
+
+Start filling the form. The Pre-Shared Key you could configure on Tunnel Options. If you have skipped this, go to AWS VPN tab, and click **Download Configuration**. It his file you will find PSK to fill in point 1 and the **Remote IP Address**(point 4).
+In the **Remote Gateway/Subnets**(point 3) put AWS VPC network addressing. In my case it was `172.31.0.0/16`.
+
+To align enryption options to **Tunnel Options** on AWS, select **Manual** in Advanced configuration and customize. Configure your parameters accordingly to this how you have configured. I am recommending using **AES-256** and higher DH Groups and use above image as an example..
+
+{{< alert type="success" >}}
+The VPN connection should be established ❤️
+{{< /alert >}}
+## Last step - testing
+To check if you have working VPN connection create EC2 instance on this VPC. 
+{{< alert type="warning" >}}
+Ensure your Security group allow for your home network. You can allow access to single port, protocol or whole traffic.
+{{< /alert >}}
+
+I have created an instance with IP `172.31.34.95`. This instance has Security Group roule allowing for **All Traffic** from my home network.
+When the VPN works, and instance is up, simple `ping` can prove that everything is configured:
+```bash
+$ ping 172.31.34.95 -c 5
+PING 172.31.34.95 (172.31.34.95) 56(84) bytes of data.
+64 bytes from 172.31.34.95: icmp_seq=1 ttl=63 time=38.1 ms
+64 bytes from 172.31.34.95: icmp_seq=2 ttl=63 time=38.2 ms
+64 bytes from 172.31.34.95: icmp_seq=3 ttl=63 time=36.4 ms
+64 bytes from 172.31.34.95: icmp_seq=4 ttl=63 time=38.3 ms
+64 bytes from 172.31.34.95: icmp_seq=5 ttl=63 time=38.1 ms
+
+--- 172.31.34.95 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4005ms
+rtt min/avg/max/mdev = 36.380/37.810/38.285/0.718 ms
+```
+
+> If you are not sure that you are pinging EC2 take a look on ping response times. On local networks they are much lower.
+
+## Summary 
+
+Setting up VPN allows to make your infrastructure secure. You don't have to expose ports on public internet to have access to cloud machines.
+
+### FAQ
+**I have two network VLAN's at home, should I configure some firewall rules if I don't want to allow access from one of them?**
+Let's assume you have two networks: `home` and `guest`.  
+If `guest` network should not have access to resources to VPN, on AWS VPN,  in **Static IP Prefixes** configuration you have to set only `home` network subnet.
+
+Another thing are Security groups, where we define allowed networks. If you will not set too wide range, then it will also block access.
 
