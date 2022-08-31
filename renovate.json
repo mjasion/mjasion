@@ -4,9 +4,6 @@
     "config:base",
     "config:semverAllMonthly"
   ],
-  "schedule": [
-    "after 10pm every weekday"
-  ],
   "prConcurrentLimit": 5,
   "labels": [
     "dependencies"
