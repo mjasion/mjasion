@@ -1,5 +1,5 @@
 ---
-title: Remove Gmail messages by filter
+title: Cleanup Gmail messages by filter
 weight: 1
 date: "2022-09-13T08:00:00.000Z"
 menu:
@@ -11,7 +11,7 @@ menu:
 ---
 
 <!-- Variable -->
-{{< note title="Remove Gmail emails by filter" >}}
+{{< note title="Cleanup Gmail emails by filter" >}}
 This is example how to remove Github Notifications of failed jobs after 7 days:
 ```javascript
 function cleanupByFilter() {
