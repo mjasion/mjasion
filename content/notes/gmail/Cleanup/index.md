@@ -4,7 +4,7 @@ weight: 1
 date: "2022-09-13T08:00:00.000Z"
 menu:
   notes:
-    name: gmail-cleanup
+    name: Cleanup
     identifier: gmail-cleanup
     parent: gmail
     weight: 1
