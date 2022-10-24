@@ -5,7 +5,7 @@
   </a>
 </p>
 <h1 align="center">Hi 👋, I'm Marcin Jasion</h1>
-I am a passionate DevOps Engineer, Site Reliability Engineer, and Developer with 9 years of working experience.  
+I am a passionate Platform Engieer with 10 years of working experience.  
 
 I started my career as a Java Developer, where I got experience with applications architectures, clean code, and the software development lifecycle. 
 
@@ -14,7 +14,7 @@ After 2 years I switched to a DevOps role where I am responsible for keeping run
 
 - 💬 Ask me about **Kubernetes, AWS, DevOps, CI/CD, GitOps, Blockchain**
 
-- 🌱 I’m currently learning **Blockchain techonology, Smart contracts**
+- 🌱 I’m currently learning **Blockchain techonology & Smart contracts**
 
 - 📝 I regularly write articles on [https://mjasion.pl/blog](https://mjasion.pl/blog)
 
