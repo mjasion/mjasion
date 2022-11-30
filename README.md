@@ -1,9 +1,4 @@
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
-<p align="center">
-  <a href="https://mjasion.pl">
-    <img alt="MJasion" src="assets/images/mjasion.jpg" width="60" />
-  </a>
-</p>
 <h1 align="center">Hi 👋, I'm Marcin Jasion</h1>
 I am a passionate Platform Engieer with 10 years of working experience.  
 
