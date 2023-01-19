@@ -2,7 +2,7 @@
 <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Title }}{{ end }}" />
 <link
   rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark.min.css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
 />
 <link rel="stylesheet" href="{{ "/css/layouts/single.css" | relURL }}"/>
 <link rel="stylesheet" href="{{ "/css/navigators/sidebar.css" | relURL }}">
@@ -192,7 +192,7 @@
 {{ end }}
 
 {{ define "scripts" }}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script src="{{ "/js/single.js" | relURL }}"></script>
 <script>
   hljs.initHighlightingOnLoad();
