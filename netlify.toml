@@ -5,20 +5,25 @@ publish = "public"
 [context.production.environment]
 HUGO_ENABLEGITINFO = "true"
 HUGO_ENV           = "production"
-HUGO_THEME         = "toha"
-HUGO_VERSION       = "0.98.0"
+HUGO_VERSION       = "0.111.1"
+NODE_VERSION       = "v18.12.1"
+NPM_VERSION        = "8.19.2"
 
 [context.deploy-preview]
-command = "hugo --gc --minify --buildFuture --buildDrafts -b $DEPLOY_PRIME_URL "
+command = "./build.sh && hugo --gc --minify --buildFuture --buildDrafts -b $DEPLOY_PRIME_URL "
 
-    [context.deploy-preview.environment]
-    HUGO_VERSION = "0.98.0"
+[context.deploy-preview.environment]
+HUGO_VERSION       = "0.111.1"
+NODE_VERSION       = "v18.12.1"
+NPM_VERSION        = "8.19.2"
 
 [context.branch-deploy]
-command = "hugo --gc --minify --buildFuture --buildDrafts -b $DEPLOY_PRIME_URL "
+command = "./build.sh && hugo --gc --minify --buildFuture --buildDrafts -b $DEPLOY_PRIME_URL "
 
-    [context.branch-deploy.environment]
-    HUGO_VERSION = "0.98.0"
+[context.branch-deploy.environment]
+HUGO_VERSION       = "0.111.1"
+NODE_VERSION       = "v18.12.1"
+NPM_VERSION        = "8.19.2"
 
 [context.next.environment]
 HUGO_ENABLEGITINFO = "true"
