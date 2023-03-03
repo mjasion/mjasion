@@ -16,3 +16,4 @@ menu:
 ```bash
 KUBECONFIG=$(ls ~/.kube/*.config | tr "\n" ":") kubectl config view --merge --flatten > ~/.kube/config
 ```
+{{< /note >}}

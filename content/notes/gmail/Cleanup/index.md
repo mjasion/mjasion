@@ -34,3 +34,4 @@ function deleteEmails(filter) {
 ```
 
 To setup this see my post [here](/posts/label-gitlab-notifications/). 
+{{< /note >}}
