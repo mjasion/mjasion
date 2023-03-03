@@ -1,0 +1,81 @@
+# section information
+section:
+  name: Experiences
+  id: experiences
+  enable: false
+  weight: 6
+  showOnNavbar: true
+  # Can optionally hide the title in sections
+  # hideTitle: true
+
+# Your experiences
+experiences:
+  - company:
+      name: Iterative
+      url: "https://iterative.ai"
+      location: Remote
+      overview: Iterative is a company that builds open-source tools for machine learning. The company also offers team collaboration products as a SaaS and self-hosted solution. I joined 2 people Platform team, to maintain and improve the infrastructure, developer's tools, and processes.
+    positions:
+      - designation: Senior Platform Engineer
+        start: Jul 2022
+        # don't provide end date if you are currently working there. It will be replaced by "Present"
+        # end: Dec 2020
+        # give some points about what was your responsibilities at the company.
+        responsibilities:
+          - Design and develop XYZ tool for ABC task
+          - Design, develop and manage disaster recovery tool [Xtool](https://www.example.com) that backup Kubernetes volumes, databases, and cluster's resource definition.
+          - Lead backend team.
+
+  - company:
+      name: Equnix
+      url: "https://www.equnix.com"
+      location: Warsaw
+      overview: PreExample Co. is a gateway company to enter into Example co. So, nothing special here.
+    positions:
+      - designation: Software Engineer
+        start: Aug 2020
+        end: April 2022
+        responsibilities:
+          - Write lots of example codes.
+          - Read lots of examples.
+          - See lots of example videos.
+
+  - company:
+      name: Codility
+      url: "https://www.codility.com"
+      location: Warsaw, Poland
+      overview: Intern counting Company (ICC) is responsible for counting worldwide intern Engineers.
+    positions:
+      - designation: Intern
+        start: Nov 2018
+        end: Jul 2020
+        responsibilities:
+          - Count lost of interns.
+          - Count more interns.
+          - Count me as an intern.
+  - company:
+      name: F5
+      url: "https://www.f5.com"
+      location: Warsaw, Poland
+      overview: Intern counting Company (ICC) is responsible for counting worldwide intern Engineers.
+    positions:
+      - designation: Intern
+        start: Feb 2018
+        end: Oct 2020
+        responsibilities:
+          - Count lost of interns.
+          - Count more interns.
+          - Count me as an intern.
+  - company:
+      name: TouK
+      url: "https://www.touk.pl"
+      location: Warsaw, Poland
+      overview: Intern counting Company (ICC) is responsible for counting worldwide intern Engineers.
+    positions:
+      - designation: Intern
+        start: Jan 2014
+        end: Feb 2018
+        responsibilities:
+          - Count lost of interns.
+          - Count more interns.
+          - Count me as an intern.
