@@ -31,3 +31,4 @@ and run the `kind`:
 $ kind create cluster --config kind-cluster.yaml
 ```
 Control-plane node should use your network DNS now.
+{{< /note >}}

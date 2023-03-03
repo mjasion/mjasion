@@ -6,10 +6,10 @@ section:
   showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
   template: sections/about.html # allows you to point to a specific template.
 
-designation: Senior DevOps Engineer
+designation: Senior Platform Engineer
 company:
-  name: Equinix
-  url: "https://www.equinix.com"
+  name: Iterative
+  url: "https://iterative.ai"
 
 
 # your resume. this file path should be relative to you "static" directory
@@ -54,7 +54,7 @@ softSkills:
 #   percentage: 85
 #   color: blue
 - name: Team Work
-  percentage: 90
+  percentage: 85
   color: yellow
 - name: Communication
   percentage: 85
@@ -69,7 +69,7 @@ softSkills:
   percentage: 95
   color: orange
 - name: Fast Learner
-  percentage: 80
+  percentage: 90
   color: sky
 # - name: Example 2
 #   percentage: 65
