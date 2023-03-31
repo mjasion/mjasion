@@ -1,15 +1,18 @@
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 <h1 align="center">Hi 👋, I'm Marcin Jasion</h1>
-I am a passionate Platform Engieer with 10 years of working experience.  
+  As a passionate Platform Engineer with 10 years of experience, I am dedicated to delivering exceptional results. 
+  I have worked as a full-stack developer for the first two years of my career and as a Golang developer. 
 
-I started my career as a Java Developer, where I got experience with applications architectures, clean code, and the software development lifecycle. 
+I have a deep understanding of application architecture, clean code, and the software development lifecycle.
+As a problem solver, I am always eager to find new and innovative solutions to complex challenges.
+Whether I am working on infrastructure automation, software design, or troubleshooting, I am committed to delivering high-quality results that exceed expectations.
 
-After 2 years I switched to a DevOps role where I am responsible for keeping running up and safe the infrastructure delivering automation for daily work. In daily work, I am sharing my knowledge with other teams, by developer mentoring from used tools or by presenting the PoC of tools that are addressing met problems around work.
-
+Above all, I value collaboration and teamwork. I believe that knowledge sharing is essential to building successful projects and strong teams.
+I am always eager to learn from and collaborate with my colleagues, and I am committed to fostering a positive and proactive work environment.
 
 - 💬 Ask me about **Kubernetes, AWS, DevOps, CI/CD, GitOps, Blockchain**
 
-- 🌱 I’m currently learning **Blockchain techonology & Smart contracts**
+- 🌱 I’m currently learning **Blockchain techonology**
 
 - 📝 I regularly write articles on [https://mjasion.pl/blog](https://mjasion.pl/blog)
 
