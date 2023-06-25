@@ -6,15 +6,26 @@ hero:  aws-unifi.png
 author:
   name: Marcin Jasion
 tags:
-- cloud
-- aws
-- unifi
-- vpn
-- vpc
-- ipsec
-- site-to-site
-- udm
-- how to
+- Cloud
+- How to
+- Cloud computing
+- VPN setup
+- AWS
+- Site-to-Site VPN
+- IPSec protocol
+- Unifi Dream Machine
+- Unifi Dream Router
+- AWS VPC
+- Customer Gateway
+- Virtual Private Gateway
+- VPN connection
+- IPSec parameters
+- VPC routing
+- Unifi router
+- network security
+- EC2 instance
+- ping
+- infrastructure security
 menu:
   sidebar:
     name: VPN
