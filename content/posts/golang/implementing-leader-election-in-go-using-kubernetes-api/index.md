@@ -2,7 +2,7 @@
 title: Implementing Leader Election in Golang using Kubernetes API
 date: "2023-06-26"
 description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs does not help"
-hero:  service_mesh.png
+hero:  hero_implementing-leader-election-in-go-using-kubernetes-api.svg
 author:
   name: Marcin Jasion
 tags:
@@ -103,7 +103,6 @@ func onStartedLeading(ctx context.Context) {
 				log.Println("Stopped leader loop")
 				return
 			default:
-				// Perform leader tasks here
 				log.Println("Performing leader tasks...")
 				time.Sleep(1 * time.Second)
 			}
@@ -129,9 +128,7 @@ wg.Add(1)
 
 go func() {
     defer wg.Done()
-
-    // Start the leader election
-    leaderelection.RunOrDie(ctx, leaderElectionConfig)
+	leaderelection.RunOrDie(ctx, leaderElectionConfig)
 }()
 
 cancel()
