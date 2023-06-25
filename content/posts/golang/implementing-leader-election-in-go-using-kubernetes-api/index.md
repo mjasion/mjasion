@@ -81,28 +81,12 @@ leaderElectionConfig := leaderelection.LeaderElectionConfig{
 }
 ```
 
-A context and a wait group are created to manage goroutines. A goroutine is started to run the leader 
-election using the `leaderelection.RunOrDie` function.
-
-```go
-ctx, cancel := context.WithCancel(context.Background())
-defer cancel()
-wg := &sync.WaitGroup{}
-wg.Add(1)
-
-go func() {
-    defer wg.Done()
-
-    // Start the leader election
-    leaderelection.RunOrDie(ctx, leaderElectionConfig)
-}()
-
-cancel()
-wg.Wait()
-```
-
-The program also sets up a Gin router and defines a root endpoint that returns the hostname of the 
-current node, to easily check which Pod is beeing a leader.
+The most important settings are the **lease duration**, **renewal deadline**, and **retry period**:
+* The `LeaseDuration` specifies how long the lease is valid. 
+* The `RenewDeadline` specifies the amount 
+  of time that the current node has to renew the lease before it expires. 
+* The `RetryPeriod` specifies the amount of time that the current node has to wait before retrying to  
+  acquire the lease after it expires.
 
 The leader-specific tasks are performed in the `onStartedLeading` function, which is called 
 when the current node becomes the leader. The `updateServiceSelectorToCurrentPod` function updates the 
@@ -127,12 +111,73 @@ func onStartedLeading(ctx context.Context) {
 	}()
 }
 ```
-The`onStoppedLeading` function is called when the current node stops being the leader.
+The `onStoppedLeading` function is called when the current node stops being the leader.
 ```go
 func onStoppedLeading() {
 	log.Println("Stopped being leader")
 }
 ```
+
+A context and a wait group are created to manage goroutines. A goroutine is started to run the leader
+election using the `leaderelection.RunOrDie` function.
+
+```go
+ctx, cancel := context.WithCancel(context.Background())
+defer cancel()
+wg := &sync.WaitGroup{}
+wg.Add(1)
+
+go func() {
+    defer wg.Done()
+
+    // Start the leader election
+    leaderelection.RunOrDie(ctx, leaderElectionConfig)
+}()
+
+cancel()
+wg.Wait()
+```
+
+The program also sets up a Gin router and defines a root endpoint that returns the hostname of the
+current node, to easily check which Pod is beeing a leader.
+
+
+## Demo 1 - Deploying a single Pod
+
+In this demo, we will deploy a single Pod to a Kubernetes cluster and observe how the leader election works.
+
+![Single Pod_Example](./1_log_and_lease-min.gif)
+
+As you can see here, the pod is elected as a leader and performs leader-specific tasks. The `lease` object
+contains the information about the current leader in the `HOLDER` column.
+
+```shell
+NAME                 HOLDER                               AGE
+k8s-leader-example   k8s-leader-example-8dd646bb7-dsfmq   11s
+```
+
+## Demo 2 - Deploying multiple Pods and killing the leader
+
+In this demo, we will deploy multiple Pods to a Kubernetes cluster and observe how the leader election works.
+The settings used for this demo are as follows:
+|Setting|Value|
+|-|-|
+|Lease Duration|10 seconds|
+|Renewal Deadline|5 seconds|
+|Retry Period|1 seconds|
+
+The leader election mechanism will attempt to renew the lease every 5 seconds. If the lease is not renewed
+within 5 seconds, the leader election mechanism will attempt to acquire the lease. If the lease is not acquired
+within 1 second, the leader election mechanism will retry to acquire the lease.
+
+![2_multi_instance-min.gif](2_multi_instance-min.gif)
+
+Running command `kubectl get lease --watch` allows to observe the leader election process. The `lease` object
+contains first the information about the previous leader, when the leader is killed, and then the information
+about the new leader.
+
+
+
 ## Conclusion
 
 Implementing leader election in Kubernetes using lease locks is an effective way to ensure that only 
