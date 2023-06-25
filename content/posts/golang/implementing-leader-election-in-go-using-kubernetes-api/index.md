@@ -86,8 +86,7 @@ The most important settings are the **lease duration**, **renewal deadline**, an
 * The `LeaseDuration` specifies how long the lease is valid. 
 * The `RenewDeadline` specifies the amount 
   of time that the current node has to renew the lease before it expires. 
-* The `RetryPeriod` specifies the amount of time that the current node has to wait before retrying to  
-  acquire the lease after it expires.
+* The `RetryPeriod` specifies the amount of time  that the current holder of a lease has last updated the lease.
 
 The leader-specific tasks are performed in the `onStartedLeading` function, which is called 
 when the current node becomes the leader. The `updateServiceSelectorToCurrentPod` function updates the 
@@ -111,7 +110,9 @@ func onStartedLeading(ctx context.Context) {
 	}()
 }
 ```
-The `onStoppedLeading` function is called when the current node stops being the leader.
+
+The `onStoppedLeading` function is called when the current node stops being the leader. It can be used for cleanup tasks.
+
 ```go
 func onStoppedLeading() {
 	log.Println("Stopped being leader")
@@ -181,8 +182,7 @@ about the new leader.
 
 Implementing leader election in Kubernetes using lease locks is an effective way to ensure that only 
 one instance or node performs leader-specific tasks at a time. In this blog post, we explored the provided 
-Go code that demonstrates how to implement leader election in a Kubernetes cluster. The code utilized the 
-Kubernetes client library and lease locks to elect a leader and perform leader-specific tasks.
+Go code that demonstrates how to implement leader election in a Kubernetes cluster. 
 
 By incorporating leader election into your distributed system, you can enhance its reliability and prevent 
 conflicts that may arise from multiple instances attempting to execute the same tasks simultaneously.
