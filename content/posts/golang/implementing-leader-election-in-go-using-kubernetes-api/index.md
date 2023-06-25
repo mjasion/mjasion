@@ -1,6 +1,6 @@
 ---
 title: Implementing Leader Election in Golang using Kubernetes API
-date: "2023-06-26"
+date: "2023-06-25"
 description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs does not help"
 hero:  hero_implementing-leader-election-in-go-using-kubernetes-api.svg
 author:
