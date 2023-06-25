@@ -143,7 +143,7 @@ current node, to easily check which Pod is beeing a leader.
 
 In this demo, we will deploy a single Pod to a Kubernetes cluster and observe how the leader election works.
 
-![Single Pod_Example](./1_log_and_lease-min.gif)
+{{< video src="1_log_and_lease.webm" type="video/webm" preload="auto" loop="true" autoplay="true" >}}
 
 As you can see here, the pod is elected as a leader and performs leader-specific tasks. The `lease` object
 contains the information about the current leader in the `HOLDER` column.
@@ -167,7 +167,8 @@ The leader election mechanism will attempt to renew the lease every 5 seconds. I
 within 5 seconds, the leader election mechanism will attempt to acquire the lease. If the lease is not acquired
 within 1 second, the leader election mechanism will retry to acquire the lease.
 
-![2_multi_instance-min.gif](2_multi_instance-min.gif)
+<!-- ![2_multi_instance-min.webm](2_multi_instance-min.webm) -->
+{{< video src="2_multi_instance-min.webm" type="video/webm" preload="auto" loop="true" autoplay="true" >}}
 
 Running command `kubectl get lease --watch` allows to observe the leader election process. The `lease` object
 contains first the information about the previous leader, when the leader is killed, and then the information
