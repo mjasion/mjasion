@@ -171,8 +171,7 @@ The leader election mechanism will attempt to renew the lease every 5 seconds. I
 within 5 seconds, the leader election mechanism will attempt to acquire the lease. If the lease is not acquired
 within 1 second, the leader election mechanism will retry to acquire the lease.
 
-<!-- ![2_multi_instance.webm](2_multi_instance-min.webm) -->
-{{< video src="2_multi_instance-min.webm" type="video/webm" preload="auto" loop="true" autoplay="true" >}}
+{{< video src="2_multi_instance.webm" type="video/webm" preload="auto" loop="true" autoplay="true" >}}
 
 Running command `kubectl get lease --watch` allows to observe the leader election process. The `lease` object
 contains first the information about the previous leader, when the leader is killed, and then the information
