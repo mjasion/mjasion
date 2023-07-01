@@ -55,7 +55,7 @@ imaging:
 # Site parameters
 params:
   # Background image of the landing page
-  background: images/network_background.png
+  background: images/background.png
 
   # specify whether you want to write some blog posts or not
   enableBlogPost: false
