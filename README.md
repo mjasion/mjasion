@@ -12,8 +12,6 @@ I am always eager to learn from and collaborate with my colleagues, and I am com
 
 - 💬 Ask me about **Kubernetes, AWS, DevOps, CI/CD, GitOps, Blockchain**
 
-- 🌱 I’m currently learning **Blockchain techonology**
-
 - 📝 I regularly write articles on [https://mjasion.pl/blog](https://mjasion.pl/blog)
 
 - 📄 Know about my experiences [https://mjasion.pl/](https://mjasion.pl)
