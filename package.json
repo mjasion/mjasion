@@ -31,13 +31,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@fontsource/mulish": "5.0.5",
+    "@fontsource/mulish": "5.0.17",
     "@fortawesome/fontawesome-free": "^6.2.0",
     "autoprefixer": "^10.4.13",
     "bootstrap": "^5.0.0",
     "darkreader": "^4.9.58",
     "eslint": "^8.31.0",
-    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^16.0.0",
@@ -45,7 +45,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "filterizr": "^2.2.4",
     "flag-icon-css": "^4.1.7",
-    "fuse.js": "^6.6.2",
+    "fuse.js": "^7.0.0",
     "highlight.js": "^11.6.0",
     "imagesloaded": "^5.0.0",
     "ityped": "^1.0.3",
@@ -55,7 +55,7 @@
     "plyr": "^3.7.2",
     "popper.js": "^1.16.1",
     "postcss": "^8.4.21",
-    "postcss-cli": "^10.0.0"
+    "postcss-cli": "^11.0.0"
   },
   "name": "mjasion",
   "version": "0.1.0"
