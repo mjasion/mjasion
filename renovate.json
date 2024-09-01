@@ -4,5 +4,12 @@
   "prConcurrentLimit": 5,
   "labels": ["dependencies"],
   "rebaseWhen": "conflicted",
-  "configMigration": true
+  "configMigration": true,
+  "packageRules": [
+    {
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true
+    }
+  ]
 }
