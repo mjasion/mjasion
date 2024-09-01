@@ -56,7 +56,10 @@ imaging:
 params:
   # Background image of the landing page
   background: images/background.png
-
+  darkMode:
+    provider: darkreader
+    enable: true
+    default: system
   # specify whether you want to write some blog posts or not
   enableBlogPost: false
 
@@ -87,8 +90,6 @@ params:
   features:
 
     # Enable dark theme
-    darkMode:
-      enable: false
    # Enable and configure blog posts
     blog:
       enable: true
