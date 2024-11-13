@@ -25,14 +25,14 @@ In my previous [post](../how-to-enable-debug-in-terraform-cloud/) I showed how t
 [Terraform](https://www.terraform.io/) by default runs `10` concurrent operations. To reduce execution time on plan or apply operation we can increase this parameter.
 > By increasing **paralellism**  you can hist rate limit your provider. Some cloud providers (like [Cloudflare](https://developers.cloudflare.com/terraform/advanced-topics/provider-customization/#increase-the-frequency-of-api-requests)) informs about number of API request allowed in period of time. Hitting the limit can impact your deployments.
 
-## `TFE_PARALLELISM` variable 
+## `TFE_PARALLELISM` variable
 The easiest way to increase parallelism in Terraform Cloud for Remote Execution is `TFE_PARALLELISM` variable. It just require a number. To set this you need to perform those steps:
 
 * Select your workspace,
 * Go to **Variables** tab,
 * Add variable in **Workspace variables** panel and create `TFE_PARALLELISM` variable:
   ![Workspace TFE_PARALLELISM variable](workspace_tfe_parallelism.png)
-  > Ensure you have selected **Environment variable** button  
+  > Ensure you have selected **Environment variable** button
 
 The change should be available on next execution.
 

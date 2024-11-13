@@ -12,7 +12,7 @@ tags:
 - tcpdump
 - upe
 - 503 UC
-- upstream_reset_before_response_started 
+- upstream_reset_before_response_started
 - Upstream connection termination
 - wireshark
 menu:
@@ -55,7 +55,7 @@ $ kubectl logs http-chunked-0 -c istio-proxy
 
 ## Time for spying 🕵🏻‍♂️
 
-To analyze the traffic we can use `tcpdump` and Wireshark. Istio-proxy runs as a sidecar, which routes whole incoming and outgoing traffic to pod through own proxy.  
+To analyze the traffic we can use `tcpdump` and Wireshark. Istio-proxy runs as a sidecar, which routes whole incoming and outgoing traffic to pod through own proxy.
 ![Istio Pod](./istio-pod.png)
 
 To sniff traffic there are 3 ways:
@@ -72,7 +72,7 @@ First will not work by default, because `istio-proxy` runs without root permissi
 
 * figures  out what node is running pod with an app,
 * deploys an own pod with an affinity to that node, bound to the host network,
-* opens Wireshark on your laptop with a packet stream from the application.  
+* opens Wireshark on your laptop with a packet stream from the application.
 
 Let's execute it to sniff our application:
 
@@ -82,10 +82,10 @@ kubectl sniff http-chunked-0 -c istio-proxy -p -f '-i lo' -n default
 
 > **Important parameters**
 >
-> * `-p` is parameter to support sniffing even if the pod is non-priviledged. See [docs](https://github.com/eldadru/ksniff#non-privileged-and-scratch-pods),  
+> * `-p` is parameter to support sniffing even if the pod is non-priviledged. See [docs](https://github.com/eldadru/ksniff#non-privileged-and-scratch-pods),
 > * `-f '-i lo'` passes filter to tcpdump, we want to sniff localhost interface inside the Pod.
 
-If there is no issue, our system has Wireshark in `PATH`, `ksniff` should open a new window  
+If there is no issue, our system has Wireshark in `PATH`, `ksniff` should open a new window
 ![Wireshark](./wireshark_init.png)
 
 ### Finding the root cause 🔎
@@ -101,7 +101,7 @@ It shows only a single packet, our request. Wireshark allows to show the whole T
 * click right click on the packet,
 * go to `Conversation Filter`,
 * select `TCP`.
-  
+
 Wireshark will write a filter to show the whole communication between istio-proxy container and the application container!
 
 ![Wireshark - Filtering the conversation](./wireshark_convesation_filter.png)
@@ -120,7 +120,7 @@ Click with the right mouse on a single packet, go to the `Follow` tab, and selec
 
 ![Wireshark - Filtering TCP stream](./wireshark_tcp_stream.png)
 
-Now we can check what the request from `istio-proxy` looked like, and what was the response from the app.  
+Now we can check what the request from `istio-proxy` looked like, and what was the response from the app.
 Do you have an idea from the above picture?
 
 Look closer at the response, there is a double `Transfer-Encoding` header. One starts from uppercase, the second one does not.

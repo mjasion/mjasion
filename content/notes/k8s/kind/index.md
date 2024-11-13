@@ -15,7 +15,7 @@ menu:
 
 By default Kind uses system `/etc/resolv.conf`. This points to `systemd-resolved`  service and some queries might fail. You can mount your network DNS configuration.
 
-Save below config in `kind-cluster.yaml`: 
+Save below config in `kind-cluster.yaml`:
 ```yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
