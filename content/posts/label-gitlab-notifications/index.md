@@ -58,7 +58,7 @@ function processInbox() {
       var messages = threads[i].getMessages();
       for (var j = 0; j < messages.length; j++) {
          var message = messages[j];
-         processMessage(message); // function to process the message 
+         processMessage(message); // function to process the message
       }
    }
 }
@@ -69,10 +69,10 @@ As you see, the code is pretty simple. It uses `search()` function from [GmailAp
 To do that you have to call `getRawContent()` function on the message object and check if the message contains a string that you are looking for. For example to check that this is a message send by GitLab find in the body string `"X-GitLab"`:
 
 ```js
-var gitlabLabel = GmailApp.getUserLabelByName("GitLab"); 
-var body = message.getRawContent(); 
-if (body.indexOf("X-GitLab") > -1) { 
-  message.getThread().addLabel(gitlabLabel); 
+var gitlabLabel = GmailApp.getUserLabelByName("GitLab");
+var body = message.getRawContent();
+if (body.indexOf("X-GitLab") > -1) {
+  message.getThread().addLabel(gitlabLabel);
 }
 ```
 
@@ -95,17 +95,17 @@ function processInbox() {
 
 function processMessage(message) {
   // Get label instances
-  var gitlabLabel = GmailApp.getUserLabelByName("GitLab");    
+  var gitlabLabel = GmailApp.getUserLabelByName("GitLab");
   var issueLabel = GmailApp.getUserLabelByName("Gitlab/Issue");
   var mrLabel = GmailApp.getUserLabelByName("Gitlab/Merge request");
   var buildLabel = GmailApp.getUserLabelByName("Gitlab/Build");
-  var commitLabel = GmailApp.getUserLabelByName("Gitlab/Commit");  
-  var discussionLabel = GmailApp.getUserLabelByName("Gitlab/Discussion");  
+  var commitLabel = GmailApp.getUserLabelByName("Gitlab/Commit");
+  var discussionLabel = GmailApp.getUserLabelByName("Gitlab/Discussion");
 
   // Start message processing
-  var body = message.getRawContent(); 
-  if (body.indexOf("X-GitLab") > -1) { 
-     message.getThread().addLabel(gitlabLabel); 
+  var body = message.getRawContent();
+  if (body.indexOf("X-GitLab") > -1) {
+     message.getThread().addLabel(gitlabLabel);
   }
   if (body.indexOf("X-GitLab-Issue-ID") > -1) {
     message.getThread().addLabel(issueLabel);
@@ -141,7 +141,7 @@ function processMessage(message) {
 6. When there is no errors, create a custom trigger. Find button: ![Trigger](google_script_trigger_button.png)
 
 7. Click “Add trigger” button at the bottom of the page.
-8. Select function `processInbox` and configure the time source. The execution frequency depends is your choice. If you receive a lot of messages and you will run this script every 1 minute you can hit the limits. In the above script, I am scanning for emails from the last hour so the script can be executed at least once an hour.  
+8. Select function `processInbox` and configure the time source. The execution frequency depends is your choice. If you receive a lot of messages and you will run this script every 1 minute you can hit the limits. In the above script, I am scanning for emails from the last hour so the script can be executed at least once an hour.
 ![GAS Trigger](google_script_new_trigger.png)
 
 ## 🏁And that’s it!

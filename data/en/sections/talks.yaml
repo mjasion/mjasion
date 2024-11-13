@@ -25,7 +25,7 @@ presentations:
   assets: #(optional)
   - title: Youtube 🇵🇱
     url: "https://www.youtube.com/watch?v=IJYxvyzHp8A"
-- name: Autoscaling GitLab CI 
+- name: Autoscaling GitLab CI
   icon: fab fa-gitlab
   meetup:
     name: "SysOps/DevOps Warszawa MeetUp #42"
@@ -34,4 +34,3 @@ presentations:
   assets: #(optional)
   - title: Youtube 🇵🇱
     url: "https://youtu.be/u2hFb1ZpXYk"
-

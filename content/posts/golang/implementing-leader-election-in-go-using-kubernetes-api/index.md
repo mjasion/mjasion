@@ -2,7 +2,7 @@
 title: Implementing Leader Election in Golang using Kubernetes API
 date: "2023-06-25"
 description: |
-  Learn how to implement a leader election mechanism in Golang using the Kubernetes API, leveraging 
+  Learn how to implement a leader election mechanism in Golang using the Kubernetes API, leveraging
   lease locks and distributed coordination to ensure reliable task execution in distributed systems.
 hero:  hero_implementing-leader-election-in-go-using-kubernetes-api.svg
 author:
@@ -35,15 +35,15 @@ menu:
 ## Introduction
 
 Leader election is a crucial pattern in distributed systems where multiple instances or nodes compete
-to perform certain tasks. In a Kubernetes cluster, leader election can be used to ensure that only 
-one instance is responsible for executing leader-specific tasks at any given time. This blog post will 
+to perform certain tasks. In a Kubernetes cluster, leader election can be used to ensure that only
+one instance is responsible for executing leader-specific tasks at any given time. This blog post will
 explore how to implement a leader election mechanism in Kubernetes using lease locks.
 
 ## Overview
 
-The leader election mechanism implemented in   Go code relies on Kubernetes coordination 
-features, specifically [Lease](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/lease-v1/) 
-object in the `coordination.k8s.io` API Group. Lease locks provide a way to acquire a lease on a shared resource, 
+The leader election mechanism implemented in   Go code relies on Kubernetes coordination
+features, specifically [Lease](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/lease-v1/)
+object in the `coordination.k8s.io` API Group. Lease locks provide a way to acquire a lease on a shared resource,
 which can be used to determine the leader among a group of nodes.
 
 ### Repository
@@ -53,12 +53,12 @@ The example code, used for this blog is available on [mjasion/golang-k8s-leader-
 ## Code Walkthrough
 
 
-The main function is the entry point of the program. It reads configuration values from environment 
+The main function is the entry point of the program. It reads configuration values from environment
 variables and obtains the Kubernetes `clientset` by getting access to Kube-Api by ServiceAccount attached to Pod.
 The application is written to work in Kubernetes Pod, that's why it is using `rest.InClusterConfig()` function.
 
-The leader election configuration is set up using the `LeaderElectionConfig` struct from the Kubernetes 
-client library. It specifies the lease lock, lease duration, renewal deadline, retry period, and callback 
+The leader election configuration is set up using the `LeaderElectionConfig` struct from the Kubernetes
+client library. It specifies the lease lock, lease duration, renewal deadline, retry period, and callback
 functions for leader-specific tasks.
 
 ```go
@@ -85,13 +85,13 @@ leaderElectionConfig := leaderelection.LeaderElectionConfig{
 ```
 
 The most important settings are the **lease duration**, **renewal deadline**, and **retry period**:
-* The `LeaseDuration` specifies how long the lease is valid. 
-* The `RenewDeadline` specifies the amount 
-  of time that the current node has to renew the lease before it expires. 
+* The `LeaseDuration` specifies how long the lease is valid.
+* The `RenewDeadline` specifies the amount
+  of time that the current node has to renew the lease before it expires.
 * The `RetryPeriod` specifies the amount of time  that the current holder of a lease has last updated the lease.
 
-The leader-specific tasks are performed in the `onStartedLeading` function, which is called 
-when the current node becomes the leader. The `updateServiceSelectorToCurrentPod` function updates the 
+The leader-specific tasks are performed in the `onStartedLeading` function, which is called
+when the current node becomes the leader. The `updateServiceSelectorToCurrentPod` function updates the
 service selector to include the current pod's hostname.
 ```go
 func onStartedLeading(ctx context.Context) {
@@ -181,9 +181,9 @@ about the new leader.
 
 ## Conclusion
 
-Implementing leader election in Kubernetes using lease locks is an effective way to ensure that only 
-one instance or node performs leader-specific tasks at a time. In this blog post, we explored the provided 
-Go code that demonstrates how to implement leader election in a Kubernetes cluster. 
+Implementing leader election in Kubernetes using lease locks is an effective way to ensure that only
+one instance or node performs leader-specific tasks at a time. In this blog post, we explored the provided
+Go code that demonstrates how to implement leader election in a Kubernetes cluster.
 
-By incorporating leader election into your distributed system, you can enhance its reliability and prevent 
+By incorporating leader election into your distributed system, you can enhance its reliability and prevent
 conflicts that may arise from multiple instances attempting to execute the same tasks simultaneously.

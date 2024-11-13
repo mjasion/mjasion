@@ -1,15 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "config:semverAllMonthly"],
-  "prConcurrentLimit": 5,
-  "labels": ["dependencies"],
+  "extends": [
+    "config:recommended"
+  ],
+  "schedule": [
+    "on Friday"
+  ],
   "rebaseWhen": "conflicted",
-  "configMigration": true,
-  "packageRules": [
-    {
-      "matchManagers": ["gomod"],
-      "matchDepTypes": ["indirect"],
-      "enabled": true
-    }
-  ]
+  "prConcurrentLimit": 0,
+  "minimumReleaseAge": "3 days",
+  "configMigration": true
 }

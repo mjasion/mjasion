@@ -47,10 +47,10 @@ The Virtual Private Gateway is the virtual entity on the VPC side, that allows t
 
 ### Create base components 🏗️
 
-To start your VPN connection start by defining Customer Gateway.  
+To start your VPN connection start by defining Customer Gateway.
 Go to the **VPC** tab, find panel **Customer Gateway** and click t button to **Create**. The required field is IP address. Write here your public IP address where your router is running. Also, it is good to name this gateway. I named my as `home`.
 
-> To quickly check you public IP you can open  https://ifconfig.co 
+> To quickly check you public IP you can open  https://ifconfig.co
 
 The next step is to create Virtual Private Gateway. Go to the **Virtual Panel Gateway** panel and click **Create**. It just asks for a name. Let's name it also `home`. The VPG state will be detached. I will back to it later.
 ![](virtual_gateway_notassigned.png)
@@ -66,7 +66,7 @@ Next select **Customer gateway**. Here you define with which router the VPN will
 
 There is the last configuration to set: routing. It is a section where you can define to which local networks will the VPN will be used. On the screenshot, I marked this as a point **1**.
 
-AWS allows for two options. to configure routing dynamic, based on BGP. And statically defined. In my case, I am using static.   
+AWS allows for two options. to configure routing dynamic, based on BGP. And statically defined. In my case, I am using static.
 In the prefixes, I am putting my local network prefixes(like `192.168.1.0/24`). You are allowed to put multiple networks here.
 
 ![](create_vpn.png)
@@ -105,7 +105,7 @@ After a few seconds, the new route should be added
 As you can see, the last route is "Propagated", and it's target is my virtual private gateway.
 
 ## Setup VPN on Unifi 🏠
-Having configured AWS VPC, left the part to configure our router. In my home, I have Unifi Dream Machine, with the latest software (Network 7.1). 
+Having configured AWS VPC, left the part to configure our router. In my home, I have Unifi Dream Machine, with the latest software (Network 7.1).
 
 To create a VPN connection:
 * Go to **Settings** > **Teleport & VPN**,
@@ -122,7 +122,7 @@ The VPN connection should be established ❤️
 {{< /alert >}}
 
 ## Last step - testing 🪛
-To check if you have a working VPN connection create an EC2 instance on this VPC. 
+To check if you have a working VPN connection create an EC2 instance on this VPC.
 
 {{< alert type="warning" >}}
 Ensure your Security group allows for your home network. You can allow access to a single port, protocol, or whole traffic.
@@ -157,4 +157,3 @@ Setting up VPN allows to make your infrastructure secure. You don't have to expo
 Let's assume you have two networks: `home` and `guest`.  If the `guest` network should not have access to resources to VPN, on AWS VPN,  in **Static IP Prefixes** configuration you have to set only `home` network subnet.
 
 Another thing are Security Groups, where we define allowed networks. If you will not set too wide network range, then it will also block access.
-
