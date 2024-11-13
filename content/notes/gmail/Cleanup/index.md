@@ -16,7 +16,7 @@ This is example how to remove Github Notifications of failed jobs after 7 days:
 ```javascript
 function cleanupByFilter() {
   deleteEmails('from:notifications@github.com older_than:7d subject: "Run failed"')
-  // For more filters add more `deleteEmails` function executions here 
+  // For more filters add more `deleteEmails` function executions here
 }
 
 function deleteEmails(filter) {
@@ -33,5 +33,5 @@ function deleteEmails(filter) {
 }
 ```
 
-To setup this see my post [here](/posts/label-gitlab-notifications/). 
+To setup this see my post [here](/posts/label-gitlab-notifications/).
 {{< /note >}}

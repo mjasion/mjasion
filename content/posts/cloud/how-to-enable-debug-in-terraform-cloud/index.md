@@ -43,7 +43,7 @@ If this run is in Terraform Cloud or Terraform Enterprise with Remote Execution,
 * Go to **Variables** tab,
 * Add variable in **Workspace variables** panel and create `TF_LOG` variable:
   ![Workspace Variables](workspace_variables.png)
-  > Ensure you have selected **Environment variable** button  
+  > Ensure you have selected **Environment variable** button
 * Perform the run that you want to trace
 
 ### Another option is to enable local execution
@@ -51,4 +51,3 @@ If you are working on your own project, it will be much convenient to disable Re
 
 * * *
 Once the issue is resolved, unset the `TF_LOG` environment variable to disable the enhanced logging.
-
