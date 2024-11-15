@@ -48,7 +48,7 @@
     "fuse.js": "^6.6.2",
     "highlight.js": "^11.10.0",
     "imagesloaded": "^5.0.0",
-    "include-media": "^1.4.10",
+    "include-media": "^2.0.0",
     "ityped": "^1.0.3",
     "katex": "^0.16.11",
     "mark.js": "^8.11.1",
