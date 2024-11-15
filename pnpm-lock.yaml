@@ -60,8 +60,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       include-media:
-        specifier: ^1.4.10
-        version: 1.4.10
+        specifier: ^2.0.0
+        version: 2.0.0
       ityped:
         specifier: ^1.0.3
         version: 1.0.3
@@ -914,8 +914,8 @@ packages:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
 
-  include-media@1.4.10:
-    resolution: {integrity: sha512-TymQzKF7oWHbItEcEHOCponZ90lRr1I9QbYeD+qCxXy4Z0/pSpS4Ocz2bq3FMOERlXXrY9Sawsh9GjiObVQA6A==}
+  include-media@2.0.0:
+    resolution: {integrity: sha512-LSJcffPYIZ/Kln0rIi5UhqQbZxElDCMYA4dPC5MI1rkwwjptgEiOicHnzB0MMhMNJver0+4zULb4MKlgDyapZg==}
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
@@ -2545,7 +2545,7 @@ snapshots:
 
   imurmurhash@0.1.4: {}
 
-  include-media@1.4.10: {}
+  include-media@2.0.0: {}
 
   inflight@1.0.6:
     dependencies:
