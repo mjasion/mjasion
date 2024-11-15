@@ -36,8 +36,8 @@ importers:
         specifier: ^15.7.0
         version: 15.7.0(eslint@8.57.1)
       eslint-plugin-no-jquery:
-        specifier: ^2.7.0
-        version: 2.7.0(eslint@8.57.1)
+        specifier: ^3.0.0
+        version: 3.0.2(eslint@8.57.1)
       eslint-plugin-promise:
         specifier: ^6.6.0
         version: 6.6.0(eslint@8.57.1)
@@ -664,10 +664,10 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-no-jquery@2.7.0:
-    resolution: {integrity: sha512-Aeg7dA6GTH1AcWLlBtWNzOU9efK5KpNi7b0EhBO0o0M+awyzguUUo8gF6hXGjQ9n5h8/uRtYv9zOqQkeC5CG0w==}
+  eslint-plugin-no-jquery@3.0.2:
+    resolution: {integrity: sha512-n/+6p6PFhWDNPVLJj1463hw4OTIRBbROGcbhmtOHTgw7yihSKzkwZiQ00EJTneyeR3jRiw5lpWSMCCBhtb8t2g==}
     peerDependencies:
-      eslint: '>=2.3.0'
+      eslint: '>=8.0.0'
 
   eslint-plugin-promise@6.6.0:
     resolution: {integrity: sha512-57Zzfw8G6+Gq7axm2Pdo3gW/Rx3h9Yywgn61uE/3elTCOePEHVrn2i5CdfBwA1BLK0Q0WqctICIUSqXZW/VprQ==}
@@ -2264,7 +2264,7 @@ snapshots:
       resolve: 1.22.8
       semver: 7.6.3
 
-  eslint-plugin-no-jquery@2.7.0(eslint@8.57.1):
+  eslint-plugin-no-jquery@3.0.2(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
 
