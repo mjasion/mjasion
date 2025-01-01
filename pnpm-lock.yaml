@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@fontsource/mulish':
-        specifier: 4.5.13
-        version: 4.5.13
+        specifier: 5.1.1
+        version: 5.1.1
       '@fortawesome/fontawesome-free':
         specifier: ^6.6.0
         version: 6.6.0
@@ -110,8 +110,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@fontsource/mulish@4.5.13':
-    resolution: {integrity: sha512-uJ4NzvEZSCZnrKU0Xvk6Qf0WFMRnyCwslLOtHIao3vh2+W1llbaZy4+PiR6mcB2Y62dPG2HvZPN0NnKfDaFSbA==}
+  '@fontsource/mulish@5.1.1':
+    resolution: {integrity: sha512-4zLYQ2iWugtXFSViBpJYfINhIK7s7xANtHgpkvK/UfY7aWYZUss0fLNk2GYW/KT1ohOzwfRd30oPKFNlrWrwVg==}
 
   '@fortawesome/fontawesome-free@6.6.0':
     resolution: {integrity: sha512-60G28ke/sXdtS9KZCpZSHHkCbdsOGEhIUGlwq6yhY74UpTiToIh8np7A8yphhM4BWsvNFtIvLpi4co+h9Mr9Ow==}
@@ -1616,7 +1616,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@fontsource/mulish@4.5.13': {}
+  '@fontsource/mulish@5.1.1': {}
 
   '@fortawesome/fontawesome-free@6.6.0': {}
 
