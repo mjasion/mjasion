@@ -5,12 +5,12 @@ description: "Step by step guide to deploy first contract on Ethereum blockchain
 hero:  solidity.png
 author:
   name: Marcin Jasion
-tags:
-- ethereum
-- blockchain
-- solidity
-- introduction
-- tutorial
+#tags:
+#- ethereum
+#- blockchain
+#- solidity
+#- introduction
+#- tutorial
 menu:
   sidebar:
     name: Blockchain

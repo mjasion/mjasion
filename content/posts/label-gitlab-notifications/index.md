@@ -5,12 +5,12 @@ description: "You can label emails by headers in Gmail. To do this you have to c
 hero:  gitlab_mails_labeled.png
 author:
   name: Marcin Jasion
-tags:
-- gitlab
-- gmail
-- google app scripts
-- automation
-- labels
+#tags:
+#- gitlab
+#- gmail
+#- google app scripts
+#- automation
+#- labels
 menu:
   sidebar:
     name: Gitlab
