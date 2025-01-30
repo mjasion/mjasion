@@ -1,31 +1,71 @@
 section:
-  name: Skills # Title of section (default: "")
-  id: skills # url id/slug of section *Required*
-  enable: true # Boolean to determine if this section is enabled (default: false)
-  weight: 2 # Order to display section in (default: alphabetical followed by weight)
-  showOnNavbar: true # Boolean to determine if a link should be shown for this section on the navbar
-  template: sections/skills.html # allows you to point to a specific template.
+  name: Skills
+  id: skills
+  enable: true
+  weight: 2
+  showOnNavbar: true
+  filter: true
+  # Can optionally hide the title in sections
+  # hideTitle: true
+
+# filter buttons
+buttons:
+  - name: All
+    filter: "all"
+  - name: Container
+    filter: "container"
+  - name: Cloud
+    filter: "cloud"
+  - name: Programming
+    filter: "programming"
+  - name: Tools
+    filter: "tools"
+  - name: Others
+    filter: "others"
+
 skills:
+
 - name: Kubernetes
-  logo: "images/sections/skills/kubernetes.png"
-  summary: "With my extensive experience and expertise in Kubernetes, I am capable of designing, deploying, and managing containerized applications at scale."
+  logo: /images/sections/skills/kubernetes.svg
+  summary: "5 years extensive experience, I feel expertise to design, deploy, and manage containerized applications at scale. I have a deep understanding of Kubernetes architecture, components, and best practices."
+  categories: ["container"]
   url: "https://kubernetes.io/"
 
 - name: Istio
-  logo: "images/sections/skills/istio-bluelogo-whitebackground-framed.svg"
-  summary: "As a skilled Istio practitioner, I am capable of configuring, securing, and managing service meshes to ensure seamless communication and traffic management across complex microservices environments."
+  logo: "images/sections/skills/istio.svg"
+  summary: "3 years of experience in deploying,  configuring, securing, and managing service meshes to ensure seamless communication and traffic management across complex microservices environments."
   url: "https://istio.io"
+  categories: ["container"]
 
 - name: Go Development
-  logo: "images/sections/skills/go.png"
-  summary: "As a professional developer, I use Golang as my primary language and have demonstrated my ability to write scalable, testable, and maintainable programs that meet the highest standards of efficiency and performance."
+  logo: "images/sections/skills/golang.svg"
+  summary: "6 years of experies. Good understanding of standard libraries and I know patterns write scalable, testable, and maintainable programs that meet the highest standards of efficiency and performance."
   url: "https://golang.org/"
+  categories: ["programming"]
 
-- name: Cloud Computing
-  logo: "images/sections/skills/aws.png"
-  summary: "With my extensive experience and expertise in AWS cloud computing, I am highly skilled in designing, deploying, and managing secure, scalable, and cost-effective cloud-based solutions that meet the needs of businesses and organizations of all sizes."
+- name: AWS
+  logo: "images/sections/skills/aws.svg"
+  summary: "8 years of experience with AWS cloud computing. I am highly skilled in designing, deploying, and managing secure, scalable, and cost-effective cloud-based solutions that meet the needs of businesses and organizations of all sizes."
   url: https://aws.amazon.com/
+  categories: ["cloud"]
+
+- name: GCP
+  logo: "images/sections/skills/google-cloud.svg"
+  summary: "2 years of experience. I am capable to design, deploy, and manage secure setup in GCP using range of resources. I designed a multi-cloud platform using GKE, where some workload were on AWS and GCP as well."
+  url: https://cloud.google.com/
+  categories: ["cloud"]
+
+- name: Docker
+  logo: "images/sections/skills/docker.svg"
+  summary: "8+ years using this tool and could never go back. Docker integrates with my workflow seamlessly and solves many issues - bug replicability, code isolation, security vulnerabilities."
+  categories: ["container", "tools"]
 
 - name: Linux
-  logo: "images/sections/skills/linux.png"
+  logo: "images/sections/skills/linux.svg"
   summary: "As a proficient Linux user, I have expertise in Linux administration, shell scripting, and automation, enabling me to design and implement robust and secure Linux-based systems for various applications and purposes."
+  categories: ["tools"]
+
+- name: GitHub
+  logo: "images/sections/skills/github.svg"
+  summary: "8+ years of using GitHub enables me to collaborate effectively with teams and manage code repositories efficiently. I have experience in using GitHub Actions for CI/CD pipelines."
+  categories: ["tools"]

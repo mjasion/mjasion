@@ -1,13 +1,17 @@
 name: "Marcin Jasion"
+nickname: "Marcin"
 image: "images/mjasion.jpg"
 
 # give your contact information. they will be used in the footer
 contactInfo:
   email: "hello@mjasion.pl"
+  linkedin: marcinjasion
+  github: mjasion
 
 # a summary of what you do
 summary:
-- I am a Platform Engineer 💻
-- I am Kubernetes Administrator ☸️
-- I am AWS specialist ☁️
-- I am work-live integration adopter 🫶
+- I am a Platform Engineer/DevOps/SRE
+- I love Kubernetes
+- I do Cloud
+- I do Crossfit
+- I am preparing for Hyrox Warsaw 2025
