@@ -7,22 +7,22 @@ description: |
 hero:  hero_implementing-leader-election-in-go-using-kubernetes-api.svg
 author:
   name: Marcin Jasion
-tags:
-- Leader Election
-- Golang
-- Kubernetes
-- Distributed Systems
-- Lease Locks
-- Kubernetes API
-- Leader Election Pattern
-- Distributed Computing
-- High Availability
-- Scalability
-- Go Programming
-- Kubernetes Coordination
-- Concurrency
-- Fault Tolerance
-- Code Examples
+#tags:
+#- Leader Election
+#- Golang
+#- Kubernetes
+#- Distributed Systems
+#- Lease Locks
+#- Kubernetes API
+#- Leader Election Pattern
+#- Distributed Computing
+#- High Availability
+#- Scalability
+#- Go Programming
+#- Kubernetes Coordination
+#- Concurrency
+#- Fault Tolerance
+#- Code Examples
 menu:
   sidebar:
     name: Golang Leader Example

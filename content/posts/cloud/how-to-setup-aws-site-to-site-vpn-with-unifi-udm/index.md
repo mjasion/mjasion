@@ -5,27 +5,27 @@ description: "Site-to-Site VPN allows connecting local network with AWS VPC. Thi
 hero:  aws-unifi.png
 author:
   name: Marcin Jasion
-tags:
-- Cloud
-- How to
-- Cloud computing
-- VPN setup
-- AWS
-- Site-to-Site VPN
-- IPSec protocol
-- Unifi Dream Machine
-- Unifi Dream Router
-- AWS VPC
-- Customer Gateway
-- Virtual Private Gateway
-- VPN connection
-- IPSec parameters
-- VPC routing
-- Unifi router
-- network security
-- EC2 instance
-- ping
-- infrastructure security
+#tags:
+#- Cloud
+#- How to
+#- Cloud computing
+#- VPN setup
+#- AWS
+#- Site-to-Site VPN
+#- IPSec protocol
+#- Unifi Dream Machine
+#- Unifi Dream Router
+#- AWS VPC
+#- Customer Gateway
+#- Virtual Private Gateway
+#- VPN connection
+#- IPSec parameters
+#- VPC routing
+#- Unifi router
+#- network security
+#- EC2 instance
+#- ping
+#- infrastructure security
 menu:
   sidebar:
     name: VPN

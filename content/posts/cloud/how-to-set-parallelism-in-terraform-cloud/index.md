@@ -5,13 +5,13 @@ description: "Remote terraform execution runs on default parallelism value. Ther
 hero:  terraform-logo.png
 author:
   name: Marcin Jasion
-tags:
-- terraform
-- terraform cloud
-- cloud
-- aws
-- parallelism
-- how to
+#tags:
+#- terraform
+#- terraform cloud
+#- cloud
+#- aws
+#- parallelism
+#- how to
 menu:
   sidebar:
     name: Terraform Parallelism
