@@ -1,7 +1,15 @@
-description: Personal Site of Marcin Jasion
+description: Portfolio and personal site of Marcin Jasion
 
 customMenus:
 - name: Notes
   url: https://mjasion.pl/notes/
   hideFromNavbar: false
-  showOnFooter: false
+  showOnFooter: true
+
+# Specify OpenGraph Headers
+openGraph:
+  title: Marcin Jasion
+  type: website
+  description: Portfolio and personal site of Marcin Jasion
+  image: images/mjasion.jpg
+  url: https://mjasion.pl

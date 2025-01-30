@@ -2,8 +2,8 @@
 
 hugo mod tidy
 hugo mod npm pack
-npm install
-
+#npm install
+pnpm install
 #
 if [ -n "$CF_PAGES_URL" ]; then
   hugo --gc --minify --cleanDestinationDir -b "$CF_PAGES_URL"
