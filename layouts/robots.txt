@@ -3,6 +3,9 @@ Sitemap: https://mjasion.pl/sitemap.xml
 User-agent: *
 Disallow:
 
+User-agent: *
+Disallow: *.pdf
+
 # "This robot collects content from the Internet for the sole purpose of
 # helping educational institutions prevent plagiarism. [...] we compare
 # student papers against the content we find on the Internet to see if we
