@@ -4,12 +4,12 @@
 - 🌱 I’m currently learning **NextJS, Supabase**
 
 - 📝 I regularly write articles
-  on [[https://mjasion.pl/blog](https://mjasion.pl/blog)]([https://mjasion.pl/blog](https://mjasion.pl/blog))
+  on [blog](https://mjasion.pl/blog)
 
 - 💬 Ask me about ****Kubernetes, AWS, DevOps, CI/CD, GitOps and Security****
 
 - 📄 Know about my
-  experiences [[https://mjasion.pl/](https://mjasion.pl)]([https://mjasion.pl/](https://mjasion.pl))
+   [experiences page](https://mjasion.pl)
 
 <h3 align="left">Connect with me:</h3>
 <p align="left" >
