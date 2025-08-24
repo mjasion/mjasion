@@ -71,3 +71,4 @@ yarn-error.log
 resources/
 
 themes/toha/content/
+.playwright-mcp

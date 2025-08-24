@@ -5,7 +5,20 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "WebSearch",
-      "Bash(wrangler:*)"
+      "Bash(wrangler:*)",
+      "WebFetch(domain:landerx.framer.website)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npm install:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm add:*)",
+      "WebFetch(domain:www.framer.com)",
+      "Bash(pnpm run:*)",
+      "Bash(grep:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(npm run dev:*)",
+      "mcp__playwright__browser_evaluate"
     ],
     "deny": [],
     "ask": []
