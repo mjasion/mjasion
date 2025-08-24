@@ -24,7 +24,7 @@ export default async function Home() {
                 <h3 className="text-2xl font-bold text-white mb-4">Distinguish yourself</h3>
                 <p className="text-gray-300 mb-6">Elevate your brand with a golden tick and connect with top-tier associates.</p>
                 <div className="flex items-center space-x-4">
-                  {['LanderX', 'Crystalio', 'Robinson jr'].map((name, i) => (
+                  {['LanderX', 'Crystalio', 'Robinson jr'].map((name) => (
                     <div key={name} className="flex items-center space-x-2">
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full border border-white/20"></div>
                       <span className="text-sm text-gray-300">{name}</span>
@@ -40,7 +40,7 @@ export default async function Home() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <div className="text-sm text-blue-400 font-medium">Web Business</div>
-                    <div className="text-sm text-purple-400 font-medium">SAAS Startup's</div>
+                    <div className="text-sm text-purple-400 font-medium">SAAS Startup&apos;s</div>
                     <div className="text-sm text-green-400 font-medium">Marketing Agencies</div>
                   </div>
                   <div className="space-y-2">
@@ -185,7 +185,7 @@ export default async function Home() {
               </div>
               <h3 className="text-lg font-semibold text-white mb-3">Dedicated Support</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
-                Access expert assistance 24/7 to ensure you're never alone on your growth journey
+                Access expert assistance 24/7 to ensure you&apos;re never alone on your growth journey
               </p>
             </div>
           </div>

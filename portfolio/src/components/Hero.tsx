@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -37,10 +38,11 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-bg perspective-1000">
       {/* Grid Background */}
       <div className="absolute inset-0 overflow-hidden opacity-30">
-        <img
+        <Image
           src="https://framerusercontent.com/images/eVPQSYBoVqwchmpN78sjyYtovY.svg"
           alt="Grid Background"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          className="object-cover"
           style={{
             transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
           }}
