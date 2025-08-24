@@ -3,7 +3,9 @@
     "allow": [
       "Bash(hugo mod:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebSearch",
+      "Bash(wrangler:*)"
     ],
     "deny": [],
     "ask": []
