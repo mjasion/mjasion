@@ -49,7 +49,7 @@ importers:
         version: 2.2.4
       flag-icons:
         specifier: ^7.2.3
-        version: 7.3.2
+        version: 7.5.0
       fuse.js:
         specifier: ^6.6.2
         version: 6.6.2
@@ -740,8 +740,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  flag-icons@7.3.2:
-    resolution: {integrity: sha512-QkaZ6Zvai8LIjx+UNAHUJ5Dhz9OLZpBDwCRWxF6YErxIcR16jTkIFm3bFu54EkvKQy4+wicW+Gm7/0631wVQyQ==}
+  flag-icons@7.5.0:
+    resolution: {integrity: sha512-kd+MNXviFIg5hijH766tt+3x76ele1AXlo4zDdCxIvqWZhKt4T83bOtxUOOMlTx/EcFdUMH5yvQgYlFh1EqqFg==}
 
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
@@ -2343,7 +2343,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  flag-icons@7.3.2: {}
+  flag-icons@7.5.0: {}
 
   flat-cache@3.2.0:
     dependencies:
