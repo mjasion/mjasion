@@ -51,8 +51,8 @@ enableEmoji: true
 
 imaging:
   exif:
-    disableDate: yes
-    disableLatLong: yes
+    disableDate: true
+    disableLatLong: true
 
 # Site parameters
 params:

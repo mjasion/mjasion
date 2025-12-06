@@ -7,8 +7,8 @@ hugo mod npm pack
 pnpm install
 #
 if [ -n "$CF_PAGES_URL" ]; then
-  hugo --gc --minify --cleanDestinationDir -b "$CF_PAGES_URL"
+  hugo --gc --minify -b "$CF_PAGES_URL"
 else
-  hugo --gc --minify --cleanDestinationDir
+  hugo --gc --minify
 fi
 cp static/_redirects public/_redirects

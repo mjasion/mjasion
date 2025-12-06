@@ -8,7 +8,7 @@ This is a personal website/blog built with Hugo using the Toha theme. The site s
 
 ## Architecture
 
-- **Static Site Generator**: Hugo with Toha theme (v4.9.0)
+- **Static Site Generator**: Hugo with Toha theme (v4.12.0)
 - **Content Management**:
   - Blog posts in `content/posts/` organized by category (cloud, golang, kubernetes, etc.)
   - Notes in `content/notes/` for shorter technical documentation
@@ -28,8 +28,38 @@ This is a personal website/blog built with Hugo using the Toha theme. The site s
 hugo mod tidy              # Clean up module dependencies
 hugo mod npm pack          # Generate package.json from Hugo modules
 pnpm install              # Install Node.js dependencies
-hugo --gc --minify --cleanDestinationDir  # Build site
+hugo --gc --minify        # Build site (--cleanDestinationDir removed due to bug in Hugo 0.152.2)
 ```
+
+### Known Issues
+
+#### EXIF Configuration
+The `config.yml` file must use boolean values (`true`/`false`) for EXIF settings, not string values (`yes`/`no`). This was fixed in commit fixing the Toha theme upgrade.
+
+Example:
+```yaml
+imaging:
+  exif:
+    disableDate: true      # Correct - boolean
+    disableLatLong: true   # Correct - boolean
+    # disableDate: yes     # Wrong - string value causes build error
+```
+
+#### Hugo `--cleanDestinationDir` Flag Issue
+Hugo 0.152.2 has a bug where the `--cleanDestinationDir` flag causes "permission denied" errors when trying to overwrite `public/sitemap.xml`. The flag has been removed from `build.sh`.
+
+**Workaround**: If you encounter permission denied errors:
+```bash
+# Remove the public directory before building
+rm -rf public
+# Then build without --cleanDestinationDir
+hugo --gc --minify
+```
+
+#### Hugo Version Compatibility
+- **Local development**: Uses Hugo 0.152.2 (installed via Homebrew)
+- **Netlify production**: Uses Hugo 0.111.1 (specified in netlify.toml)
+- The `--cleanDestinationDir` flag works in 0.111.1 but has issues in 0.152.2
 
 ### Development server
 ```bash
