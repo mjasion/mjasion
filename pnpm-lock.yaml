@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@fontsource/mulish':
-        specifier: 4.5.13
-        version: 4.5.13
+        specifier: 4.5.14
+        version: 4.5.14
       '@fortawesome/fontawesome-free':
         specifier: ^6.6.0
         version: 6.7.2
@@ -110,8 +110,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@fontsource/mulish@4.5.13':
-    resolution: {integrity: sha512-uJ4NzvEZSCZnrKU0Xvk6Qf0WFMRnyCwslLOtHIao3vh2+W1llbaZy4+PiR6mcB2Y62dPG2HvZPN0NnKfDaFSbA==}
+  '@fontsource/mulish@4.5.14':
+    resolution: {integrity: sha512-EniB9wVc6hhCY4Vo+d80tOfAgHFIxXaApIuczzRJsqHF55UjncEo4OD/Kyl/LGwLlZ7ya4sf0/N6vJdRMBiwHw==}
 
   '@fortawesome/fontawesome-free@6.7.2':
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
@@ -813,7 +813,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
@@ -1581,7 +1581,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@fontsource/mulish@4.5.13': {}
+  '@fontsource/mulish@4.5.14': {}
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
