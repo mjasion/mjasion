@@ -12,8 +12,8 @@ importers:
         specifier: 4.5.13
         version: 4.5.13
       '@fortawesome/fontawesome-free':
-        specifier: ^6.6.0
-        version: 6.7.2
+        specifier: ^7.0.0
+        version: 7.2.0
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.1)
@@ -113,8 +113,8 @@ packages:
   '@fontsource/mulish@4.5.13':
     resolution: {integrity: sha512-uJ4NzvEZSCZnrKU0Xvk6Qf0WFMRnyCwslLOtHIao3vh2+W1llbaZy4+PiR6mcB2Y62dPG2HvZPN0NnKfDaFSbA==}
 
-  '@fortawesome/fontawesome-free@6.7.2':
-    resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
+  '@fortawesome/fontawesome-free@7.2.0':
+    resolution: {integrity: sha512-3DguDv/oUE+7vjMeTSOjCSG+KeawgVQOHrKRnvUuqYh1mfArrh7s+s8hXW3e4RerBA1+Wh+hBqf8sJNpqNrBWg==}
     engines: {node: '>=6'}
 
   '@humanwhocodes/config-array@0.13.0':
@@ -813,7 +813,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
@@ -1583,7 +1583,7 @@ snapshots:
 
   '@fontsource/mulish@4.5.13': {}
 
-  '@fortawesome/fontawesome-free@6.7.2': {}
+  '@fortawesome/fontawesome-free@7.2.0': {}
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
