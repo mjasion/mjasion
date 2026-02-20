@@ -41,7 +41,7 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.6.0",
-    "eslint-plugin-no-jquery": "^2.7.0",
+    "eslint-plugin-no-jquery": "^3.0.0",
     "eslint-plugin-promise": "^6.1.1",
     "feather-icons": "^4.29.1",
     "filterizr": "^2.2.4",

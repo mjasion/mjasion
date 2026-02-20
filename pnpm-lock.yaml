@@ -36,8 +36,8 @@ importers:
         specifier: ^15.6.0
         version: 15.7.0(eslint@8.57.1)
       eslint-plugin-no-jquery:
-        specifier: ^2.7.0
-        version: 2.7.0(eslint@8.57.1)
+        specifier: ^3.0.0
+        version: 3.1.1(eslint@8.57.1)
       eslint-plugin-promise:
         specifier: ^6.1.1
         version: 6.6.0(eslint@8.57.1)
@@ -634,10 +634,10 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-no-jquery@2.7.0:
-    resolution: {integrity: sha512-Aeg7dA6GTH1AcWLlBtWNzOU9efK5KpNi7b0EhBO0o0M+awyzguUUo8gF6hXGjQ9n5h8/uRtYv9zOqQkeC5CG0w==}
+  eslint-plugin-no-jquery@3.1.1:
+    resolution: {integrity: sha512-LTLO3jH/Tjr1pmxCEqtV6qmt+OChv8La4fwgG470JRpgxyFF4NOzoC9CRy92GIWD3Yjl0qLEgPmD2FLQWcNEjg==}
     peerDependencies:
-      eslint: '>=2.3.0'
+      eslint: '>=8.0.0'
 
   eslint-plugin-promise@6.6.0:
     resolution: {integrity: sha512-57Zzfw8G6+Gq7axm2Pdo3gW/Rx3h9Yywgn61uE/3elTCOePEHVrn2i5CdfBwA1BLK0Q0WqctICIUSqXZW/VprQ==}
@@ -813,7 +813,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
@@ -2207,7 +2207,7 @@ snapshots:
       resolve: 1.22.10
       semver: 7.7.0
 
-  eslint-plugin-no-jquery@2.7.0(eslint@8.57.1):
+  eslint-plugin-no-jquery@3.1.1(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
 
