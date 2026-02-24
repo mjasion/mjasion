@@ -4,6 +4,7 @@ date: "2026-02-28"
 description: |
   After building with Vercel and Supabase, I switched to Cloudflare and TanStack.
   Here's why — and what I gained.
+hero: hero.svg
 tags:
 - cloudflare
 - tanstack

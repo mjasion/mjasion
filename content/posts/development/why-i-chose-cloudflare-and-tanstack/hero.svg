@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="cfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f6821f"/>
+      <stop offset="100%" style="stop-color:#f9a825"/>
+    </linearGradient>
+    <linearGradient id="tsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4aa"/>
+      <stop offset="100%" style="stop-color:#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f6821f;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#00d4aa;stop-opacity:0.6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg)" rx="0"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.05" stroke="#fff" stroke-width="0.5">
+    <line x1="0" y1="50" x2="800" y2="50"/><line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="150" x2="800" y2="150"/><line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="250" x2="800" y2="250"/><line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="350" x2="800" y2="350"/>
+    <line x1="100" y1="0" x2="100" y2="400"/><line x1="200" y1="0" x2="200" y2="400"/>
+    <line x1="300" y1="0" x2="300" y2="400"/><line x1="400" y1="0" x2="400" y2="400"/>
+    <line x1="500" y1="0" x2="500" y2="400"/><line x1="600" y1="0" x2="600" y2="400"/>
+    <line x1="700" y1="0" x2="700" y2="400"/>
+  </g>
+
+  <!-- Left: Cloudflare stack -->
+  <g transform="translate(110, 100)">
+    <!-- Card background -->
+    <rect x="0" y="0" width="200" height="200" rx="12" fill="#1e293b" stroke="#f6821f" stroke-width="1.5" opacity="0.9"/>
+
+    <!-- Cloudflare icon (simplified cloud) -->
+    <g transform="translate(70, 30)">
+      <path d="M50 20 C50 10, 40 2, 28 5 C22 -2, 10 0, 8 8 C2 9, -2 16, 4 22 L56 22 C62 18, 58 10, 50 20Z" fill="url(#cfGrad)" opacity="0.9"/>
+    </g>
+
+    <!-- Label -->
+    <text x="100" y="80" text-anchor="middle" fill="#f6821f" font-size="16" font-weight="700">Cloudflare</text>
+
+    <!-- Sub-items -->
+    <g transform="translate(20, 100)">
+      <rect x="0" y="0" width="160" height="28" rx="6" fill="#f6821f" opacity="0.15"/>
+      <text x="80" y="18" text-anchor="middle" fill="#f9a825" font-size="12" font-weight="500">Workers</text>
+    </g>
+    <g transform="translate(20, 135)">
+      <rect x="0" y="0" width="160" height="28" rx="6" fill="#f6821f" opacity="0.15"/>
+      <text x="80" y="18" text-anchor="middle" fill="#f9a825" font-size="12" font-weight="500">Pages</text>
+    </g>
+    <g transform="translate(20, 170)">
+      <rect x="0" y="0" width="76" height="24" rx="6" fill="#f6821f" opacity="0.1"/>
+      <text x="38" y="16" text-anchor="middle" fill="#f9a825" font-size="10" font-weight="500">D1</text>
+      <rect x="84" y="0" width="76" height="24" rx="6" fill="#f6821f" opacity="0.1"/>
+      <text x="122" y="16" text-anchor="middle" fill="#f9a825" font-size="10" font-weight="500">R2</text>
+    </g>
+  </g>
+
+  <!-- Center: Arrow / Connection -->
+  <g transform="translate(340, 170)">
+    <line x1="0" y1="30" x2="100" y2="30" stroke="url(#arrowGrad)" stroke-width="2" stroke-dasharray="6,4"/>
+    <polygon points="105,30 95,24 95,36" fill="#00d4aa" opacity="0.6"/>
+    <text x="52" y="18" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="400">fullstack</text>
+  </g>
+
+  <!-- Right: TanStack -->
+  <g transform="translate(480, 100)">
+    <!-- Card background -->
+    <rect x="0" y="0" width="200" height="200" rx="12" fill="#1e293b" stroke="#00d4aa" stroke-width="1.5" opacity="0.9"/>
+
+    <!-- TanStack icon (simplified layers) -->
+    <g transform="translate(65, 20)">
+      <rect x="5" y="0" width="60" height="12" rx="3" fill="#00d4aa" opacity="0.4"/>
+      <rect x="0" y="16" width="70" height="12" rx="3" fill="#00d4aa" opacity="0.65"/>
+      <rect x="5" y="32" width="60" height="12" rx="3" fill="#00d4aa" opacity="0.9"/>
+    </g>
+
+    <!-- Label -->
+    <text x="100" y="80" text-anchor="middle" fill="#00d4aa" font-size="16" font-weight="700">TanStack</text>
+
+    <!-- Sub-items -->
+    <g transform="translate(20, 100)">
+      <rect x="0" y="0" width="160" height="28" rx="6" fill="#00d4aa" opacity="0.15"/>
+      <text x="80" y="18" text-anchor="middle" fill="#00d4aa" font-size="12" font-weight="500">Router</text>
+    </g>
+    <g transform="translate(20, 135)">
+      <rect x="0" y="0" width="160" height="28" rx="6" fill="#00d4aa" opacity="0.15"/>
+      <text x="80" y="18" text-anchor="middle" fill="#00d4aa" font-size="12" font-weight="500">Query</text>
+    </g>
+    <g transform="translate(20, 170)">
+      <rect x="0" y="0" width="76" height="24" rx="6" fill="#00d4aa" opacity="0.1"/>
+      <text x="38" y="16" text-anchor="middle" fill="#00d4aa" font-size="10" font-weight="500">Start</text>
+      <rect x="84" y="0" width="76" height="24" rx="6" fill="#00d4aa" opacity="0.1"/>
+      <text x="122" y="16" text-anchor="middle" fill="#00d4aa" font-size="10" font-weight="500">Form</text>
+    </g>
+  </g>
+
+  <!-- Bottom label -->
+  <text x="400" y="360" text-anchor="middle" fill="#64748b" font-size="13" font-weight="400" letter-spacing="1">SIDE PROJECT STACK</text>
+</svg>
