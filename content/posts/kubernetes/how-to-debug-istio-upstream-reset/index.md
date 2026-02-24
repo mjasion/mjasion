@@ -5,16 +5,11 @@ description: "Istio can reset processing the request. This blog post shows how t
 hero:  service_mesh.png
 author:
   name: Marcin Jasion
-#tags:
-#- istio
-#- 502 UPE
-#- kubernetes
-#- tcpdump
-#- upe
-#- 503 UC
-#- upstream_reset_before_response_started
-#- Upstream connection termination
-#- wireshark
+tags:
+- istio
+- kubernetes
+- debugging
+- networking
 menu:
   sidebar:
     name: Istio

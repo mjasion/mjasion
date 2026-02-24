@@ -5,16 +5,16 @@ description: "Step by step guide to deploy first contract on Ethereum blockchain
 hero:  solidity.png
 author:
   name: Marcin Jasion
-#tags:
-#- ethereum
-#- blockchain
-#- solidity
-#- introduction
-#- tutorial
+tags:
+- ethereum
+- blockchain
+- solidity
+- tutorial
 menu:
   sidebar:
     name: Blockchain
     identifier: first-contract
+    parent: development
     weight: 2
 ---
 

@@ -4,5 +4,5 @@ menu:
   sidebar:
     name: Development
     identifier: development
-    weight: 4
+    weight: 2
 ---

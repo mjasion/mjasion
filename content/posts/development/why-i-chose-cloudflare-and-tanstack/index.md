@@ -1,9 +1,14 @@
 ---
 title: Why I'm Choosing Cloudflare and TanStack for My Side Projects
-date: "2026-02-24"
+date: "2026-02-28"
 description: |
   After building with Vercel and Supabase, I switched to Cloudflare and TanStack.
   Here's why — and what I gained.
+tags:
+- cloudflare
+- tanstack
+- frontend
+- side-projects
 author:
   name: Marcin Jasion
 menu:

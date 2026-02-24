@@ -1,0 +1,30 @@
+# Marcin Jasion - Pragmatic DevOps
+
+> Personal blog and portfolio of Marcin Jasion, a DevOps engineer writing about cloud infrastructure, Kubernetes, and software development.
+
+## About
+
+Marcin Jasion is a DevOps engineer based in Warsaw, Poland. This site contains technical blog posts, notes, and a professional portfolio.
+
+- Website: https://mjasion.pl
+- GitHub: https://github.com/mjasion
+- LinkedIn: https://linkedin.com/in/marcinjasion
+
+## Blog Posts
+
+- [How to enable debug and trace logs in Terraform Cloud and Enterprise](https://mjasion.pl/posts/cloud/how-to-enable-debug-in-terraform-cloud/)
+- [How to configure parallelism in Terraform Cloud](https://mjasion.pl/posts/cloud/how-to-set-parallelism-in-terraform-cloud/)
+- [How to setup AWS Site-to-Site VPN with Unifi UDM](https://mjasion.pl/posts/cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm/)
+- [How to debug Istio Upstream Reset 502 UPE](https://mjasion.pl/posts/kubernetes/how-to-debug-istio-upstream-reset/)
+- [Implementing Leader Election in Golang using Kubernetes API](https://mjasion.pl/posts/kubernetes/implementing-leader-election-in-go-using-kubernetes-api/)
+- [How to label GitLab notification in Gmail by headers](https://mjasion.pl/posts/development/label-gitlab-notifications/)
+- [Deploy your first blockchain contract to Ethereum](https://mjasion.pl/posts/development/first-blockchain-contract/)
+- [Why I'm Choosing Cloudflare and TanStack for My Side Projects](https://mjasion.pl/posts/development/why-i-chose-cloudflare-and-tanstack/)
+
+## Topics
+
+Cloud (AWS, Terraform), Kubernetes (Istio, Leader Election), Golang, DevOps, Automation, Blockchain, Frontend Development
+
+## Feed
+
+- Atom: https://mjasion.pl/index.xml

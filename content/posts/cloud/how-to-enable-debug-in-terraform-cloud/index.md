@@ -5,13 +5,10 @@ description: "Remote terraform execution does not forward CLI parameters. This p
 hero:  terraform-logo.png
 author:
   name: Marcin Jasion
-#tags:
-#- terraform
-#- terraform cloud
-#- cloud
-#- aws
-#- debug
-#- how to
+tags:
+- terraform
+- terraform-cloud
+- debugging
 menu:
   sidebar:
     name: Terraform Logs
