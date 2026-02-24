@@ -18,6 +18,8 @@ menu:
     weight: 3
 ---
 
+*Updated on 24-02-2026: Improved the script to use `getHeader()` instead of raw body search, added data-driven header configuration, and auto-creation of labels.*
+
 ## 📨 How GitLab sends notifications?
 
 GitLab allows you to stay informed about what’s happening in your projects sending you the notifications via email. With enabled notifications, you can receive updates about activity in issues, merge requests or build results. All of those emails are sent from a single address which without a doubt makes it harder to do successful filtering and labeling.
@@ -52,7 +54,7 @@ Firstly you have to begin with function, which will be scheduled to query for ne
 ```js
 function processInbox() {
    // process all recent threads in the Inbox
-   var threads = GmailApp.search("newer_than:1h"); // search query is exactly same as in Gmail search box
+   var threads = GmailApp.search("in:inbox from:gitlab@* newer_than:1h");
    for (var i = 0; i < threads.length; i++) {
       // get all messages in a given thread
       var messages = threads[i].getMessages();
@@ -64,68 +66,78 @@ function processInbox() {
 }
 ```
 
-As you see, the code is pretty simple. It uses `search()` function from [GmailApp](https://developers.google.com/apps-script/reference/gmail) which allows you to interact with Gmail service. The result of the function is a list of threads from the last hour. After that we have to get the message content. We can do it by writing a loop to get every message from a thread. The `getMessages()` function returns a list o [Gmail Messages](https://developers.google.com/apps-script/reference/gmail/gmail-message) objects. Having them we can implement our actions basing on the content.
+As you see, the code is pretty simple. It uses `search()` function from [GmailApp](https://developers.google.com/apps-script/reference/gmail) which allows you to interact with Gmail service. The search query `"in:inbox from:gitlab@* newer_than:1h"` filters only GitLab emails from the last hour. After that we have to get the message content. We can do it by writing a loop to get every message from a thread. The `getMessages()` function returns a list of [Gmail Messages](https://developers.google.com/apps-script/reference/gmail/gmail-message) objects. Having them we can implement our actions based on the content.
 
-To do that you have to call `getRawContent()` function on the message object and check if the message contains a string that you are looking for. For example to check that this is a message send by GitLab find in the body string `"X-GitLab"`:
+To do that you can use the `getHeader()` function on the message object to read a specific email header by name. For example, to check the pipeline status:
 
 ```js
-var gitlabLabel = GmailApp.getUserLabelByName("GitLab");
-var body = message.getRawContent();
-if (body.indexOf("X-GitLab") > -1) {
-  message.getThread().addLabel(gitlabLabel);
+var status = message.getHeader("X-GitLab-Pipeline-Status");
+if (status) {
+  // header exists — this is a pipeline notification
 }
 ```
 
-Now we can implement the `processMessage(message)` function adding other conditions and putting it below `processInbox()`. As a result, we will get a full script, which will look like this:
+This is more reliable than searching the raw email body for header names, which could produce false positives if the header name appears in the message text.
+
+To make the script easy to extend, we can define a configuration map that describes which headers to look for and what labels to apply. The full script looks like this:
 
 ```js
+// Label to apply on any GitLab match
+var mainLabel = "GitLab";
+
+// Configuration: header → label mapping
+// nestValue: true  → creates sub-label with the header value, e.g. Pipeline/failed
+// matchValue: "x"  → only applies the label when the header value equals "x"
+var headersMap = {
+  "X-GitLab-Pipeline-Status":      { "label_name": "Pipeline",   "nestValue": true },
+  "X-GitLab-Project":              { "label_name": "Project",    "nestValue": true },
+  "X-GitLab-NotificationReason":   { "label_name": "Reason",     "nestValue": true },
+  "X-GitLab-Issue-ID":             { "label_name": "Issue" },
+  "X-GitLab-MergeRequest-ID":      { "label_name": "MergeRequest" },
+  "X-GitLab-Discussion-ID":        { "label_name": "Discussion" },
+  "X-GitLab-MergeRequest-State":   { "label_name": "Merged",     "matchValue": "merged" },
+};
+
 function processInbox() {
-   // process all recent threads in the Inbox (see comment to this answer)
-  var threads = GmailApp.search("newer_than:1h");
-  Logger.log(threads.length)
-   for (var i = 0; i < threads.length; i++) {
-      // get all messages in a given thread
-      var messages = threads[i].getMessages();
-      for (var j = 0; j < messages.length; j++) {
-         var message = messages[j];
-         processMessage(message);
-      }
-   }
+  var threads = GmailApp.search("in:inbox from:gitlab@* newer_than:1h");
+  for (var i = 0; i < threads.length; i++) {
+    var messages = threads[i].getMessages();
+    for (var j = 0; j < messages.length; j++) {
+      processMessage(messages[j]);
+    }
+  }
 }
 
 function processMessage(message) {
-  // Get label instances
-  var gitlabLabel = GmailApp.getUserLabelByName("GitLab");
-  var issueLabel = GmailApp.getUserLabelByName("Gitlab/Issue");
-  var mrLabel = GmailApp.getUserLabelByName("Gitlab/Merge request");
-  var buildLabel = GmailApp.getUserLabelByName("Gitlab/Build");
-  var commitLabel = GmailApp.getUserLabelByName("Gitlab/Commit");
-  var discussionLabel = GmailApp.getUserLabelByName("Gitlab/Discussion");
+  var firstMatch = true;
+  for (var header in headersMap) {
+    var val = message.getHeader(header);
+    if (val) {
+      if (firstMatch) {
+        firstMatch = false;
+        addOrCreateLabel(mainLabel, message);
+      }
+      var labelText = headersMap[header]["label_name"];
+      if (headersMap[header]["matchValue"]) {
+        if (val != headersMap[header]["matchValue"]) continue;
+      } else if (headersMap[header]["nestValue"]) {
+        labelText += "/" + val;
+      }
+      addOrCreateLabel(labelText, message);
+    }
+  }
+}
 
-  // Start message processing
-  var body = message.getRawContent();
-  if (body.indexOf("X-GitLab") > -1) {
-     message.getThread().addLabel(gitlabLabel);
+function addOrCreateLabel(labelText, message) {
+  var label = GmailApp.getUserLabelByName(labelText);
+  if (!label) {
+    label = GmailApp.createLabel(labelText);
   }
-  if (body.indexOf("X-GitLab-Issue-ID") > -1) {
-    message.getThread().addLabel(issueLabel);
-  }
-  if (body.indexOf("X-GitLab-MergeRequest-ID") > -1) {
-    message.getThread().addLabel(mrLabel);
-  }
-  if (body.indexOf("X-GitLab-Commit-ID") > -1 || body.indexOf("X-GitLab-Author-ID") > -1) {
-    message.getThread().addLabel(commitLabel);
-  }
-  if (body.indexOf("X-GitLab-Author") > -1) {
-    message.getThread().addLabel(commitLabel);
-  }
-  if (body.indexOf("X-GitLab-Pipeline-Id") > -1) {
-    message.getThread().addLabel(buildLabel)
-  }
+  message.getThread().addLabel(label);
 }
 ```
 
-> You have to create labels before running the function. Otherwise, your script will throw an error.
+The `headersMap` at the top is the only thing you need to edit to add new labels — no code changes required. Labels are created automatically if they don't exist yet.
 
 ## ▶️ How to turn on the script processing for you Gmail inbox?
 
