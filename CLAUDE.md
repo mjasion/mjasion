@@ -4,87 +4,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal website/blog built with Hugo using the Toha theme. The site showcases the owner's professional experience as a Platform Engineer with expertise in Kubernetes, AWS, DevOps, CI/CD, GitOps and Security. The site includes blog posts, notes, and a professional portfolio.
+Personal website/blog built with Hugo using the [Toha theme](https://github.com/hugo-toha/toha) (v4, imported via Hugo modules). Includes blog posts, notes, and a professional portfolio. Site: [mjasion.pl](https://mjasion.pl)
+
+## Commands
+
+```bash
+# Build (recommended — used by CI)
+./build.sh
+
+# Dev server (includes drafts and future-dated posts)
+hugo server --buildDrafts --buildFuture
+
+# Lint (pre-commit hooks: check-json, check-toml, check-yaml, end-of-file-fixer, trailing-whitespace)
+pre-commit run --all-files
+
+# Package management — uses pnpm, NOT npm
+pnpm install
+```
+
+`build.sh` runs: `hugo mod tidy` → `hugo mod npm pack` → `pnpm install` → `hugo --gc --minify --cleanDestinationDir` → copies `static/_redirects` to output. When `CF_PAGES_URL` is set, it passes `-b $CF_PAGES_URL` to Hugo.
 
 ## Architecture
 
-- **Static Site Generator**: Hugo with Toha theme (v4.9.0)
-- **Content Management**:
-  - Blog posts in `content/posts/` organized by category (cloud, golang, kubernetes, etc.)
-  - Notes in `content/notes/` for shorter technical documentation
-  - Site data in YAML files under `data/` directory
-- **Theme**: Uses Hugo modules to import the Toha theme from GitHub
-- **Assets**: Node.js dependencies managed via pnpm for theme assets and tooling
-- **Deployment**: Configured for Netlify with custom build commands
+- **Hugo modules** pull in the Toha theme (`go.mod`); `hugo mod npm pack` generates `package.json` from the theme's requirements
+- **Content**: blog posts in `content/posts/<category>/` (each post is a directory with `index.md` + assets); notes in `content/notes/`
+- **Site data**: `config.yml` (main config), `data/author.yaml`, `data/site.yaml`, section definitions in `data/en/sections/` (numbered YAML files control homepage sections)
+- **Custom layouts** override the theme: `layouts/partials/sections/presentations.html`, `layouts/shortcodes/video.html`, `layouts/rss.xml`, `layouts/robots.txt`
 
-## Common Development Commands
+## Blog Post Front Matter
 
-### Building the site
-```bash
-# Full build process (recommended)
-./build.sh
-
-# Manual build steps
-hugo mod tidy              # Clean up module dependencies
-hugo mod npm pack          # Generate package.json from Hugo modules
-pnpm install              # Install Node.js dependencies
-hugo --gc --minify --cleanDestinationDir  # Build site
+Posts use this front matter structure:
+```yaml
+title: "Post Title"
+date: "YYYY-MM-DD"
+description: |
+  Multi-line description
+hero: hero-image-filename.svg
+author:
+  name: Marcin Jasion
+menu:
+  sidebar:
+    name: Display Name
+    identifier: unique-id
+    parent: category-name
 ```
-
-### Development server
-```bash
-hugo server --buildDrafts --buildFuture
-```
-
-### Linting
-```bash
-# The project uses pre-commit hooks
-pre-commit run --all-files
-```
-
-### Package management
-```bash
-# This project uses pnpm (not npm)
-pnpm install
-pnpm update
-```
-
-## Content Structure
-
-### Blog Posts
-- Located in `content/posts/`
-- Organized by categories: `cloud/`, `golang/`, `kubernetes/`
-- Each post is in its own directory with an `index.md` file
-- Images and assets are stored alongside the post content
-
-### Notes
-- Located in `content/notes/`
-- Shorter technical documentation and quick references
-- Categories include `gmail/`, `k8s/`
-
-### Site Configuration
-- Main config: `config.yml` - Contains Hugo and theme configuration
-- Author data: `data/author.yaml`
-- Sections: `data/en/sections/` - Contains YAML files defining site sections
-- Site metadata: `data/site.yaml`
-
-## Key Files
-
-- `build.sh` - Main build script used by CI/CD
-- `go.mod` - Hugo module dependencies
-- `package.json` - Node.js dependencies for theme assets
-- `netlify.toml` - Netlify deployment configuration
-- `config.yml` - Main Hugo configuration
-
-## Hugo Theme Customization
-
-The site uses custom layouts and partials:
-- Custom presentations layout: `layouts/partials/sections/presentations.html`
-- Custom video shortcode: `layouts/shortcodes/video.html`
-- Custom RSS and robots.txt templates
 
 ## Deployment
 
-- **Production**: Netlify with Hugo version 0.111.1
-- **Preview**: Deploy previews enabled for pull requests
-- **Build command**: Uses `./build.sh` for preview/branch deploys, direct Hugo build for production
+- **Cloudflare Pages**: primary deployment target; daily scheduled deploy via GitHub Actions (`.github/workflows/cloudflare-deploy.yml`)
