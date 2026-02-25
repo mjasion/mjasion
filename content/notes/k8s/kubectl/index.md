@@ -1,5 +1,5 @@
 ---
-title: Merging multipe Kubernetes configs
+title: Merging multiple Kubernetes configs
 weight: 1
 date: "2022-04-01T1:00:00.000Z"
 menu:
@@ -11,7 +11,7 @@ menu:
 ---
 
 <!-- Variable -->
-{{< note title="Merging multipe Kubernetes configs" >}}
+{{< note title="Merging multiple Kubernetes configs" >}}
 
 ```bash
 KUBECONFIG=$(ls ~/.kube/*.config | tr "\n" ":") kubectl config view --merge --flatten > ~/.kube/config

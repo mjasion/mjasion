@@ -6,4 +6,4 @@ menu:
     identifier: gmail
     weight: 1
 ---
-# Gmail Nodes
+# Gmail Notes

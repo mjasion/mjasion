@@ -20,7 +20,7 @@ menu:
 
 ## First contract - Pet owners
 
-I am learning blockchain and smarcontract. This post will be my note how I am starting my journey to blockchain technology.
+I am learning blockchain and smart contracts. This post will be my note on how I am starting my journey into blockchain technology.
 
 In this example I will create a contract for storing who is owning a Pet.
 
@@ -45,7 +45,7 @@ contract PetOwner {
 }
 ```
 
-Put it to the Remix IDE: https://remix.ethereum.org/. It should compile and we can deploy it on local environment:
+Put it in the Remix IDE: https://remix.ethereum.org/. It should compile and we can deploy it on the local environment:
 
 ![Deploy contract](deploy_smart_contract.png)
 
@@ -57,17 +57,17 @@ and ask `petOwners` field for information which Pet is owned by `Marcin`.
 
 ![Test check](check_test_transaction.png)
 
-## Let's deploy it to Ethenerum test network
+## Let's deploy it to Ethereum test network
 
-Ethenerum allows to test our contract test networks. For this example I will use Rinkeby. This a free and for testing smart contracts network.
+Ethereum allows testing our contract on test networks. For this example I will use Rinkeby. This is a free network for testing smart contracts.
 
 > I am not covering how to install Metamask. Always remember to not share **private key** and **seed**
-> You can always create a new Metamask identity for the your tests.
+> You can always create a new Metamask identity for your tests.
 
 1. Switch the Remix Environment from `Javascript VM` to `Injected Web3`
-2. Connect your Metamas. Ensure you have choosen Rinkeby network
+2. Connect your Metamask. Ensure you have chosen Rinkeby network
 ![Metamask Rinkeby Network](metamask_rinkeby.png)
-3. If you dont have any `ETH` coins you can use this Faucet to grab some: https://faucets.chain.link/rinkeby
+3. If you don't have any `ETH` coins you can use this Faucet to grab some: https://faucets.chain.link/rinkeby
 4. Click deploy. You will be asked by Metamask to confirm the transaction: [Contract deployment transaction](https://rinkeby.etherscan.io/tx/0x60ad0e4b25ba4dadef1410d766222b30815fe9e6bc7168cd6cd0f205bb4d90e3)
 
 Now I can test my contract. I fill the data
@@ -83,4 +83,4 @@ And at the end we can check if `petOwner` field contains our definition:
 ![](rinkeby-data-confirmation.png)
 
 ---
-_This post are my notes from Blockchain development tutorial availale [here](https://www.youtube.com/watch?v=M576WGiDBdQ)._
+_This post contains my notes from a Blockchain development tutorial available [here](https://www.youtube.com/watch?v=M576WGiDBdQ)._

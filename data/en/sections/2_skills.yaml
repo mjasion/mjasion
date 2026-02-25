@@ -27,19 +27,19 @@ skills:
 
 - name: Kubernetes
   logo: /images/sections/skills/kubernetes.svg
-  summary: "5 years extensive experience, I feel expertise to design, deploy, and manage containerized applications at scale. I have a deep understanding of Kubernetes architecture, components, and best practices."
+  summary: "5 years of extensive experience designing, deploying, and managing containerized applications at scale. I have a deep understanding of Kubernetes architecture, components, and best practices."
   categories: ["container"]
   url: "https://kubernetes.io/"
 
 - name: Istio
   logo: "images/sections/skills/istio.svg"
-  summary: "3 years of experience in deploying,  configuring, securing, and managing service meshes to ensure seamless communication and traffic management across complex microservices environments."
+  summary: "3 years of experience in deploying, configuring, securing, and managing service meshes to ensure seamless communication and traffic management across complex microservices environments."
   url: "https://istio.io"
   categories: ["container"]
 
 - name: Go Development
   logo: "images/sections/skills/golang.svg"
-  summary: "6 years of experies. Good understanding of standard libraries and I know patterns write scalable, testable, and maintainable programs that meet the highest standards of efficiency and performance."
+  summary: "6 years of experience. Good understanding of standard libraries and patterns to write scalable, testable, and maintainable programs that meet the highest standards of efficiency and performance."
   url: "https://golang.org/"
   categories: ["programming"]
 
@@ -51,7 +51,7 @@ skills:
 
 - name: GCP
   logo: "images/sections/skills/google-cloud.svg"
-  summary: "2 years of experience. I am capable to design, deploy, and manage secure setup in GCP using range of resources. I designed a multi-cloud platform using GKE, where some workload were on AWS and GCP as well."
+  summary: "2 years of experience. I am capable of designing, deploying, and managing secure setups in GCP using a range of resources. I designed a multi-cloud platform using GKE, where some workloads were on AWS and GCP."
   url: https://cloud.google.com/
   categories: ["cloud"]
 
