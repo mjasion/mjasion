@@ -5,3 +5,5 @@
 /posts/label-gitlab-notifications/ /posts/development/label-gitlab-notifications/ 301
 /posts/first-blockchain-contract/ /posts/development/first-blockchain-contract/ 301
 /posts/golang/implementing-leader-election-in-go-using-kubernetes-api/ /posts/kubernetes/implementing-leader-election-in-go-using-kubernetes-api/ 301
+/blog /posts/ 301
+/blog/ /posts/ 301

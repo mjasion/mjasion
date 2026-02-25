@@ -62,7 +62,7 @@ What matters most for side projects is portability. Unlike Next.js, which is dee
 
 ## How I structure a project
 
-In practice, I run two Cloudflare Workers as a monorepo. The frontend is a TanStack Start worker handling SSR and file-based routing. The backend is a Hono API worker handling auth, database, and business logic. The frontend calls the backend directly through a Cloudflare [service binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/) - no HTTP round-trip, no CORS, just an internal `env.API.fetch()` call. Both workers share the same cookie prefix, so auth tokens flow seamlessly between them.
+In practice, I run two Cloudflare Workers as a monorepo. The frontend is a TanStack Start worker handling SSR and file-based routing. The backend is a [Hono](https://hono.dev/) API worker handling auth, database, and business logic. The frontend calls the backend directly through a Cloudflare [service binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/) - no HTTP round-trip, no CORS, just an internal `env.API.fetch()` call. Both workers share the same cookie prefix, so auth tokens flow seamlessly between them.
 
 For data, D1 handles the relational storage with Drizzle ORM for type-safe queries and migrations. KV stores session data - specifically refresh tokens for the JWT auth flow. R2 is available for file uploads when needed. Everything is bound to the workers through `wrangler.toml`, so there's no infrastructure to provision beyond the config file.
 
