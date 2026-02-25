@@ -1,0 +1,48 @@
+---
+/**
+ * Email obfuscation: reverse + ROT13
+ * Without JS, the email is unreadable to bots.
+ * With JS, it decodes and creates a working mailto link.
+ */
+interface Props {
+  email: string;
+  class?: string;
+}
+
+const { email, class: className } = Astro.props;
+
+function rot13(str: string): string {
+  return str.replace(/[a-zA-Z]/g, (c) => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode(((c.charCodeAt(0) - base + 13) % 26) + base);
+  });
+}
+
+// Reverse then ROT13
+const obfuscated = rot13(email.split('').reverse().join(''));
+---
+
+<a
+  href="#"
+  class:list={['obfuscated-email', className]}
+  data-e={obfuscated}
+  aria-label="Email"
+>
+  <slot />
+</a>
+
+<script>
+  function rot13(str: string): string {
+    return str.replace(/[a-zA-Z]/g, (c) => {
+      const base = c <= 'Z' ? 65 : 97;
+      return String.fromCharCode(((c.charCodeAt(0) - base + 13) % 26) + base);
+    });
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('.obfuscated-email').forEach((el) => {
+    const encoded = el.dataset.e;
+    if (!encoded) return;
+    const decoded = rot13(encoded).split('').reverse().join('');
+    el.href = `mailto:${decoded}`;
+  });
+</script>

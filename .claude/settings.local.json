@@ -9,7 +9,10 @@
       "mcp__playwright__browser_navigate",
       "mcp__playwright__browser_close",
       "mcp__playwright__browser_take_screenshot",
-      "Bash(hugo:*)"
+      "Bash(hugo:*)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "mcp__playwright__browser_evaluate"
     ],
     "deny": [],
     "ask": []

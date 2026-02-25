@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => {
+    // post.id is like "cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm"
+    // Extract just the slug (after the category prefix)
+    const parts = post.id.split('/');
+    const category = parts[0];
+    const slug = parts.slice(1).join('/');
+    return {
+      params: { category, slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const heroSrc = post.data.hero
+  ? typeof post.data.hero === 'string'
+    ? post.data.hero
+    : post.data.hero.src
+  : undefined;
+const wordCount = post.body?.split(/\s+/).length ?? 0;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+---
+
+<PostLayout
+  title={post.data.title}
+  description={post.data.description}
+  date={post.data.date}
+  category={post.data.category}
+  tags={post.data.tags}
+  heroSrc={heroSrc}
+  headings={headings}
+  readingTime={readingTime}
+>
+  <Content />
+</PostLayout>

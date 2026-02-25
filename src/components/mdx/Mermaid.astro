@@ -1,0 +1,54 @@
+---
+interface Props {
+  chart: string;
+}
+
+const { chart } = Astro.props;
+---
+
+<div class="my-6 flex justify-center rounded-xl bg-gray-50 dark:bg-transparent p-4 dark:p-0 [&_svg]:max-w-full [&_svg]:min-w-[min(100%,600px)]">
+  <pre class="mermaid not-prose bg-transparent! p-0! text-lg" set:html={chart} />
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+
+  function renderMermaid() {
+    const isDark = document.documentElement.classList.contains('dark');
+    // Restore original source before re-rendering
+    document.querySelectorAll<HTMLElement>('.mermaid').forEach((el) => {
+      const source = el.dataset.source;
+      if (source) {
+        el.removeAttribute('data-processed');
+        el.innerHTML = source;
+      }
+    });
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+    });
+    mermaid.run({ querySelector: '.mermaid' });
+  }
+
+  function init() {
+    // Store original chart source for re-rendering on theme change
+    document.querySelectorAll<HTMLElement>('.mermaid').forEach((el) => {
+      if (!el.dataset.source) {
+        el.dataset.source = el.innerHTML;
+      }
+    });
+    renderMermaid();
+
+    // Watch for dark class toggle on <html>
+    new MutationObserver(() => renderMermaid()).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
