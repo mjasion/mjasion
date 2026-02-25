@@ -7,27 +7,16 @@ description: |
 hero:  hero_implementing-leader-election-in-go-using-kubernetes-api.svg
 author:
   name: Marcin Jasion
-#tags:
-#- Leader Election
-#- Golang
-#- Kubernetes
-#- Distributed Systems
-#- Lease Locks
-#- Kubernetes API
-#- Leader Election Pattern
-#- Distributed Computing
-#- High Availability
-#- Scalability
-#- Go Programming
-#- Kubernetes Coordination
-#- Concurrency
-#- Fault Tolerance
-#- Code Examples
+tags:
+- golang
+- kubernetes
+- distributed-systems
+- leader-election
 menu:
   sidebar:
     name: Golang Leader Example
     identifier: golang-k8s-leader-example
-    parent: golang
+    parent: kubernetes
     weight: 1
 ---
 
@@ -41,7 +30,7 @@ explore how to implement a leader election mechanism in Kubernetes using lease l
 
 ## Overview
 
-The leader election mechanism implemented in   Go code relies on Kubernetes coordination
+The leader election mechanism implemented in Go code relies on Kubernetes coordination
 features, specifically [Lease](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/lease-v1/)
 object in the `coordination.k8s.io` API Group. Lease locks provide a way to acquire a lease on a shared resource,
 which can be used to determine the leader among a group of nodes.
@@ -140,7 +129,7 @@ wg.Wait()
 ```
 
 The program also sets up a Gin router and defines a root endpoint that returns the hostname of the
-current node, to easily check which Pod is beeing a leader.
+current node, to easily check which Pod is being the leader.
 
 
 ## Demo 1 - Deploying a single Pod

@@ -1,4 +1,4 @@
-description: Portfolio and personal site of Marcin Jasion
+description: Marcin Jasion - Senior Platform Engineer specializing in Kubernetes, AWS, and cloud infrastructure
 
 customMenus:
 - name: Notes
@@ -10,6 +10,6 @@ customMenus:
 openGraph:
   title: Marcin Jasion
   type: website
-  description: Portfolio and personal site of Marcin Jasion
+  description: Marcin Jasion - Senior Platform Engineer specializing in Kubernetes, AWS, and cloud infrastructure
   image: images/mjasion.jpg
   url: https://mjasion.pl

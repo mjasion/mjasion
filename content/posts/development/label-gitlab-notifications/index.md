@@ -5,16 +5,16 @@ description: "You can label emails by headers in Gmail. To do this you have to c
 hero:  gitlab_mails_labeled.png
 author:
   name: Marcin Jasion
-#tags:
-#- gitlab
-#- gmail
-#- google app scripts
-#- automation
-#- labels
+tags:
+- gitlab
+- gmail
+- google-apps-script
+- automation
 menu:
   sidebar:
     name: Gitlab
     identifier: gmail-labels
+    parent: development
     weight: 3
 ---
 
@@ -45,7 +45,7 @@ Of course, there are more headers available. The full list of headers, which Git
 
 To automatically add labels in Gmail you have to create a filter. However, it does not allow to filter by headers. But this is not impossible.
 
-Google provides a special service called Google Apps Scripts. It allows you to write short scripts in TypeScript language, where you can extend default Gmail filtering.
+Google provides a special service called Google Apps Scripts. It allows you to write short scripts in JavaScript, where you can extend default Gmail filtering.
 
 ## ⌨️ How can I add a label to message by headers?
 
@@ -73,7 +73,7 @@ To do that you can use the `getHeader()` function on the message object to read 
 ```js
 var status = message.getHeader("X-GitLab-Pipeline-Status");
 if (status) {
-  // header exists — this is a pipeline notification
+  // header exists - this is a pipeline notification
 }
 ```
 
@@ -137,7 +137,7 @@ function addOrCreateLabel(labelText, message) {
 }
 ```
 
-The `headersMap` at the top is the only thing you need to edit to add new labels — no code changes required. Labels are created automatically if they don't exist yet.
+The `headersMap` at the top is the only thing you need to edit to add new labels - no code changes required. Labels are created automatically if they don't exist yet.
 
 ## ▶️ How to turn on the script processing for you Gmail inbox?
 
@@ -153,7 +153,7 @@ The `headersMap` at the top is the only thing you need to edit to add new labels
 6. When there is no errors, create a custom trigger. Find button: ![Trigger](google_script_trigger_button.png)
 
 7. Click “Add trigger” button at the bottom of the page.
-8. Select function `processInbox` and configure the time source. The execution frequency depends is your choice. If you receive a lot of messages and you will run this script every 1 minute you can hit the limits. In the above script, I am scanning for emails from the last hour so the script can be executed at least once an hour.
+8. Select function `processInbox` and configure the time source. The execution frequency is your choice. If you receive a lot of messages and you will run this script every 1 minute you can hit the limits. In the above script, I am scanning for emails from the last hour so the script can be executed at least once an hour.
 ![GAS Trigger](google_script_new_trigger.png)
 
 ## 🏁And that’s it!
@@ -164,6 +164,6 @@ Google should now start executing your script and checking for new emails to mak
 
 ## 📖 Summarize
 
-Gmail filters are sufficient for most user’s usage. However, if your use case is more advanced then for help arrives Google Apps Scripts. It doesn’t require deep programming knowledge and searching in Google you can solve your problems. Summing up remember that you can have multiple scripts to process your inbox, and you can
+Gmail filters are sufficient for most users' needs. However, if your use case is more advanced, Google Apps Scripts comes to the rescue. It doesn't require deep programming knowledge and by searching online you can solve your problems. Remember that you can have multiple scripts to process your inbox.
 
 Did you know about Google App Scripts before? Please share how are you using them in the comments below.

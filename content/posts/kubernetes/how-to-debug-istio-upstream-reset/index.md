@@ -1,20 +1,15 @@
 ---
 title: How to debug Istio Upstream Reset 502 UPE (old 503 UC)
 date: "2022-04-25"
-description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs does not help"
+description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs do not help"
 hero:  service_mesh.png
 author:
   name: Marcin Jasion
-#tags:
-#- istio
-#- 502 UPE
-#- kubernetes
-#- tcpdump
-#- upe
-#- 503 UC
-#- upstream_reset_before_response_started
-#- Upstream connection termination
-#- wireshark
+tags:
+- istio
+- kubernetes
+- debugging
+- networking
 menu:
   sidebar:
     name: Istio
@@ -23,21 +18,21 @@ menu:
     weight: 1
 ---
 
-[Istio](https://istio.io) is a complex system. For the applications, the main component is the sidecar container Istio-Proxy, which proxies while traffic from all containers in Pod. And this can lead to some issues.
+[Istio](https://istio.io) is a complex system. For the applications, the main component is the sidecar container Istio-Proxy, which proxies all traffic from all containers in Pod. And this can lead to some issues.
 
 This post describes one of the most complicated problems I have encountered in my career.
 
 ## The problem - Connection Reset 🐛
 
-During Istio on a huge system, with more than different 40 microservices, on a single endpoint, QA engineers found a bug. It was POST endpoint, which was returning chunked data.
+During Istio rollout on a huge system, with more than 40 different microservices, on a single endpoint, QA engineers found a bug. It was a POST endpoint, which was returning chunked data.
 
-Istio was returning error 502, in logs were visible additional flag: `upstream_reset_before_response_started`. The application logs were confirming, that the result was correct.
+Istio was returning error 502, in logs an additional flag was visible: `upstream_reset_before_response_started`. The application logs confirmed that the result was correct.
 
 > In legacy Istio versions of the presented problem Istio were returning `503` error with `UC` flag.
 
 ## Analyzing issue ⛏️
 
-Lest see the  `curl` response and look at Istio-proxy logs:
+Let's see the `curl` response and look at Istio-proxy logs:
 
 ```bash
 kubectl exec -it curl-0 -- curl http://http-chunked:8080/wrong -v
@@ -61,10 +56,10 @@ To analyze the traffic we can use `tcpdump` and Wireshark. Istio-proxy runs as a
 To sniff traffic there are 3 ways:
 
 1. Running tcpdump in `istio-proxy` container,
-2. Using `kubectl` plugin `ksinff`  - a plugin to kubectl to dump packets from pod, [github repo](https://github.com/eldadru/ksniff),
+2. Using `kubectl` plugin `ksniff` - a plugin to kubectl to dump packets from pod, [github repo](https://github.com/eldadru/ksniff),
 3. Adding additional container to pod, with `root` permission and `tcpdump`  installed,
 
-First will not work by default, because `istio-proxy` runs without root permission. The third is the backup if 1 and 2 would not work. Let's try [ksniff](https://github.com/eldadru/ksniff).
+The first option will not work by default, because `istio-proxy` runs without root permission. The third is the backup if 1 and 2 would not work. Let's try [ksniff](https://github.com/eldadru/ksniff).
 
 ### What is ksniff 🛠️
 
@@ -82,7 +77,7 @@ kubectl sniff http-chunked-0 -c istio-proxy -p -f '-i lo' -n default
 
 > **Important parameters**
 >
-> * `-p` is parameter to support sniffing even if the pod is non-priviledged. See [docs](https://github.com/eldadru/ksniff#non-privileged-and-scratch-pods),
+> * `-p` is a parameter to support sniffing even if the pod is non-privileged. See [docs](https://github.com/eldadru/ksniff#non-privileged-and-scratch-pods),
 > * `-f '-i lo'` passes filter to tcpdump, we want to sniff localhost interface inside the Pod.
 
 If there is no issue, our system has Wireshark in `PATH`, `ksniff` should open a new window
@@ -90,7 +85,7 @@ If there is no issue, our system has Wireshark in `PATH`, `ksniff` should open a
 
 ### Finding the root cause 🔎
 
-Wireshark will continuously follow with new packet records. It makes it hard to figure out our particular call. We can youse filters to help with searching. Knowing the request path, method, response code - we can use it to find our packet using filter:
+Wireshark will continuously follow with new packet records. It makes it hard to figure out our particular call. We can use filters to help with searching. Knowing the request path, method, response code - we can use it to find our packet using filter:
 
 ```bash
 http.request.uri == "/wrong"
@@ -114,7 +109,7 @@ This is what we saw in the logs. The flag was `upstream_reset_before_response_st
 
 ### Swiss knife by Wireshark 🪛
 
-It is hard to read the HTTP protocol from multiple packets bodies. But also there Wireshark has a solution. We can see data from L7, the application one. In our case, it is the HTTP protocol.
+It is hard to read the HTTP protocol from multiple packet bodies. But Wireshark also has a solution for that. We can see data from L7, the application one. In our case, it is the HTTP protocol.
 
 Click with the right mouse on a single packet, go to the `Follow` tab, and select `TCP Stream`:
 
@@ -127,7 +122,7 @@ Look closer at the response, there is a double `Transfer-Encoding` header. One s
 
 ### Double transfer-encoding header - what does it mean❔
 
-Searching over Istio issues I found [this answer](https://github.com/istio/istio/issues/24753#issuecomment-656380098). The most important are first 2 points:
+Searching over Istio issues I found [this answer](https://github.com/istio/istio/issues/24753#issuecomment-656380098). The most important are the first 2 points:
 
 > 1. two `transfer-encoding: chunked` is equivalent to `transfer-encoding: chunked, chunked` as per RFC,
 > 2. `transfer-encoding: chunked, chunked` doesn't have the same semantic as `transfer-encoding: chunked`

@@ -21,7 +21,7 @@ function cleanupByFilter() {
 
 function deleteEmails(filter) {
   var threads = GmailApp.search(filter);
-  Logger.log("Deleting " + threads.length + " messsages from filter: " + filter)
+  Logger.log("Deleting " + threads.length + " messages from filter: " + filter)
    for (var i = 0; i < threads.length; i++) {
       var messages = threads[i].getMessages();
       for (var j = 0; j < messages.length; j++) {
@@ -33,5 +33,5 @@ function deleteEmails(filter) {
 }
 ```
 
-To setup this see my post [here](/posts/label-gitlab-notifications/).
+To set this up see my post [here](/posts/development/label-gitlab-notifications/).
 {{< /note >}}

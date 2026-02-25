@@ -19,8 +19,8 @@ designation: Senior Platform Engineer
 
 # a summary about you
 summary: |
-  I am a passionate Platform Engineer with 10 years of experience. I am dedicated to delivering exceptional results.
-  I started my carrier developing business applications
+  I am a passionate Platform Engineer with 12 years of experience. I am dedicated to delivering exceptional results.
+  I started my career developing business applications.
 
   I have a deep understanding of application and infrastructure architecture, and the software development lifecycle.
   As a problem solver, I am always eager to find new and innovative solutions to complex challenges.
@@ -50,9 +50,9 @@ socialLinks:
   icon: "fab fa-linkedin"
   url: "https://www.linkedin.com/in/marcinjasion"
 
-- name: Twitter
-  icon: "fab fa-twitter"
-  url: "https://twitter.com/marcinjasion"
+- name: X
+  icon: "fab fa-x-twitter"
+  url: "https://x.com/marcinjasion"
 
 
 # You can put custom buttons to link your relevant resources.

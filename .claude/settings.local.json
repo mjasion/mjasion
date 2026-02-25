@@ -5,7 +5,11 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "WebSearch",
-      "Bash(wrangler:*)"
+      "Bash(wrangler:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(hugo:*)"
     ],
     "deny": [],
     "ask": []
