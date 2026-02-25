@@ -73,7 +73,7 @@ To do that you can use the `getHeader()` function on the message object to read 
 ```js
 var status = message.getHeader("X-GitLab-Pipeline-Status");
 if (status) {
-  // header exists — this is a pipeline notification
+  // header exists - this is a pipeline notification
 }
 ```
 
@@ -137,7 +137,7 @@ function addOrCreateLabel(labelText, message) {
 }
 ```
 
-The `headersMap` at the top is the only thing you need to edit to add new labels — no code changes required. Labels are created automatically if they don't exist yet.
+The `headersMap` at the top is the only thing you need to edit to add new labels - no code changes required. Labels are created automatically if they don't exist yet.
 
 ## ▶️ How to turn on the script processing for you Gmail inbox?
 
