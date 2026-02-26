@@ -3,7 +3,8 @@ import { getCollection, render } from 'astro:content';
 import PostLayout from '../../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const now = new Date();
+  const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
   return posts.map((post) => {
     // post.id is like "cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm"
     // Extract just the slug (after the category prefix)

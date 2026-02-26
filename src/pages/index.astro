@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
+const now = new Date();
+const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
