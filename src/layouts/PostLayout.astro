@@ -143,12 +143,16 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
       .filter(Boolean) as HTMLElement[];
 
     function updateActive() {
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
       let activeId = headingIds[0];
-      for (const el of headingEls) {
-        if (el.getBoundingClientRect().top <= 100) {
-          activeId = el.id;
-        } else {
-          break;
+      if (atBottom) {
+        activeId = headingIds[headingIds.length - 1];
+      } else {
+        const midpoint = window.innerHeight * 0.4;
+        for (const el of headingEls) {
+          if (el.getBoundingClientRect().top <= midpoint) {
+            activeId = el.id;
+          }
         }
       }
       tocLinks.forEach((link) => {
