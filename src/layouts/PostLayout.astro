@@ -34,7 +34,7 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 <BaseLayout title={title} description={description} image={heroSrc}>
   <article class="mx-auto max-w-5xl px-4 py-8">
     <!-- Header -->
-    <header class="mx-auto max-w-3xl animate-bento-in">
+    <header class="animate-bento-in">
       <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
         <ArrowLeft class="h-4 w-4" />
         Back to blog
@@ -66,7 +66,7 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
     </header>
 
     {heroSrc && (
-      <div class="mx-auto mt-8 max-w-3xl animate-bento-in" style="animation-delay: 100ms">
+      <div class="mt-8 animate-bento-in" style="animation-delay: 100ms">
         <img
           src={heroSrc}
           alt={title}
@@ -78,7 +78,7 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 
     <!-- Content with optional TOC -->
     <div class="mx-auto mt-10 max-w-5xl xl:grid xl:grid-cols-[1fr_200px] xl:gap-8">
-      <div class="mx-auto max-w-3xl xl:mx-0 xl:max-w-none animate-bento-in" style="animation-delay: 150ms">
+      <div class="mx-auto max-w-3xl xl:mx-0 xl:max-w-none min-w-0 animate-bento-in" style="animation-delay: 150ms">
         <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-16 lg:prose-headings:scroll-mt-8 prose-a:text-accent-600 dark:prose-a:text-accent-400 prose-img:rounded-xl">
           <slot />
         </div>
