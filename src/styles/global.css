@@ -10,7 +10,449 @@
   --color-development: #10b981;
   --color-kubernetes: #8b5cf6;
 
+  /* Default palette = Slate */
+  --color-white: #f8fafc;
+  --color-gray-50:  #f1f5f9;
+  --color-gray-100: #e2e8f0;
+  --color-gray-200: #cbd5e1;
+  --color-gray-300: #94a3b8;
+  --color-gray-400: #64748b;
+  --color-gray-500: #475569;
+  --color-gray-600: #334155;
+  --color-gray-700: #1e293b;
+  --color-gray-800: #0f172a;
+  --color-gray-900: #0b1120;
+  --color-gray-950: #060a16;
+
+  /* Accent color tokens (default = indigo) */
+  --color-accent-400: #818cf8;
+  --color-accent-500: #6366f1;
+  --color-accent-600: #4f46e5;
+
+  /* Shadow tokens */
+  --shadow-bento: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-bento-hover: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+
   --animate-bento-in: bento-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* ===== Glass, gradient, and dark-mode token defaults ===== */
+
+:root {
+  --color-glass: rgba(248, 250, 252, 0.7);
+  --color-glass-border: rgba(71, 85, 105, 0.08);
+  --gradient-hero: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+}
+
+.dark {
+  --color-glass: rgba(20, 24, 32, 0.7);
+  --color-glass-border: rgba(148, 163, 184, 0.06);
+  --shadow-bento: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-bento-hover: 0 10px 25px rgba(148, 163, 184, 0.08), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #0b0e14 0%, #10141c 50%, #1e2430 100%);
+}
+
+/* Utility classes for non-color tokens */
+.bg-glass {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.border-glass {
+  border-color: var(--color-glass-border);
+}
+
+.bg-gradient-hero {
+  background-image: var(--gradient-hero);
+}
+
+/* Shiki dual-theme: switch to dark variables via .dark class */
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+/* ===== Theme overrides ===== */
+/* Each theme overrides: gray scale, accent, glass, shadow (hover glow), gradient */
+
+/* ---------- Aurora — Northern lights, teal/violet ---------- */
+.theme-aurora {
+  --color-white: #f0fdfa;
+  --color-gray-50:  #e6fffa;
+  --color-gray-100: #ccfbf1;
+  --color-gray-200: #99f6e4;
+  --color-gray-300: #5eead4;
+  --color-gray-400: #2dd4bf;
+  --color-gray-500: #14b8a6;
+  --color-gray-600: #0d9488;
+  --color-gray-700: #0f766e;
+  --color-gray-800: #115e59;
+  --color-gray-900: #134e4a;
+  --color-gray-950: #042f2e;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+  --color-glass: rgba(240, 253, 250, 0.7);
+  --color-glass-border: rgba(13, 148, 136, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(13, 148, 136, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #f0fdfa 0%, #e6fffa 50%, #ccfbf1 100%);
+}
+.dark.theme-aurora, .dark .theme-aurora {
+  --color-glass: rgba(10, 26, 36, 0.7);
+  --color-glass-border: rgba(45, 212, 191, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(45, 212, 191, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #042f2e 0%, #081c28 50%, #0f2433 100%);
+}
+
+/* ---------- Forest — Lush greens, earthy ---------- */
+.theme-forest {
+  --color-white: #f0fdf4;
+  --color-gray-50:  #dcfce7;
+  --color-gray-100: #bbf7d0;
+  --color-gray-200: #86efac;
+  --color-gray-300: #4ade80;
+  --color-gray-400: #22c55e;
+  --color-gray-500: #16a34a;
+  --color-gray-600: #15803d;
+  --color-gray-700: #166534;
+  --color-gray-800: #14532d;
+  --color-gray-900: #052e16;
+  --color-gray-950: #021a0a;
+  --color-accent-400: #4ade80;
+  --color-accent-500: #22c55e;
+  --color-accent-600: #16a34a;
+  --color-glass: rgba(240, 253, 244, 0.7);
+  --color-glass-border: rgba(22, 163, 74, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(22, 163, 74, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+}
+.dark.theme-forest, .dark .theme-forest {
+  --color-glass: rgba(5, 46, 22, 0.7);
+  --color-glass-border: rgba(34, 197, 94, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(34, 197, 94, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #021a0a 0%, #03220e 50%, #14532d 100%);
+}
+
+/* ---------- Sunset — Warm peach/coral ---------- */
+.theme-sunset {
+  --color-white: #fffbf5;
+  --color-gray-50:  #fff7ed;
+  --color-gray-100: #ffedd5;
+  --color-gray-200: #fed7aa;
+  --color-gray-300: #fdba74;
+  --color-gray-400: #fb923c;
+  --color-gray-500: #f97316;
+  --color-gray-600: #ea580c;
+  --color-gray-700: #c2410c;
+  --color-gray-800: #9a3412;
+  --color-gray-900: #7c2d12;
+  --color-gray-950: #431407;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-glass: rgba(255, 251, 245, 0.7);
+  --color-glass-border: rgba(234, 88, 12, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(234, 88, 12, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #fffbf5 0%, #fff7ed 50%, #ffedd5 100%);
+}
+.dark.theme-sunset, .dark .theme-sunset {
+  --color-glass: rgba(28, 16, 8, 0.7);
+  --color-glass-border: rgba(251, 146, 60, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(251, 146, 60, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #120a04 0%, #1a0f06 50%, #2a1a0c 100%);
+}
+
+/* ---------- Rose — Soft blush pink ---------- */
+.theme-rose {
+  --color-white: #fff1f2;
+  --color-gray-50:  #ffe4e6;
+  --color-gray-100: #fecdd3;
+  --color-gray-200: #fda4af;
+  --color-gray-300: #fb7185;
+  --color-gray-400: #f43f5e;
+  --color-gray-500: #e11d48;
+  --color-gray-600: #be123c;
+  --color-gray-700: #9f1239;
+  --color-gray-800: #881337;
+  --color-gray-900: #4c0519;
+  --color-gray-950: #2a0210;
+  --color-accent-400: #fb7185;
+  --color-accent-500: #f43f5e;
+  --color-accent-600: #e11d48;
+  --color-glass: rgba(255, 241, 242, 0.7);
+  --color-glass-border: rgba(225, 29, 72, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(225, 29, 72, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 50%, #fecdd3 100%);
+}
+.dark.theme-rose, .dark .theme-rose {
+  --color-glass: rgba(28, 11, 25, 0.7);
+  --color-glass-border: rgba(244, 114, 182, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(244, 114, 182, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #110610 0%, #190a16 50%, #2a1226 100%);
+}
+
+/* ---------- Lavender — Purple haze, violet ---------- */
+.theme-lavender {
+  --color-white: #faf5ff;
+  --color-gray-50:  #f3e8ff;
+  --color-gray-100: #e9d5ff;
+  --color-gray-200: #d8b4fe;
+  --color-gray-300: #c084fc;
+  --color-gray-400: #a855f7;
+  --color-gray-500: #9333ea;
+  --color-gray-600: #7e22ce;
+  --color-gray-700: #6b21a8;
+  --color-gray-800: #581c87;
+  --color-gray-900: #3b0764;
+  --color-gray-950: #1e0338;
+  --color-accent-400: #c084fc;
+  --color-accent-500: #a78bfa;
+  --color-accent-600: #7c3aed;
+  --color-glass: rgba(250, 245, 255, 0.7);
+  --color-glass-border: rgba(124, 58, 237, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(124, 58, 237, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+}
+.dark.theme-lavender, .dark .theme-lavender {
+  --color-glass: rgba(20, 16, 42, 0.7);
+  --color-glass-border: rgba(167, 139, 250, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(167, 139, 250, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #0c0a1a 0%, #100e24 50%, #1e1840 100%);
+}
+
+/* ---------- Carbon — Minimal monochrome ---------- */
+.theme-carbon {
+  --color-white: #ffffff;
+  --color-gray-50:  #fafafa;
+  --color-gray-100: #f4f4f5;
+  --color-gray-200: #e4e4e7;
+  --color-gray-300: #d4d4d8;
+  --color-gray-400: #a1a1aa;
+  --color-gray-500: #71717a;
+  --color-gray-600: #52525b;
+  --color-gray-700: #3f3f46;
+  --color-gray-800: #27272a;
+  --color-gray-900: #18181b;
+  --color-gray-950: #09090b;
+  --color-accent-400: #d4d4d8;
+  --color-accent-500: #a1a1aa;
+  --color-accent-600: #52525b;
+  --color-glass: rgba(255, 255, 255, 0.7);
+  --color-glass-border: rgba(0, 0, 0, 0.06);
+  --shadow-bento-hover: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #ffffff 0%, #fafafa 50%, #f4f4f5 100%);
+}
+.dark.theme-carbon, .dark .theme-carbon {
+  --color-glass: rgba(24, 24, 27, 0.7);
+  --color-glass-border: rgba(255, 255, 255, 0.06);
+  --shadow-bento: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-bento-hover: 0 10px 25px rgba(255, 255, 255, 0.05), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #09090b 0%, #111113 50%, #1c1c1f 100%);
+}
+
+/* ---------- Copper — Warm metallic amber ---------- */
+.theme-copper {
+  --color-white: #fefce8;
+  --color-gray-50:  #fef9c3;
+  --color-gray-100: #fef3c7;
+  --color-gray-200: #fde68a;
+  --color-gray-300: #fcd34d;
+  --color-gray-400: #fbbf24;
+  --color-gray-500: #f59e0b;
+  --color-gray-600: #d97706;
+  --color-gray-700: #b45309;
+  --color-gray-800: #92400e;
+  --color-gray-900: #78350f;
+  --color-gray-950: #451a03;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #c28241;
+  --color-accent-600: #b45309;
+  --color-glass: rgba(254, 252, 232, 0.7);
+  --color-glass-border: rgba(180, 83, 9, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(180, 83, 9, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #fefce8 0%, #fef9c3 50%, #fef3c7 100%);
+}
+.dark.theme-copper, .dark .theme-copper {
+  --color-glass: rgba(26, 20, 12, 0.7);
+  --color-glass-border: rgba(194, 130, 65, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(194, 130, 65, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #0c0906 0%, #140f08 50%, #2a2018 100%);
+}
+
+/* ---------- Classic — Original Tailwind gray + blue ---------- */
+.theme-classic {
+  --color-white: #ffffff;
+  --color-gray-50:  #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-glass: rgba(255, 255, 255, 0.8);
+  --color-glass-border: rgba(0, 0, 0, 0.06);
+  --shadow-bento-hover: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%);
+}
+.dark.theme-classic, .dark .theme-classic {
+  --color-glass: rgba(3, 7, 18, 0.8);
+  --color-glass-border: rgba(255, 255, 255, 0.06);
+  --shadow-bento-hover: 0 10px 25px rgba(59, 130, 246, 0.15), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #030712 0%, #0a0f1a 50%, #111827 100%);
+}
+
+/* ---------- Crimson — Bold red ---------- */
+.theme-crimson {
+  --color-white: #fef2f2;
+  --color-gray-50:  #fee2e2;
+  --color-gray-100: #fecaca;
+  --color-gray-200: #fca5a5;
+  --color-gray-300: #f87171;
+  --color-gray-400: #ef4444;
+  --color-gray-500: #dc2626;
+  --color-gray-600: #b91c1c;
+  --color-gray-700: #991b1b;
+  --color-gray-800: #7f1d1d;
+  --color-gray-900: #450a0a;
+  --color-gray-950: #250505;
+  --color-accent-400: #f87171;
+  --color-accent-500: #ef4444;
+  --color-accent-600: #dc2626;
+  --color-glass: rgba(254, 242, 242, 0.7);
+  --color-glass-border: rgba(220, 38, 38, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(220, 38, 38, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%);
+}
+.dark.theme-crimson, .dark .theme-crimson {
+  --color-glass: rgba(26, 10, 14, 0.7);
+  --color-glass-border: rgba(220, 38, 38, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(220, 38, 38, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #0e0406 0%, #140608 50%, #2a1218 100%);
+}
+
+/* ---------- Jade — Imperial jade green ---------- */
+.theme-jade {
+  --color-white: #ecfdf5;
+  --color-gray-50:  #d1fae5;
+  --color-gray-100: #a7f3d0;
+  --color-gray-200: #6ee7b7;
+  --color-gray-300: #34d399;
+  --color-gray-400: #10b981;
+  --color-gray-500: #059669;
+  --color-gray-600: #047857;
+  --color-gray-700: #065f46;
+  --color-gray-800: #064e3b;
+  --color-gray-900: #022c22;
+  --color-gray-950: #011612;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+  --color-glass: rgba(236, 253, 245, 0.7);
+  --color-glass-border: rgba(5, 150, 105, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(5, 150, 105, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+}
+.dark.theme-jade, .dark .theme-jade {
+  --color-glass: rgba(10, 28, 20, 0.7);
+  --color-glass-border: rgba(52, 211, 153, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(52, 211, 153, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #040e0a 0%, #08160e 50%, #122a20 100%);
+}
+
+/* ---------- Midnight — Deep navy, azure ---------- */
+.theme-midnight {
+  --color-white: #eff6ff;
+  --color-gray-50:  #dbeafe;
+  --color-gray-100: #bfdbfe;
+  --color-gray-200: #93c5fd;
+  --color-gray-300: #60a5fa;
+  --color-gray-400: #3b82f6;
+  --color-gray-500: #2563eb;
+  --color-gray-600: #1d4ed8;
+  --color-gray-700: #1e40af;
+  --color-gray-800: #1e3a5f;
+  --color-gray-900: #0a1628;
+  --color-gray-950: #020818;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-glass: rgba(239, 246, 255, 0.7);
+  --color-glass-border: rgba(37, 99, 235, 0.1);
+  --shadow-bento-hover: 0 10px 25px rgba(37, 99, 235, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --gradient-hero: linear-gradient(180deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
+}
+.dark.theme-midnight, .dark .theme-midnight {
+  --color-glass: rgba(10, 22, 40, 0.7);
+  --color-glass-border: rgba(59, 130, 246, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(59, 130, 246, 0.12), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #020818 0%, #060e24 50%, #142240 100%);
+}
+
+/* ---------- Mocha — Coffee/cream ---------- */
+.theme-mocha {
+  --color-white: #faf6f0;
+  --color-gray-50:  #f0e8d8;
+  --color-gray-100: #e4d4c0;
+  --color-gray-200: #d4c0a4;
+  --color-gray-300: #b8a080;
+  --color-gray-400: #96785a;
+  --color-gray-500: #78583a;
+  --color-gray-600: #6b4c30;
+  --color-gray-700: #503820;
+  --color-gray-800: #3d2814;
+  --color-gray-900: #221e18;
+  --color-gray-950: #0a0806;
+  --color-accent-400: #d4a06a;
+  --color-accent-500: #96785a;
+  --color-accent-600: #78583a;
+  --color-glass: rgba(250, 246, 240, 0.7);
+  --color-glass-border: rgba(120, 88, 58, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(120, 88, 58, 0.08), 0 4px 10px rgba(0, 0, 0, 0.03);
+  --gradient-hero: linear-gradient(180deg, #faf6f0 0%, #f0e8d8 50%, #e4d4c0 100%);
+}
+.dark.theme-mocha, .dark .theme-mocha {
+  --color-glass: rgba(22, 18, 16, 0.7);
+  --color-glass-border: rgba(150, 120, 90, 0.06);
+  --shadow-bento-hover: 0 10px 25px rgba(150, 120, 90, 0.1), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #0a0806 0%, #100e08 50%, #221e18 100%);
+}
+
+/* ---------- Terracotta — Mediterranean clay ---------- */
+.theme-terracotta {
+  --color-white: #fef7ed;
+  --color-gray-50:  #f5ece0;
+  --color-gray-100: #e8d0b8;
+  --color-gray-200: #d4b896;
+  --color-gray-300: #b09070;
+  --color-gray-400: #887058;
+  --color-gray-500: #78522e;
+  --color-gray-600: #5c3a1a;
+  --color-gray-700: #3d2814;
+  --color-gray-800: #241c16;
+  --color-gray-900: #181210;
+  --color-gray-950: #0a0806;
+  --color-accent-400: #d4956a;
+  --color-accent-500: #b47850;
+  --color-accent-600: #b45309;
+  --color-glass: rgba(254, 247, 237, 0.7);
+  --color-glass-border: rgba(180, 83, 9, 0.08);
+  --shadow-bento-hover: 0 10px 25px rgba(180, 83, 9, 0.08), 0 4px 10px rgba(0, 0, 0, 0.03);
+  --gradient-hero: linear-gradient(180deg, #fef7ed 0%, #f5ece0 50%, #e8d0b8 100%);
+}
+.dark.theme-terracotta, .dark .theme-terracotta {
+  --color-glass: rgba(24, 18, 16, 0.7);
+  --color-glass-border: rgba(180, 120, 80, 0.06);
+  --shadow-bento-hover: 0 10px 25px rgba(180, 120, 80, 0.1), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --gradient-hero: linear-gradient(180deg, #0a0806 0%, #100e0a 50%, #241c16 100%);
 }
 
 @keyframes bento-in {

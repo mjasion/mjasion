@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
-import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
+import ThemePicker from '../components/ThemePicker.astro';
 
 interface Props {
   title: string;
@@ -48,7 +49,7 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
     <meta name="twitter:image" content={ogImage} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Dark mode (before paint to prevent flash) -->
     <script is:inline>
@@ -57,6 +58,8 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
         if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
         }
+        var devTheme = localStorage.getItem('dev-theme');
+        if (devTheme) document.documentElement.classList.add(devTheme);
       })();
     </script>
 
@@ -70,10 +73,16 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
     </script>
   </head>
   <body class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased">
-    <Header />
-    <main>
-      <slot />
-    </main>
-    <Footer />
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:bg-white dark:focus:bg-gray-950 focus:px-4 focus:py-2 focus:text-sm focus:font-medium">
+      Skip to content
+    </a>
+    <Sidebar />
+    <div class="lg:ml-60 print:ml-0">
+      <main id="main-content">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    {import.meta.env.DEV && <ThemePicker />}
   </body>
 </html>

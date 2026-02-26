@@ -30,7 +30,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
 <a
   href={href}
-  class="group block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+  class="group block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200"
 >
   {hero && (
     <div class="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -50,7 +50,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
     </span>
 
     <!-- Title -->
-    <h3 class="mt-2 text-lg font-semibold leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+    <h3 class="mt-2 text-lg font-semibold leading-snug text-accent-600 dark:text-accent-400 transition-colors">
       {title}
     </h3>
 

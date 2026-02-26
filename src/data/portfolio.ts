@@ -8,14 +8,12 @@ export const author = {
     'I am a passionate Platform Engineer with 12 years of experience. I have a deep understanding of application and infrastructure architecture, and the software development lifecycle. As a problem solver, I am always eager to find new and innovative solutions to complex challenges.',
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
-    { name: 'GitLab', url: 'https://www.gitlab.com/mjasion', icon: 'gitlab' },
     {
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/in/marcinjasion',
       icon: 'linkedin',
     },
-    { name: 'X', url: 'https://x.com/marcinjasion', icon: 'x' },
-    { name: 'Email', url: '#', icon: 'mail', obfuscated: true },
+    { name: 'Email', icon: 'mail', obfuscated: true },
   ],
   cvUrl:
     'https://pub-161b014b043f4380a88430689756374e.r2.dev/marcinjasion_cv_public.pdf',

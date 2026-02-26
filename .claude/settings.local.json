@@ -12,7 +12,11 @@
       "Bash(hugo:*)",
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "mcp__playwright__browser_evaluate"
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_hover",
+      "mcp__playwright__browser_snapshot",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

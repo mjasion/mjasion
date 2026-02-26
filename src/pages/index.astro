@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BioCard from '../components/BioCard.astro';
 import BlogCard from '../components/BlogCard.astro';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
@@ -9,24 +8,14 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
 ---
 
 <BaseLayout title="Marcin Jasion">
-  <div class="mx-auto max-w-7xl px-4 py-8">
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
-      <!-- Bio sidebar -->
-      <aside class="lg:sticky lg:top-20 lg:self-start animate-bento-in">
-        <BioCard />
-      </aside>
-
-      <!-- Blog posts bento grid -->
-      <section>
-        <h1 class="sr-only">Blog Posts</h1>
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {posts.map((post, i) => (
-            <div class="animate-bento-in" style={`animation-delay: ${75 + i * 75}ms`}>
-              <BlogCard post={post} />
-            </div>
-          ))}
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <h1 class="sr-only">Blog Posts</h1>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post, i) => (
+        <div class="animate-bento-in" style={`animation-delay: ${75 + i * 75}ms`}>
+          <BlogCard post={post} />
         </div>
-      </section>
+      ))}
     </div>
   </div>
 </BaseLayout>

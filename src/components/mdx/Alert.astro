@@ -1,4 +1,6 @@
 ---
+import { CircleCheck, TriangleAlert, Info, CircleX } from '@lucide/astro';
+
 interface Props {
   type?: 'success' | 'warning' | 'info' | 'danger';
 }
@@ -12,17 +14,13 @@ const styles: Record<string, string> = {
   danger: 'border-red-500 bg-red-50 text-red-900 dark:bg-red-950/30 dark:text-red-200',
 };
 
-const icons: Record<string, string> = {
-  success: '✓',
-  warning: '⚠',
-  info: 'ℹ',
-  danger: '✕',
-};
+const iconMap = { success: CircleCheck, warning: TriangleAlert, info: Info, danger: CircleX };
+const Icon = iconMap[type];
 ---
 
 <div class={`my-4 rounded-lg border-l-4 p-4 ${styles[type]}`} role="alert">
   <div class="flex items-start gap-2">
-    <span class="mt-0.5 font-bold">{icons[type]}</span>
+    <Icon class="mt-0.5 h-5 w-5 shrink-0" />
     <div class="[&>p]:m-0"><slot /></div>
   </div>
 </div>

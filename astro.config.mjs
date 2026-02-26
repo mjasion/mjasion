@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://mjasion.pl',
   output: 'static',
+  publicDir: 'static',
   build: {
     format: 'directory',
   },
