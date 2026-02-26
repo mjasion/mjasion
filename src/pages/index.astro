@@ -8,6 +8,20 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
 ---
 
 <BaseLayout title="Marcin Jasion">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Marcin Jasion',
+      url: 'https://mjasion.pl',
+      description: 'Marcin Jasion - Senior Platform Engineer specializing in Kubernetes, AWS, and cloud infrastructure',
+      author: {
+        '@type': 'Person',
+        name: 'Marcin Jasion',
+        url: 'https://mjasion.pl',
+      },
+    })} />
+  </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
     <h1 class="sr-only">Blog Posts</h1>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
