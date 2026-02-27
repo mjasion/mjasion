@@ -91,14 +91,16 @@ const breadcrumbSchema = {
   <article class="mx-auto max-w-5xl px-4 py-8">
     <!-- Header -->
     <header class="animate-bento-in">
-      <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
-        <ArrowLeft class="h-4 w-4" />
-        Back to blog
-      </a>
-
-      <a href={`/posts/${category}/`} class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${categoryColors[category]} hover:opacity-80 transition-opacity`}>
-        {category}
-      </a>
+      <div class="flex items-center gap-3 mb-6">
+        <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+          <ArrowLeft class="h-4 w-4" />
+          Back to blog
+        </a>
+        <span class="text-gray-300 dark:text-gray-600">/</span>
+        <a href={`/posts/${category}/`} class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${categoryColors[category]} hover:opacity-80 transition-opacity`}>
+          {category}
+        </a>
+      </div>
 
       <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
         {title}
