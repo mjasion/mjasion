@@ -5,6 +5,7 @@ import type { ImageMetadata } from 'astro';
 import { ArrowLeft } from '@lucide/astro';
 import { author } from '@/data/portfolio';
 import type { MarkdownHeading } from 'astro';
+import Comments from '@/components/Comments.astro';
 
 interface Props {
   title: string;
@@ -162,6 +163,24 @@ const breadcrumbSchema = {
         <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-16 lg:prose-headings:scroll-mt-8 prose-a:text-accent-600 dark:prose-a:text-accent-400 prose-img:rounded-xl">
           <slot />
         </div>
+        <!-- Author card -->
+        <div class="mt-12">
+          <div class="flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 p-5">
+            <img
+              src={author.image}
+              alt={author.name}
+              class="h-14 w-14 shrink-0 rounded-full"
+              loading="lazy"
+            />
+            <div>
+              <p class="font-semibold text-gray-900 dark:text-gray-100">
+                <a href="/about/" class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">{author.name}</a>
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{author.designation}</p>
+            </div>
+          </div>
+        </div>
+        <Comments />
       </div>
 
       {tocHeadings.length > 2 && (
@@ -184,24 +203,6 @@ const breadcrumbSchema = {
           </nav>
         </aside>
       )}
-    </div>
-
-    <!-- Author card -->
-    <div class="mx-auto mt-12 max-w-3xl">
-      <div class="flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 p-5">
-        <img
-          src={author.image}
-          alt={author.name}
-          class="h-14 w-14 shrink-0 rounded-full"
-          loading="lazy"
-        />
-        <div>
-          <p class="font-semibold text-gray-900 dark:text-gray-100">
-            <a href="/about/" class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">{author.name}</a>
-          </p>
-          <p class="text-sm text-gray-500 dark:text-gray-400">{author.designation}</p>
-        </div>
-      </div>
     </div>
 
     <!-- Related posts -->
@@ -228,6 +229,7 @@ const breadcrumbSchema = {
         </div>
       </div>
     )}
+
   </article>
 
   <!-- Lightbox overlay -->
