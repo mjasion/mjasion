@@ -54,7 +54,8 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
           src={typeof hero === 'string' ? hero : hero.src}
           alt={title}
           class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : undefined}
         />
       )}
     </div>
