@@ -20,6 +20,9 @@ export const GET: APIRoute = async ({ site }) => {
       <title type="html"><![CDATA[${post.data.title}]]></title>
       <link href="${url}?utm_source=atom_feed" rel="alternate" type="text/html" />
       <id>${url}</id>
+      <author>
+        <name>Marcin Jasion</name>
+      </author>
       <published>${post.data.date.toISOString()}</published>
       <updated>${post.data.date.toISOString()}</updated>
       <content type="html"><![CDATA[${desc}]]></content>
