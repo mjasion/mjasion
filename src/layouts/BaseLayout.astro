@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
-import ThemePicker from '../components/ThemePicker.astro';
 
 interface Props {
   title: string;
@@ -74,8 +73,6 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
         if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
         }
-        var devTheme = localStorage.getItem('dev-theme');
-        if (devTheme) document.documentElement.classList.add(devTheme);
       })();
     </script>
 
@@ -104,6 +101,5 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
       </main>
       <Footer />
     </div>
-    {import.meta.env.DEV && <ThemePicker />}
   </body>
 </html>
