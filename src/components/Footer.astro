@@ -3,15 +3,13 @@ import { author } from '../data/portfolio';
 import SocialLinks from './SocialLinks.astro';
 ---
 
-<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+<footer class="lg:hidden border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
   <div class="mx-auto max-w-6xl px-4 py-8">
     <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
       <p class="text-sm text-gray-500 dark:text-gray-400">
         &copy; {new Date().getFullYear()} {author.name}. All rights reserved.
       </p>
-      <div class="lg:hidden">
-        <SocialLinks class="gap-4" />
-      </div>
+      <SocialLinks class="gap-4" />
     </div>
   </div>
 </footer>
