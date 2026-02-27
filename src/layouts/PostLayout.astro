@@ -96,9 +96,9 @@ const breadcrumbSchema = {
         Back to blog
       </a>
 
-      <span class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${categoryColors[category]}`}>
+      <a href={`/posts/${category}/`} class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${categoryColors[category]} hover:opacity-80 transition-opacity`}>
         {category}
-      </span>
+      </a>
 
       <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
         {title}
