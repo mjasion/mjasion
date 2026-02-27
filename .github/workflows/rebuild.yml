@@ -1,0 +1,19 @@
+name: Scheduled Rebuild
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    name: Trigger Cloudflare Pages Rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy hook
+        run: |
+          curl -sf -X POST \
+            -H "Content-Type: application/json;charset=UTF-8" \
+            -H "X-Auth-Email: ${{ secrets.CLOUDFLARE_EMAIL }}" \
+            -H "X-Auth-Key: ${{ secrets.CLOUDFLARE_API_KEY }}" \
+            "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/390200d2-5e3b-403a-a0d7-1d0926d5f961"

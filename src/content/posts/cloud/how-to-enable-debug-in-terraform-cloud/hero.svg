@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#042f2e"/>
+      <stop offset="100%" stop-color="#134e4a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g stroke="#14b8a6" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- Terraform logo watermark -->
+  <g transform="translate(980,80)" opacity="0.12">
+    <g fill="#14b8a6">
+      <rect x="28" y="0" width="26" height="44" rx="2"/>
+      <rect x="58" y="15" width="26" height="44" rx="2"/>
+      <rect x="28" y="50" width="26" height="44" rx="2"/>
+      <rect x="-2" y="15" width="26" height="44" rx="2"/>
+    </g>
+  </g>
+
+  <!-- Terminal window -->
+  <g transform="translate(200,80)">
+    <!-- Terminal frame -->
+    <rect x="0" y="0" width="800" height="440" rx="12" fill="#021a19" stroke="#0d9488" stroke-width="1.5"/>
+    <!-- Title bar -->
+    <rect x="0" y="0" width="800" height="36" rx="12" fill="#0a302e"/>
+    <rect x="0" y="12" width="800" height="24" fill="#0a302e"/>
+    <!-- Window dots -->
+    <circle cx="20" cy="18" r="5" fill="#ef4444" fill-opacity="0.8"/>
+    <circle cx="38" cy="18" r="5" fill="#eab308" fill-opacity="0.8"/>
+    <circle cx="56" cy="18" r="5" fill="#22c55e" fill-opacity="0.8"/>
+    <!-- Title -->
+    <text x="400" y="22" text-anchor="middle" fill="#5eead4" font-family="ui-monospace,monospace" font-size="12">terraform plan — DEBUG</text>
+
+    <!-- Log lines -->
+    <g font-family="ui-monospace,monospace" font-size="13">
+      <!-- Normal log -->
+      <text x="16" y="62" fill="#4a7c79">2024-01-15T10:32:01.234Z</text>
+      <text x="250" y="62" fill="#22c55e">[INFO]</text>
+      <text x="310" y="62" fill="#94a3b8">Initializing provider plugins...</text>
+
+      <!-- Debug log highlighted -->
+      <rect x="8" y="72" width="784" height="22" rx="3" fill="#14b8a6" fill-opacity="0.08"/>
+      <text x="16" y="88" fill="#4a7c79">2024-01-15T10:32:01.456Z</text>
+      <text x="250" y="88" fill="#2dd4bf">[DEBUG]</text>
+      <text x="320" y="88" fill="#e2e8f0">provider.aws: Reading configuration values</text>
+
+      <!-- Debug log highlighted -->
+      <rect x="8" y="98" width="784" height="22" rx="3" fill="#14b8a6" fill-opacity="0.08"/>
+      <text x="16" y="114" fill="#4a7c79">2024-01-15T10:32:01.567Z</text>
+      <text x="250" y="114" fill="#2dd4bf">[DEBUG]</text>
+      <text x="320" y="114" fill="#e2e8f0">provider.aws: Configuring regional client</text>
+
+      <!-- Trace log -->
+      <rect x="8" y="124" width="784" height="22" rx="3" fill="#f59e0b" fill-opacity="0.06"/>
+      <text x="16" y="140" fill="#4a7c79">2024-01-15T10:32:01.678Z</text>
+      <text x="250" y="140" fill="#fbbf24">[TRACE]</text>
+      <text x="320" y="140" fill="#e2e8f0">HTTP request: GET /api/v2/workspaces/ws-abc123</text>
+
+      <!-- Normal -->
+      <text x="16" y="166" fill="#4a7c79">2024-01-15T10:32:02.123Z</text>
+      <text x="250" y="166" fill="#22c55e">[INFO]</text>
+      <text x="310" y="166" fill="#94a3b8">Planning changes...</text>
+
+      <!-- Debug -->
+      <rect x="8" y="176" width="784" height="22" rx="3" fill="#14b8a6" fill-opacity="0.08"/>
+      <text x="16" y="192" fill="#4a7c79">2024-01-15T10:32:02.234Z</text>
+      <text x="250" y="192" fill="#2dd4bf">[DEBUG]</text>
+      <text x="320" y="192" fill="#e2e8f0">aws_instance.web: Refreshing state [id=i-04a7f6]</text>
+
+      <!-- Trace -->
+      <rect x="8" y="202" width="784" height="22" rx="3" fill="#f59e0b" fill-opacity="0.06"/>
+      <text x="16" y="218" fill="#4a7c79">2024-01-15T10:32:02.345Z</text>
+      <text x="250" y="218" fill="#fbbf24">[TRACE]</text>
+      <text x="320" y="218" fill="#e2e8f0">HTTP response: 200 OK (42ms)</text>
+
+      <!-- Debug -->
+      <rect x="8" y="228" width="784" height="22" rx="3" fill="#14b8a6" fill-opacity="0.08"/>
+      <text x="16" y="244" fill="#4a7c79">2024-01-15T10:32:02.456Z</text>
+      <text x="250" y="244" fill="#2dd4bf">[DEBUG]</text>
+      <text x="320" y="244" fill="#e2e8f0">Evaluating resource diff for aws_instance.web</text>
+
+      <!-- Normal -->
+      <text x="16" y="270" fill="#4a7c79">2024-01-15T10:32:03.000Z</text>
+      <text x="250" y="270" fill="#22c55e">[INFO]</text>
+      <text x="310" y="270" fill="#94a3b8">Plan: 2 to add, 1 to change, 0 to destroy</text>
+
+      <!-- Cursor -->
+      <rect x="16" y="290" width="8" height="16" rx="1" fill="#2dd4bf" opacity="0.8"/>
+    </g>
+  </g>
+
+  <!-- Environment variable card -->
+  <g transform="translate(200,540)">
+    <rect x="0" y="0" width="800" height="44" rx="8" fill="#0a302e" stroke="#0d9488" stroke-width="1"/>
+    <text x="270" y="27" text-anchor="end" font-family="ui-monospace,monospace" font-size="13" fill="#4a7c79">TF_LOG=</text>
+    <text x="274" y="27" font-family="ui-monospace,monospace" font-size="13" fill="#2dd4bf" font-weight="700">DEBUG</text>
+    <text x="400" y="27" text-anchor="middle" font-family="ui-monospace,monospace" font-size="13" fill="#134e4a">|</text>
+    <text x="530" y="27" text-anchor="end" font-family="ui-monospace,monospace" font-size="13" fill="#4a7c79">TF_LOG=</text>
+    <text x="534" y="27" font-family="ui-monospace,monospace" font-size="13" fill="#fbbf24" font-weight="700">TRACE</text>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="645" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="18" font-weight="600" opacity="0.5">Debug &amp; Trace Logs in Terraform Cloud</text>
+</svg>

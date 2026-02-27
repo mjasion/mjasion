@@ -1,0 +1,41 @@
+<!-- DEPRECATED: Bio info now in Sidebar.astro. Kept for reference. -->
+---
+import { author } from '../data/portfolio';
+import SocialLinks from './SocialLinks.astro';
+---
+
+<div class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 shadow-sm">
+  <div class="flex flex-col items-center text-center">
+    <!-- Photo -->
+    <img
+      src={author.image}
+      alt={author.name}
+      width={120}
+      height={120}
+      class="rounded-full ring-2 ring-gray-200 dark:ring-gray-700"
+      loading="eager"
+    />
+
+    <!-- Name & title -->
+    <h2 class="mt-4 text-xl font-bold">{author.name}</h2>
+    <p class="text-sm text-gray-500 dark:text-gray-400">{author.designation}</p>
+
+    <!-- Short bio -->
+    <p class="mt-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+      {author.summary}
+    </p>
+
+    <!-- Social links -->
+    <div class="mt-4">
+      <SocialLinks class="gap-3" />
+    </div>
+
+    <!-- About link -->
+    <a
+      href="/about/"
+      class="mt-4 text-sm text-accent-600 dark:text-accent-400 hover:underline"
+    >
+      More about me &rarr;
+    </a>
+  </div>
+</div>

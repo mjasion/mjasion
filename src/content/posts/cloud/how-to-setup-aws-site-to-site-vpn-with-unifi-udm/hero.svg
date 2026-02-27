@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1c1007"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+    <linearGradient id="tunnel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#22c55e" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g stroke="#f59e0b" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- LEFT: Home network / Unifi UDM -->
+  <g transform="translate(80,120)">
+    <!-- Network box -->
+    <rect x="0" y="0" width="340" height="360" rx="14" fill="#2a1508" fill-opacity="0.6" stroke="#f59e0b" stroke-width="2"/>
+    <text x="170" y="28" text-anchor="middle" fill="#fbbf24" font-family="system-ui,sans-serif" font-size="14" font-weight="700">Home Network</text>
+    <text x="170" y="46" text-anchor="middle" fill="#92400e" font-family="ui-monospace,monospace" font-size="11">192.168.1.0/24</text>
+
+    <!-- UDM device -->
+    <g transform="translate(70,66)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#1c1007" stroke="#d97706" stroke-width="1.5"/>
+      <!-- Simplified UDM shape -->
+      <rect x="60" y="12" width="80" height="16" rx="8" fill="#d97706" fill-opacity="0.3"/>
+      <circle cx="80" cy="20" r="3" fill="#22c55e"/>
+      <circle cx="100" cy="20" r="3" fill="#22c55e"/>
+      <circle cx="120" cy="20" r="3" fill="#22c55e" fill-opacity="0.4"/>
+      <text x="100" y="50" text-anchor="middle" fill="#fbbf24" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Unifi UDM</text>
+      <text x="100" y="68" text-anchor="middle" fill="#92400e" font-family="ui-monospace,monospace" font-size="10">IPsec VPN</text>
+    </g>
+
+    <!-- Local devices -->
+    <g transform="translate(30,170)">
+      <!-- Device 1 -->
+      <rect x="0" y="0" width="120" height="44" rx="6" fill="#1c1007" stroke="#92400e" stroke-width="1"/>
+      <text x="60" y="18" text-anchor="middle" fill="#d4a574" font-family="system-ui,sans-serif" font-size="11">Workstation</text>
+      <text x="60" y="34" text-anchor="middle" fill="#78716c" font-family="ui-monospace,monospace" font-size="9">192.168.1.10</text>
+    </g>
+    <g transform="translate(170,170)">
+      <!-- Device 2 -->
+      <rect x="0" y="0" width="120" height="44" rx="6" fill="#1c1007" stroke="#92400e" stroke-width="1"/>
+      <text x="60" y="18" text-anchor="middle" fill="#d4a574" font-family="system-ui,sans-serif" font-size="11">NAS</text>
+      <text x="60" y="34" text-anchor="middle" fill="#78716c" font-family="ui-monospace,monospace" font-size="9">192.168.1.20</text>
+    </g>
+
+    <!-- VPN config -->
+    <g transform="translate(20,240)">
+      <rect x="0" y="0" width="300" height="100" rx="6" fill="#1c1007" stroke="#92400e" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="150" y="20" text-anchor="middle" fill="#92400e" font-family="system-ui,sans-serif" font-size="10" font-weight="600">IPsec Configuration</text>
+      <text x="12" y="40" fill="#78716c" font-family="ui-monospace,monospace" font-size="10">Phase 1:</text>
+      <text x="80" y="40" fill="#d4a574" font-family="ui-monospace,monospace" font-size="10">IKEv2, AES-256</text>
+      <text x="12" y="58" fill="#78716c" font-family="ui-monospace,monospace" font-size="10">Phase 2:</text>
+      <text x="80" y="58" fill="#d4a574" font-family="ui-monospace,monospace" font-size="10">ESP, AES-256-GCM</text>
+      <text x="12" y="76" fill="#78716c" font-family="ui-monospace,monospace" font-size="10">Remote:</text>
+      <text x="80" y="76" fill="#f59e0b" font-family="ui-monospace,monospace" font-size="10">AWS VGW endpoint</text>
+    </g>
+  </g>
+
+  <!-- TUNNEL in the middle -->
+  <g transform="translate(420,220)">
+    <!-- Tunnel background -->
+    <rect x="0" y="0" width="360" height="80" rx="40" fill="url(#tunnel)" fill-opacity="0.15" stroke="url(#tunnel)" stroke-width="2"/>
+
+    <!-- Lock icon -->
+    <g transform="translate(156,14)">
+      <rect x="0" y="16" width="24" height="18" rx="3" fill="#22c55e" fill-opacity="0.3" stroke="#22c55e" stroke-width="1.5"/>
+      <path d="M4,16 V10 A8,8 0 0,1 20,10 V16" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    </g>
+
+    <!-- Encrypted data dots -->
+    <g fill="#22c55e" fill-opacity="0.5">
+      <circle cx="60" cy="40" r="3"/>
+      <circle cx="80" cy="40" r="3"/>
+      <circle cx="100" cy="40" r="3"/>
+      <circle cx="120" cy="40" r="3"/>
+      <circle cx="240" cy="40" r="3"/>
+      <circle cx="260" cy="40" r="3"/>
+      <circle cx="280" cy="40" r="3"/>
+      <circle cx="300" cy="40" r="3"/>
+    </g>
+
+    <text x="180" y="70" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="11" font-weight="600">Site-to-Site VPN Tunnel</text>
+  </g>
+
+  <!-- RIGHT: AWS VPC -->
+  <g transform="translate(780,120)">
+    <!-- VPC box -->
+    <rect x="0" y="0" width="340" height="360" rx="14" fill="#0c1a30" fill-opacity="0.6" stroke="#3b82f6" stroke-width="2"/>
+    <text x="170" y="28" text-anchor="middle" fill="#60a5fa" font-family="system-ui,sans-serif" font-size="14" font-weight="700">AWS VPC</text>
+    <text x="170" y="46" text-anchor="middle" fill="#1e3a5f" font-family="ui-monospace,monospace" font-size="11">10.0.0.0/16</text>
+
+    <!-- Virtual Private Gateway -->
+    <g transform="translate(70,66)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#0c1a30" stroke="#3b82f6" stroke-width="1.5"/>
+      <!-- Gateway icon -->
+      <rect x="70" y="10" width="60" height="20" rx="4" fill="#3b82f6" fill-opacity="0.3"/>
+      <line x1="85" y1="20" x2="115" y2="20" stroke="#60a5fa" stroke-width="2"/>
+      <circle cx="85" cy="20" r="4" fill="#60a5fa"/>
+      <circle cx="115" cy="20" r="4" fill="#60a5fa"/>
+      <text x="100" y="50" text-anchor="middle" fill="#60a5fa" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Virtual Gateway</text>
+      <text x="100" y="68" text-anchor="middle" fill="#1e3a5f" font-family="ui-monospace,monospace" font-size="10">vgw-0a1b2c3d</text>
+    </g>
+
+    <!-- Subnets -->
+    <g transform="translate(30,170)">
+      <rect x="0" y="0" width="120" height="44" rx="6" fill="#0c1a30" stroke="#1e40af" stroke-width="1"/>
+      <text x="60" y="18" text-anchor="middle" fill="#93c5fd" font-family="system-ui,sans-serif" font-size="11">Subnet A</text>
+      <text x="60" y="34" text-anchor="middle" fill="#1e3a5f" font-family="ui-monospace,monospace" font-size="9">10.0.1.0/24</text>
+    </g>
+    <g transform="translate(170,170)">
+      <rect x="0" y="0" width="120" height="44" rx="6" fill="#0c1a30" stroke="#1e40af" stroke-width="1"/>
+      <text x="60" y="18" text-anchor="middle" fill="#93c5fd" font-family="system-ui,sans-serif" font-size="11">Subnet B</text>
+      <text x="60" y="34" text-anchor="middle" fill="#1e3a5f" font-family="ui-monospace,monospace" font-size="9">10.0.2.0/24</text>
+    </g>
+
+    <!-- Route table -->
+    <g transform="translate(20,240)">
+      <rect x="0" y="0" width="300" height="100" rx="6" fill="#0c1a30" stroke="#1e40af" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="150" y="20" text-anchor="middle" fill="#1e40af" font-family="system-ui,sans-serif" font-size="10" font-weight="600">Route Table</text>
+      <text x="12" y="42" fill="#1e3a5f" font-family="ui-monospace,monospace" font-size="10">Dest</text>
+      <text x="160" y="42" fill="#1e3a5f" font-family="ui-monospace,monospace" font-size="10">Target</text>
+      <text x="12" y="60" fill="#93c5fd" font-family="ui-monospace,monospace" font-size="10">10.0.0.0/16</text>
+      <text x="160" y="60" fill="#93c5fd" font-family="ui-monospace,monospace" font-size="10">local</text>
+      <text x="12" y="78" fill="#fbbf24" font-family="ui-monospace,monospace" font-size="10">192.168.1.0/24</text>
+      <text x="160" y="78" fill="#fbbf24" font-family="ui-monospace,monospace" font-size="10">vgw-0a1b2c3d</text>
+    </g>
+  </g>
+
+  <!-- Connection status -->
+  <g transform="translate(480,340)">
+    <rect x="0" y="0" width="240" height="36" rx="18" fill="#052e16" fill-opacity="0.6" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="20" cy="18" r="5" fill="#22c55e"/>
+    <text x="130" y="23" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Tunnel Status: UP</text>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="640" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="18" font-weight="600" opacity="0.5">AWS Site-to-Site VPN with Unifi UDM</text>
+</svg>

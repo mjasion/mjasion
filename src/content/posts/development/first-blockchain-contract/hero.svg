@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#14082e"/>
+      <stop offset="100%" stop-color="#3b0764"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g stroke="#7c3aed" stroke-opacity="0.08" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- Ethereum diamond watermark -->
+  <g transform="translate(1060,80)" opacity="0.12">
+    <path d="M0,0 L30,50 L0,38 Z" fill="#a78bfa"/>
+    <path d="M0,0 L-30,50 L0,38 Z" fill="#7c3aed"/>
+    <path d="M0,44 L30,56 L0,80 Z" fill="#a78bfa"/>
+    <path d="M0,44 L-30,56 L0,80 Z" fill="#7c3aed"/>
+  </g>
+
+  <!-- Code editor window -->
+  <g transform="translate(100,60)">
+    <!-- Editor frame -->
+    <rect x="0" y="0" width="580" height="480" rx="12" fill="#0a0118" stroke="#581c87" stroke-width="1.5"/>
+    <!-- Title bar -->
+    <rect x="0" y="0" width="580" height="36" rx="12" fill="#1e0a3a"/>
+    <rect x="0" y="12" width="580" height="24" fill="#1e0a3a"/>
+    <!-- Window dots -->
+    <circle cx="20" cy="18" r="5" fill="#ef4444" fill-opacity="0.8"/>
+    <circle cx="38" cy="18" r="5" fill="#eab308" fill-opacity="0.8"/>
+    <circle cx="56" cy="18" r="5" fill="#22c55e" fill-opacity="0.8"/>
+    <!-- File name -->
+    <text x="290" y="22" text-anchor="middle" fill="#a78bfa" font-family="ui-monospace,monospace" font-size="12">PetOwner.sol</text>
+
+    <!-- Solidity code -->
+    <g font-family="ui-monospace,monospace" font-size="13">
+      <!-- Line numbers -->
+      <g fill="#4c1d95">
+        <text x="16" y="62">1</text>
+        <text x="16" y="82">2</text>
+        <text x="16" y="102">3</text>
+        <text x="16" y="122">4</text>
+        <text x="16" y="142">5</text>
+        <text x="16" y="162">6</text>
+        <text x="16" y="182">7</text>
+        <text x="16" y="202">8</text>
+        <text x="16" y="222">9</text>
+        <text x="10" y="242">10</text>
+        <text x="10" y="262">11</text>
+        <text x="10" y="282">12</text>
+        <text x="10" y="302">13</text>
+        <text x="10" y="322">14</text>
+        <text x="10" y="342">15</text>
+      </g>
+
+      <!-- Code content -->
+      <text x="44" y="62" fill="#6b7280">// SPDX-License-Identifier: MIT</text>
+      <text x="44" y="82"><tspan fill="#c084fc">pragma</tspan><tspan fill="#e2e8f0"> solidity ^0.8.0;</tspan></text>
+      <text x="44" y="102" fill="#1e0a3a">.</text>
+      <text x="44" y="122"><tspan fill="#c084fc">contract</tspan><tspan fill="#fbbf24"> PetOwner</tspan><tspan fill="#e2e8f0"> {</tspan></text>
+      <text x="64" y="142"><tspan fill="#c084fc">mapping</tspan><tspan fill="#e2e8f0"> (</tspan><tspan fill="#34d399">string</tspan><tspan fill="#e2e8f0"> =&gt; Pet) </tspan><tspan fill="#c084fc">public</tspan><tspan fill="#e2e8f0"> petOwners;</tspan></text>
+      <text x="44" y="162" fill="#1e0a3a">.</text>
+      <text x="64" y="182"><tspan fill="#c084fc">struct</tspan><tspan fill="#fbbf24"> Pet</tspan><tspan fill="#e2e8f0"> {</tspan></text>
+      <text x="84" y="202"><tspan fill="#34d399">string</tspan><tspan fill="#e2e8f0"> name;</tspan></text>
+      <text x="84" y="222"><tspan fill="#34d399">string</tspan><tspan fill="#e2e8f0"> petType;</tspan></text>
+      <text x="64" y="242" fill="#e2e8f0">}</text>
+      <text x="44" y="262" fill="#1e0a3a">.</text>
+      <text x="64" y="282"><tspan fill="#c084fc">function</tspan><tspan fill="#60a5fa"> addPetOwner</tspan><tspan fill="#e2e8f0">(</tspan></text>
+      <text x="84" y="302"><tspan fill="#34d399">string</tspan><tspan fill="#e2e8f0"> ownerName, ...</tspan></text>
+      <text x="64" y="322" fill="#e2e8f0">}</text>
+      <text x="44" y="342" fill="#e2e8f0">}</text>
+
+      <!-- Cursor -->
+      <rect x="56" y="350" width="8" height="16" rx="1" fill="#c084fc" opacity="0.8"/>
+    </g>
+  </g>
+
+  <!-- Right side: blockchain illustration -->
+  <g transform="translate(780,100)">
+    <!-- Block 1 -->
+    <g transform="translate(0,0)">
+      <rect x="0" y="0" width="280" height="100" rx="10" fill="#1e0a3a" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="140" y="24" text-anchor="middle" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Block #4370001</text>
+      <line x1="16" y1="34" x2="264" y2="34" stroke="#581c87" stroke-width="1"/>
+      <text x="16" y="52" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Hash:</text>
+      <text x="60" y="52" fill="#c4b5fd" font-family="ui-monospace,monospace" font-size="10">0x60ad...90e3</text>
+      <text x="16" y="70" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Tx:</text>
+      <text x="60" y="70" fill="#c4b5fd" font-family="ui-monospace,monospace" font-size="10">Deploy PetOwner</text>
+      <text x="16" y="88" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Gas:</text>
+      <text x="60" y="88" fill="#34d399" font-family="ui-monospace,monospace" font-size="10">0.00234 ETH</text>
+    </g>
+
+    <!-- Chain link 1-2 -->
+    <g transform="translate(126,100)">
+      <line x1="14" y1="0" x2="14" y2="40" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 3"/>
+      <circle cx="14" cy="20" r="8" fill="#3b0764" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="14" y="24" text-anchor="middle" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="10">+</text>
+    </g>
+
+    <!-- Block 2 -->
+    <g transform="translate(0,140)">
+      <rect x="0" y="0" width="280" height="100" rx="10" fill="#1e0a3a" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="140" y="24" text-anchor="middle" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Block #4370002</text>
+      <line x1="16" y1="34" x2="264" y2="34" stroke="#581c87" stroke-width="1"/>
+      <text x="16" y="52" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Hash:</text>
+      <text x="60" y="52" fill="#c4b5fd" font-family="ui-monospace,monospace" font-size="10">0x5d53...8b7d</text>
+      <text x="16" y="70" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Tx:</text>
+      <text x="60" y="70" fill="#c4b5fd" font-family="ui-monospace,monospace" font-size="10">addPetOwner("Marcin")</text>
+      <text x="16" y="88" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Gas:</text>
+      <text x="60" y="88" fill="#34d399" font-family="ui-monospace,monospace" font-size="10">0.00089 ETH</text>
+    </g>
+
+    <!-- Chain link 2-3 -->
+    <g transform="translate(126,240)">
+      <line x1="14" y1="0" x2="14" y2="40" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 3"/>
+      <circle cx="14" cy="20" r="8" fill="#3b0764" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="14" y="24" text-anchor="middle" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="10">+</text>
+    </g>
+
+    <!-- Block 3 -->
+    <g transform="translate(0,280)">
+      <rect x="0" y="0" width="280" height="100" rx="10" fill="#1e0a3a" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="140" y="24" text-anchor="middle" fill="#a78bfa" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Block #4370003</text>
+      <line x1="16" y1="34" x2="264" y2="34" stroke="#581c87" stroke-width="1"/>
+      <text x="16" y="52" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Hash:</text>
+      <text x="60" y="52" fill="#c4b5fd" font-family="ui-monospace,monospace" font-size="10">0xa1f2...7c9e</text>
+      <text x="16" y="70" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Tx:</text>
+      <text x="60" y="70" fill="#c4b5fd" font-family="ui-monospace,monospace" font-size="10">petOwners["Marcin"]</text>
+      <text x="16" y="88" fill="#6b7280" font-family="ui-monospace,monospace" font-size="10">Status:</text>
+      <text x="68" y="88" fill="#34d399" font-family="ui-monospace,monospace" font-size="10">confirmed</text>
+    </g>
+  </g>
+
+  <!-- Network badge: Rinkeby Testnet -->
+  <g transform="translate(820,500)">
+    <rect x="0" y="0" width="200" height="36" rx="18" fill="#581c87" fill-opacity="0.4" stroke="#7c3aed" stroke-width="1"/>
+    <circle cx="20" cy="18" r="6" fill="#fbbf24" fill-opacity="0.8"/>
+    <text x="110" y="23" text-anchor="middle" fill="#c4b5fd" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Rinkeby Testnet</text>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="640" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="18" font-weight="600" opacity="0.5">Deploy Your First Blockchain Contract</text>
+</svg>

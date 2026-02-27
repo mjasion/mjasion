@@ -1,0 +1,330 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { ArrowLeft } from '@lucide/astro';
+import { author } from '@/data/portfolio';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  dateModified?: Date;
+  category: string;
+  tags: string[];
+  heroSrc?: string;
+  hero?: ImageMetadata | string;
+  headings: MarkdownHeading[];
+  readingTime: number;
+  popularTags?: Set<string>;
+  relatedPosts?: { title: string; href: string; category: string; date: Date }[];
+}
+
+const { title, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [] } = Astro.props;
+
+const categoryColors: Record<string, string> = {
+  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+};
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const tocHeadings = headings.filter((h) => h.depth <= 3);
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = heroSrc?.startsWith('http') ? heroSrc : heroSrc ? `${siteUrl}${heroSrc}` : `${siteUrl}${author.image}`;
+
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: date.toISOString(),
+  dateModified: (dateModified ?? date).toISOString(),
+  author: {
+    '@type': 'Person',
+    name: author.name,
+    url: siteUrl,
+    image: `${siteUrl}${author.image}`,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: author.name,
+    url: siteUrl,
+    image: `${siteUrl}${author.image}`,
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  image: ogImage,
+  keywords: tags.join(', '),
+  articleSection: category,
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: category.charAt(0).toUpperCase() + category.slice(1), item: `${siteUrl}/posts/${category}/` },
+    { '@type': 'ListItem', position: 3, name: title },
+  ],
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={heroSrc}
+  articleDate={date}
+  articleTags={tags}
+  articleCategory={category}
+  twitterCardType={heroSrc ? 'summary_large_image' : 'summary'}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+  <article class="mx-auto max-w-5xl px-4 py-8">
+    <!-- Header -->
+    <header class="animate-bento-in">
+      <div class="flex items-center gap-3 mb-6">
+        <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+          <ArrowLeft class="h-4 w-4" />
+          Back to blog
+        </a>
+        <span class="text-gray-300 dark:text-gray-600">/</span>
+        <a href={`/posts/${category}/`} class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${categoryColors[category]} hover:opacity-80 transition-opacity`}>
+          {category}
+        </a>
+      </div>
+
+      <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+        {title}
+      </h1>
+
+      <div class="mt-4 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+        <span>&middot;</span>
+        <span>{readingTime} min read</span>
+      </div>
+
+      {tags.length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            popularTags.has(tag) ? (
+              <a href={`/tags/${tag}/`} class="rounded-md bg-gray-100 dark:bg-gray-800 px-2.5 py-1 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                {tag}
+              </a>
+            ) : (
+              <span class="rounded-md bg-gray-100 dark:bg-gray-800 px-2.5 py-1 text-xs text-gray-600 dark:text-gray-400">
+                {tag}
+              </span>
+            )
+          ))}
+        </div>
+      )}
+    </header>
+
+    {hero && (
+      <div class="mt-8 animate-bento-in" style="animation-delay: 100ms">
+        {typeof hero !== 'string' && hero.format !== 'svg' ? (
+          <Image
+            src={hero}
+            alt={title}
+            width={1024}
+            format="webp"
+            quality={85}
+            class="w-full rounded-2xl"
+            loading="eager"
+            fetchpriority="high"
+          />
+        ) : (
+          <img
+            src={typeof hero === 'string' ? hero : hero.src}
+            alt={title}
+            class="w-full rounded-2xl"
+            loading="eager"
+            fetchpriority="high"
+          />
+        )}
+      </div>
+    )}
+
+    <!-- Content with optional TOC -->
+    <div class="mx-auto mt-10 max-w-5xl xl:grid xl:grid-cols-[1fr_200px] xl:gap-8">
+      <div class="mx-auto max-w-3xl xl:mx-0 xl:max-w-none min-w-0 animate-bento-in" style="animation-delay: 150ms">
+        <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-16 lg:prose-headings:scroll-mt-8 prose-a:text-accent-600 dark:prose-a:text-accent-400 prose-img:rounded-xl">
+          <slot />
+        </div>
+      </div>
+
+      {tocHeadings.length > 2 && (
+        <aside class="hidden xl:block">
+          <nav class="sticky top-8 text-sm" id="toc-nav">
+            <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">On this page</h2>
+            <ul class="space-y-2 text-gray-500 dark:text-gray-400">
+              {tocHeadings.map((heading) => (
+                <li style={`padding-left: ${(heading.depth - 2) * 0.75}rem`}>
+                  <a
+                    href={`#${heading.slug}`}
+                    data-toc={heading.slug}
+                    class="toc-link block transition-colors duration-150 hover:text-gray-900 dark:hover:text-gray-100"
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      )}
+    </div>
+
+    <!-- Author card -->
+    <div class="mx-auto mt-12 max-w-3xl">
+      <div class="flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 p-5">
+        <img
+          src={author.image}
+          alt={author.name}
+          class="h-14 w-14 shrink-0 rounded-full"
+          loading="lazy"
+        />
+        <div>
+          <p class="font-semibold text-gray-900 dark:text-gray-100">
+            <a href="/about/" class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">{author.name}</a>
+          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">{author.designation}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related posts -->
+    {relatedPosts.length > 0 && (
+      <div class="mx-auto mt-12 max-w-3xl">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Related posts</h2>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {relatedPosts.map((related) => (
+            <a
+              href={related.href}
+              class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <span class={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[related.category]}`}>
+                {related.category}
+              </span>
+              <p class="mt-2 text-sm font-medium leading-snug text-gray-900 dark:text-gray-100 line-clamp-2">
+                {related.title}
+              </p>
+              <time class="mt-1.5 block text-xs text-gray-500 dark:text-gray-500" datetime={related.date.toISOString()}>
+                {related.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </article>
+
+  <!-- Lightbox overlay -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm cursor-zoom-out print:hidden"
+    role="dialog"
+    aria-label="Image preview"
+  >
+    <img id="lightbox-img" class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain" alt="" />
+  </div>
+</BaseLayout>
+
+<style>
+  .toc-link.is-active {
+    color: var(--color-accent-600, #2563eb);
+  }
+  .prose :global(img) {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .prose :global(img:hover) {
+    transform: scale(1.03);
+  }
+
+  :global(.dark) .toc-link.is-active {
+    color: var(--color-accent-400, #60a5fa);
+  }
+</style>
+
+<script>
+  const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+  if (tocLinks.length > 0) {
+    const headingIds = Array.from(tocLinks).map((a) => a.dataset.toc!);
+    const headingEls = headingIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    function updateActive() {
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+      let activeId = headingIds[0];
+      if (atBottom) {
+        activeId = headingIds[headingIds.length - 1];
+      } else {
+        const midpoint = window.innerHeight * 0.4;
+        for (const el of headingEls) {
+          if (el.getBoundingClientRect().top <= midpoint) {
+            activeId = el.id;
+          }
+        }
+      }
+      tocLinks.forEach((link) => {
+        link.classList.toggle('is-active', link.dataset.toc === activeId);
+      });
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateActive();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    updateActive();
+  }
+
+  // Lightbox for prose images
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+
+  function openLightbox(src: string, alt: string) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightbox!.classList.remove('hidden');
+    lightbox!.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox!.classList.add('hidden');
+    lightbox!.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.prose img').forEach((img) => {
+    const el = img as HTMLImageElement;
+    el.style.cursor = 'zoom-in';
+    el.addEventListener('click', () => openLightbox(el.src, el.alt));
+  });
+
+  lightbox?.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !lightbox!.classList.contains('hidden')) {
+      closeLightbox();
+    }
+  });
+</script>

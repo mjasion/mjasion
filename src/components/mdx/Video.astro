@@ -1,0 +1,28 @@
+---
+interface Props {
+  src: string;
+  type?: string;
+  preload?: string;
+  loop?: boolean | string;
+  autoplay?: boolean | string;
+}
+
+const { src, type = 'video/webm', preload = 'auto', loop = false, autoplay = false } = Astro.props;
+const isLoop = loop === true || loop === 'true';
+const isAutoplay = autoplay === true || autoplay === 'true';
+---
+
+<div class="my-6">
+  <video
+    controls
+    preload={preload}
+    loop={isLoop}
+    autoplay={isAutoplay}
+    muted={isAutoplay}
+    playsinline
+    class="w-full rounded-lg"
+  >
+    <source src={src} type={type} />
+    Your browser does not support the video tag.
+  </video>
+</div>

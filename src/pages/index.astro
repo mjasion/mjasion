@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+
+const now = new Date();
+const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Resolve LCP hero image URL for preloading
+const lcpHero = posts[0]?.data.hero;
+const lcpHeroSrc = lcpHero
+  ? typeof lcpHero === 'string' ? lcpHero : lcpHero.src
+  : undefined;
+---
+
+<BaseLayout title="Marcin Jasion">
+  <Fragment slot="head">
+    {lcpHeroSrc && <link rel="preload" as="image" href={lcpHeroSrc} fetchpriority="high" />}
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Marcin Jasion',
+      url: 'https://mjasion.pl',
+      description: 'Marcin Jasion - Senior Platform Engineer specializing in Kubernetes, AWS, and cloud infrastructure',
+      author: {
+        '@type': 'Person',
+        name: 'Marcin Jasion',
+        url: 'https://mjasion.pl',
+      },
+    })} />
+  </Fragment>
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl mb-6">Latest Posts</h1>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post, i) => (
+        <div class={i < 3 ? '' : 'animate-bento-in'} style={i < 3 ? undefined : `animation-delay: ${75 + i * 75}ms`}>
+          <BlogCard post={post} priority={i < 3} />
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

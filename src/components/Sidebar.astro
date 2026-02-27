@@ -1,0 +1,193 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import profileImg from '../assets/images/mjasion.jpg';
+import { Sun, Moon } from '@lucide/astro';
+import { author } from '../data/portfolio';
+import SocialLinks from './SocialLinks.astro';
+
+const pathname = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/', label: 'Blog', match: (p: string) => p === '/' || p.startsWith('/posts') || p.startsWith('/tags') },
+  { href: '/about/', label: 'About', match: (p: string) => p.startsWith('/about') },
+];
+
+const categoryColors: Record<string, string> = {
+  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+};
+
+const now = new Date();
+const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+const categoryCounts = new Map<string, number>();
+for (const post of posts) {
+  const cat = post.data.category;
+  categoryCounts.set(cat, (categoryCounts.get(cat) ?? 0) + 1);
+}
+const categoryLinks = Array.from(categoryCounts.entries())
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .map(([cat, count]) => ({
+    href: `/posts/${cat}/`,
+    label: cat.charAt(0).toUpperCase() + cat.slice(1),
+    color: categoryColors[cat] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
+  }));
+---
+
+<!-- Desktop sidebar -->
+<aside
+  class="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-60 lg:z-40
+         border-r border-gray-200 dark:border-gray-800
+         bg-glass
+         p-6 overflow-y-auto print:hidden"
+  aria-label="Site sidebar"
+>
+  <div class="flex flex-col items-center text-center">
+    <a href="/">
+      <Image
+        src={profileImg}
+        alt={author.name}
+        width={144}
+        height={144}
+        format="webp"
+        quality={80}
+        class="w-[72px] h-[72px] rounded-full ring-2 ring-gray-200 dark:ring-gray-700"
+        loading="eager"
+      />
+    </a>
+    <h2 class="mt-3 text-base font-bold">{author.name}</h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400">{author.designation}</p>
+    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+      {author.summary}
+    </p>
+
+    <div class="mt-3">
+      <SocialLinks class="gap-3" />
+    </div>
+  </div>
+
+  <nav class="mt-6 space-y-1" aria-label="Main navigation">
+    {navLinks.map((link) => (
+      link.label === 'Blog' ? (
+        <div>
+          <a
+            href={link.href}
+            aria-current={link.match(pathname) ? 'page' : undefined}
+            class:list={[
+              'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+              link.match(pathname)
+                ? 'bg-gray-100 dark:bg-gray-800 text-accent-600 dark:text-accent-400'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+            ]}
+          >
+            {link.label}
+          </a>
+          <div class="py-1 ml-3 space-y-0.5">
+            {categoryLinks.map((cat) => (
+              <a
+                href={cat.href}
+                class:list={[
+                  'flex items-center rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                  pathname.startsWith(cat.href)
+                    ? cat.color
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800',
+                ]}
+              >
+                <span>{cat.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <a
+          href={link.href}
+          aria-current={link.match(pathname) ? 'page' : undefined}
+          class:list={[
+            'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+            link.match(pathname)
+              ? 'bg-gray-100 dark:bg-gray-800 text-accent-600 dark:text-accent-400'
+              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+          ]}
+        >
+          {link.label}
+        </a>
+      )
+    ))}
+  </nav>
+
+  <div class="mt-auto"></div>
+
+  <div class="pt-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+    <p class="text-[10px] text-gray-400 dark:text-gray-500">
+      &copy; {new Date().getFullYear()} {author.name}
+    </p>
+    <button
+      id="theme-toggle-desktop"
+      type="button"
+      aria-label="Toggle dark mode"
+      class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 dark:text-gray-500 dark:hover:bg-gray-800 transition-colors"
+    >
+      <Sun class="hidden dark:block h-4 w-4" />
+      <Moon class="block dark:hidden h-4 w-4" />
+    </button>
+  </div>
+</aside>
+
+<!-- Mobile compact bar -->
+<header
+  class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800
+         bg-glass print:hidden"
+>
+  <nav class="flex items-center justify-between px-4 py-2.5" aria-label="Main navigation">
+    <a href="/" class="flex items-center gap-2.5">
+      <Image
+        src={profileImg}
+        alt=""
+        width={72}
+        height={72}
+        format="webp"
+        quality={80}
+        class="w-[36px] h-[36px] rounded-full ring-1 ring-gray-200 dark:ring-gray-700"
+        loading="eager"
+      />
+      <span class="text-sm font-bold tracking-tight">{author.name}</span>
+    </a>
+
+    <div class="flex items-center gap-4">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          aria-current={link.match(pathname) ? 'page' : undefined}
+          class:list={[
+            'text-sm font-medium transition-colors',
+            link.match(pathname)
+              ? 'text-accent-600 dark:text-accent-400'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <button
+        id="theme-toggle-mobile"
+        type="button"
+        aria-label="Toggle dark mode"
+        class="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
+      >
+        <Sun class="hidden dark:block h-4 w-4" />
+        <Moon class="block dark:hidden h-4 w-4" />
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.querySelectorAll('[id^="theme-toggle"]').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  });
+</script>
