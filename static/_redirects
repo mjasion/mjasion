@@ -1,6 +1,7 @@
 # Feeds
 /feed/ /index.xml 301
 /rss.xml /index.xml 301
+/sitemap.xml /sitemap-index.xml 301
 
 # Old sections
 /blog /posts/ 301

@@ -1,9 +1,16 @@
 ---
+import { giscus } from '@/data/portfolio';
 ---
 
 <section class="mt-12">
   <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Comments</h2>
-  <div id="giscus-container"></div>
+  <div
+    id="giscus-container"
+    data-repo={giscus.repo}
+    data-repo-id={giscus.repoId}
+    data-category={giscus.category}
+    data-category-id={giscus.categoryId}
+  ></div>
 </section>
 
 <script>
@@ -14,10 +21,10 @@
     const isDark = document.documentElement.classList.contains('dark');
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
-    script.dataset.repo = 'mjasion/mjasion';
-    script.dataset.repoId = 'R_kgDOGQ6lZQ';
-    script.dataset.category = 'General';
-    script.dataset.categoryId = 'DIC_kwDOGQ6lZc4COgAu';
+    script.dataset.repo = container.dataset.repo!;
+    script.dataset.repoId = container.dataset.repoId!;
+    script.dataset.category = container.dataset.category!;
+    script.dataset.categoryId = container.dataset.categoryId!;
     script.dataset.mapping = 'pathname';
     script.dataset.reactionsEnabled = '1';
     script.dataset.emitMetadata = '0';

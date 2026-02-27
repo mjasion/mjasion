@@ -233,6 +233,13 @@ export const certifications = [
   },
 ];
 
+export const giscus = {
+  repo: 'mjasion/mjasion' as const,
+  repoId: 'R_kgDOGQ6lZQ',
+  category: 'General',
+  categoryId: 'DIC_kwDOGQ6lZc4COgAu',
+};
+
 export const presentations = [
   {
     name: 'GitOps - Czyli konfigurowanie Kubernetesa Gitem',
