@@ -1,5 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { ArrowLeft } from '@lucide/astro';
 import { author } from '@/data/portfolio';
 import type { MarkdownHeading } from 'astro';
@@ -11,11 +13,12 @@ interface Props {
   category: string;
   tags: string[];
   heroSrc?: string;
+  hero?: ImageMetadata | string;
   headings: MarkdownHeading[];
   readingTime: number;
 }
 
-const { title, description, date, category, tags, heroSrc, headings, readingTime } = Astro.props;
+const { title, description, date, category, tags, heroSrc, hero, headings, readingTime } = Astro.props;
 
 const categoryColors: Record<string, string> = {
   cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
@@ -117,14 +120,28 @@ const breadcrumbSchema = {
       )}
     </header>
 
-    {heroSrc && (
+    {hero && (
       <div class="mt-8 animate-bento-in" style="animation-delay: 100ms">
-        <img
-          src={heroSrc}
-          alt={title}
-          class="w-full rounded-2xl"
-          loading="eager"
-        />
+        {typeof hero !== 'string' && hero.format !== 'svg' ? (
+          <Image
+            src={hero}
+            alt={title}
+            width={1024}
+            format="webp"
+            quality={85}
+            class="w-full rounded-2xl"
+            loading="eager"
+            fetchpriority="high"
+          />
+        ) : (
+          <img
+            src={typeof hero === 'string' ? hero : hero.src}
+            alt={title}
+            class="w-full rounded-2xl"
+            loading="eager"
+            fetchpriority="high"
+          />
+        )}
       </div>
     )}
 

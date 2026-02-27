@@ -16,7 +16,8 @@
       "mcp__playwright__browser_click",
       "mcp__playwright__browser_hover",
       "mcp__playwright__browser_snapshot",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__playwright__browser_install"
     ],
     "deny": [],
     "ask": []

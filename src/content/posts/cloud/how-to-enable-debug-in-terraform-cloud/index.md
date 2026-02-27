@@ -2,7 +2,7 @@
 title: How to enable debug and trace logs in Terraform Cloud and Enterprise
 date: "2022-06-10"
 description: "Remote terraform execution does not forward CLI parameters. This post covers how to do this."
-hero: ./terraform-logo.png
+hero: ./hero.svg
 tags:
 - terraform
 - terraform-cloud

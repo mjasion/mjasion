@@ -1,11 +1,13 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 
 interface Props {
   post: CollectionEntry<'posts'>;
+  priority?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, priority = false } = Astro.props;
 const { title, date, description, category, tags, hero } = post.data;
 
 const categoryColors: Record<string, string> = {
@@ -30,16 +32,31 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
 <a
   href={href}
-  class="group block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200"
+  class="group block rounded-2xl border border-gray-200 dark:border-gray-800 border-t-4 bg-white dark:bg-gray-900 overflow-hidden shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200"
+  style={`border-top-color: var(--color-${category})`}
 >
   {hero && (
     <div class="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
-      <img
-        src={typeof hero === 'string' ? hero : hero.src}
-        alt={title}
-        class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-        loading="lazy"
-      />
+      {typeof hero !== 'string' && hero.format !== 'svg' ? (
+        <Image
+          src={hero}
+          alt={title}
+          widths={[400, 662, 800]}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          format="webp"
+          quality={80}
+          class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : undefined}
+        />
+      ) : (
+        <img
+          src={typeof hero === 'string' ? hero : hero.src}
+          alt={title}
+          class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+        />
+      )}
     </div>
   )}
 

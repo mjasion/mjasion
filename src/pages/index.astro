@@ -27,8 +27,8 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft && (!impor
     <h1 class="sr-only">Blog Posts</h1>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post, i) => (
-        <div class="animate-bento-in" style={`animation-delay: ${75 + i * 75}ms`}>
-          <BlogCard post={post} />
+        <div class={i < 3 ? '' : 'animate-bento-in'} style={i < 3 ? undefined : `animation-delay: ${75 + i * 75}ms`}>
+          <BlogCard post={post} priority={i < 3} />
         </div>
       ))}
     </div>

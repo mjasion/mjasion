@@ -20,10 +20,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
-const heroSrc = post.data.hero
-  ? typeof post.data.hero === 'string'
-    ? post.data.hero
-    : post.data.hero.src
+const hero = post.data.hero;
+const heroSrc = hero
+  ? typeof hero === 'string'
+    ? hero
+    : hero.src
   : undefined;
 const wordCount = post.body?.split(/\s+/).length ?? 0;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
@@ -36,6 +37,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
   category={post.data.category}
   tags={post.data.tags}
   heroSrc={heroSrc}
+  hero={hero}
   headings={headings}
   readingTime={readingTime}
 >

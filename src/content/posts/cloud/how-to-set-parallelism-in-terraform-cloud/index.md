@@ -2,7 +2,7 @@
 title: How to configure parallelism in Terraform Cloud
 date: "2022-06-14"
 description: "Remote terraform execution runs on default parallelism value. There is a simple way to improve execution speed 4 times"
-hero: ./terraform-logo.png
+hero: ./hero.svg
 tags:
 - terraform
 - terraform-cloud
