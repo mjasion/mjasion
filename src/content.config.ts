@@ -12,6 +12,7 @@ const posts = defineCollection({
       tags: z.array(z.string()).default([]),
       category: z.enum(['cloud', 'development', 'kubernetes']),
       draft: z.boolean().default(false),
+      dateModified: z.coerce.date().optional(),
     }),
 });
 

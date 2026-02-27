@@ -35,6 +35,7 @@ export const GET: APIRoute = async ({ site }) => {
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <generator uri="https://astro.build/">Astro</generator>
   <title type="html"><![CDATA[Marcin Jasion]]></title>
+  <subtitle>Platform engineering, Kubernetes, AWS, and cloud infrastructure articles by Marcin Jasion</subtitle>
   <link href="${siteUrl}/index.xml" rel="self" type="application/atom+xml" />
   <link href="${siteUrl}/" rel="alternate" type="text/html" />
   <updated>${lastUpdated.toISOString()}</updated>

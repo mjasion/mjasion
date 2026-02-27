@@ -1,9 +1,61 @@
+# Feeds
 /feed/ /index.xml 301
 /rss.xml /index.xml 301
-/talks /#presentations 301
+
+# Old sections
+/blog /posts/ 301
+/blog/ /posts/ 301
+/talks /about/#presentations 301
+/search/ / 301
+/categories/ /posts/ 301
+
+# Old flat post URLs (before category structure was added)
 /label-gitlab-notifications/ /posts/development/label-gitlab-notifications/ 301
 /posts/label-gitlab-notifications/ /posts/development/label-gitlab-notifications/ 301
 /posts/first-blockchain-contract/ /posts/development/first-blockchain-contract/ 301
+/posts/how-to-enable-debug-in-terraform-cloud/ /posts/cloud/how-to-enable-debug-in-terraform-cloud/ 301
+/posts/how-to-set-parallelism-in-terraform-cloud/ /posts/cloud/how-to-set-parallelism-in-terraform-cloud/ 301
+/posts/how-to-setup-aws-site-to-site-vpn-with-unifi-udm/ /posts/cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm/ 301
+/posts/how-to-debug-istio-upstream-reset/ /posts/kubernetes/how-to-debug-istio-upstream-reset/ 301
+/posts/implementing-leader-election-in-go-using-kubernetes-api/ /posts/kubernetes/implementing-leader-election-in-go-using-kubernetes-api/ 301
+/posts/why-i-chose-cloudflare-and-tanstack/ /posts/development/why-i-chose-cloudflare-and-tanstack/ 301
+
+# Old category rename (golang → kubernetes)
 /posts/golang/implementing-leader-election-in-go-using-kubernetes-api/ /posts/kubernetes/implementing-leader-election-in-go-using-kubernetes-api/ 301
-/blog /posts/ 301
-/blog/ /posts/ 301
+
+# Old Hugo pagination
+/posts/page/* /posts/ 301
+/posts/cloud/page/* /posts/cloud/ 301
+/posts/development/page/* /posts/development/ 301
+/posts/kubernetes/page/* /posts/kubernetes/ 301
+
+# Old tag pages → relevant category
+/tags/ /posts/ 301
+/tags/aws/ /posts/cloud/ 301
+/tags/terraform/ /posts/cloud/ 301
+/tags/terraform-cloud/ /posts/cloud/ 301
+/tags/vpn/ /posts/cloud/ 301
+/tags/unifi/ /posts/cloud/ 301
+/tags/networking/ /posts/cloud/ 301
+/tags/debugging/ /posts/cloud/ 301
+/tags/performance/ /posts/cloud/ 301
+/tags/kubernetes/ /posts/kubernetes/ 301
+/tags/istio/ /posts/kubernetes/ 301
+/tags/leader-election/ /posts/kubernetes/ 301
+/tags/distributed-systems/ /posts/kubernetes/ 301
+/tags/golang/ /posts/kubernetes/ 301
+/tags/blockchain/ /posts/development/ 301
+/tags/ethereum/ /posts/development/ 301
+/tags/solidity/ /posts/development/ 301
+/tags/gitlab/ /posts/development/ 301
+/tags/gmail/ /posts/development/ 301
+/tags/google-apps-script/ /posts/development/ 301
+/tags/automation/ /posts/development/ 301
+/tags/frontend/ /posts/development/ 301
+/tags/cloudflare/ /posts/development/ 301
+/tags/tanstack/ /posts/development/ 301
+/tags/side-projects/ /posts/development/ 301
+/tags/tutorial/ /posts/ 301
+
+# Old notes section (removed)
+/notes/* / 301

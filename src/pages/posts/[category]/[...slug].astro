@@ -5,7 +5,8 @@ import PostLayout from '../../../layouts/PostLayout.astro';
 export async function getStaticPaths() {
   const MIN_POSTS_FOR_TAG_PAGE = 5;
   const now = new Date();
-  const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   // Count tags to determine which ones get pages
   const tagCounts = new Map<string, number>();
@@ -21,19 +22,29 @@ export async function getStaticPaths() {
   );
 
   return posts.map((post) => {
-    // post.id is like "cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm"
-    // Extract just the slug (after the category prefix)
     const parts = post.id.split('/');
     const category = parts[0];
     const slug = parts.slice(1).join('/');
+
+    // Find related posts: same category, excluding current, up to 3
+    const related = posts
+      .filter((p) => p.data.category === post.data.category && p.id !== post.id)
+      .slice(0, 3)
+      .map((p) => ({
+        title: p.data.title,
+        href: `/posts/${p.id}/`,
+        category: p.data.category,
+        date: p.data.date,
+      }));
+
     return {
       params: { category, slug },
-      props: { post, popularTags },
+      props: { post, popularTags, relatedPosts: related },
     };
   });
 }
 
-const { post, popularTags } = Astro.props;
+const { post, popularTags, relatedPosts } = Astro.props;
 const { Content, headings } = await render(post);
 const hero = post.data.hero;
 const heroSrc = hero
@@ -49,6 +60,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
   title={post.data.title}
   description={post.data.description}
   date={post.data.date}
+  dateModified={post.data.dateModified}
   category={post.data.category}
   tags={post.data.tags}
   heroSrc={heroSrc}
@@ -56,6 +68,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
   headings={headings}
   readingTime={readingTime}
   popularTags={popularTags}
+  relatedPosts={relatedPosts}
 >
   <Content />
 </PostLayout>

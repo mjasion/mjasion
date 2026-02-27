@@ -30,12 +30,34 @@ for (const post of posts) {
 // Sort categories by post count descending
 const sortedCategories = Array.from(categories.entries())
   .sort((a, b) => b[1].length - a[1].length);
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+
+const collectionPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'All Posts',
+  description: 'Browse all articles by Marcin Jasion, grouped by category',
+  url: `${siteUrl}/posts/`,
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: posts.length,
+    itemListElement: posts.map((post, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${siteUrl}/posts/${post.id}/`,
+    })),
+  },
+};
 ---
 
 <BaseLayout
   title="All Posts"
   description="Browse all articles by Marcin Jasion, grouped by category"
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
+  </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
     <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">All Posts</h1>
     <p class="mt-2 text-gray-600 dark:text-gray-400">{posts.length} articles across {sortedCategories.length} categories</p>
