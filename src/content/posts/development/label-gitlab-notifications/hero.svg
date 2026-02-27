@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1c0f06"/>
+      <stop offset="100%" stop-color="#7c2d12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g stroke="#ea580c" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- GitLab fox watermark -->
+  <g transform="translate(1060,80)" opacity="0.12">
+    <path d="M0,50 L8,26 L22,50 Z" fill="#fc6d26"/>
+    <path d="M0,50 L-10,18 L8,26 Z" fill="#e24329"/>
+    <path d="M0,50 L-22,50 L-10,18 Z" fill="#fca326"/>
+    <path d="M0,50 L22,50 L32,18 Z" fill="#fca326"/>
+    <path d="M22,50 L32,18 L14,26 Z" fill="#e24329"/>
+  </g>
+
+  <!-- Left side: Email inbox mockup -->
+  <g transform="translate(80,70)">
+    <!-- Inbox frame -->
+    <rect x="0" y="0" width="500" height="480" rx="12" fill="#1a0a02" stroke="#9a3412" stroke-width="1.5"/>
+    <!-- Title bar -->
+    <rect x="0" y="0" width="500" height="40" rx="12" fill="#2a1508"/>
+    <rect x="0" y="12" width="500" height="28" fill="#2a1508"/>
+    <!-- Window dots -->
+    <circle cx="20" cy="20" r="5" fill="#ef4444" fill-opacity="0.8"/>
+    <circle cx="38" cy="20" r="5" fill="#eab308" fill-opacity="0.8"/>
+    <circle cx="56" cy="20" r="5" fill="#22c55e" fill-opacity="0.8"/>
+    <text x="250" y="25" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="12">Gmail Inbox</text>
+
+    <!-- Email rows -->
+    <!-- Email 1: Pipeline -->
+    <g transform="translate(12,52)">
+      <rect x="0" y="0" width="476" height="64" rx="6" fill="#2a1508" fill-opacity="0.6"/>
+      <!-- Labels -->
+      <rect x="8" y="8" width="56" height="18" rx="9" fill="#e24329" fill-opacity="0.25" stroke="#e24329" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="36" y="21" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="9" font-weight="600">GitLab</text>
+      <rect x="70" y="8" width="64" height="18" rx="9" fill="#22c55e" fill-opacity="0.2" stroke="#22c55e" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="102" y="21" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="9" font-weight="600">Pipeline</text>
+      <rect x="140" y="8" width="58" height="18" rx="9" fill="#22c55e" fill-opacity="0.15" stroke="#22c55e" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="169" y="21" text-anchor="middle" fill="#86efac" font-family="system-ui,sans-serif" font-size="9">passed</text>
+      <!-- Subject -->
+      <text x="8" y="44" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12" font-weight="500">Pipeline #28451 passed for main</text>
+      <text x="460" y="44" text-anchor="end" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">2m ago</text>
+    </g>
+
+    <!-- Email 2: MR -->
+    <g transform="translate(12,124)">
+      <rect x="0" y="0" width="476" height="64" rx="6" fill="#2a1508" fill-opacity="0.6"/>
+      <rect x="8" y="8" width="56" height="18" rx="9" fill="#e24329" fill-opacity="0.25" stroke="#e24329" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="36" y="21" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="9" font-weight="600">GitLab</text>
+      <rect x="70" y="8" width="92" height="18" rx="9" fill="#818cf8" fill-opacity="0.2" stroke="#818cf8" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="116" y="21" text-anchor="middle" fill="#a5b4fc" font-family="system-ui,sans-serif" font-size="9" font-weight="600">MergeRequest</text>
+      <text x="8" y="44" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12" font-weight="500">MR !342: Update API documentation</text>
+      <text x="460" y="44" text-anchor="end" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">15m ago</text>
+    </g>
+
+    <!-- Email 3: Issue -->
+    <g transform="translate(12,196)">
+      <rect x="0" y="0" width="476" height="64" rx="6" fill="#2a1508" fill-opacity="0.6"/>
+      <rect x="8" y="8" width="56" height="18" rx="9" fill="#e24329" fill-opacity="0.25" stroke="#e24329" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="36" y="21" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="9" font-weight="600">GitLab</text>
+      <rect x="70" y="8" width="52" height="18" rx="9" fill="#fbbf24" fill-opacity="0.2" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="96" y="21" text-anchor="middle" fill="#fde047" font-family="system-ui,sans-serif" font-size="9" font-weight="600">Issue</text>
+      <text x="8" y="44" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12" font-weight="500">Issue #89: Fix login redirect on mobile</text>
+      <text x="460" y="44" text-anchor="end" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">1h ago</text>
+    </g>
+
+    <!-- Email 4: Pipeline failed -->
+    <g transform="translate(12,268)">
+      <rect x="0" y="0" width="476" height="64" rx="6" fill="#2a1508" fill-opacity="0.6"/>
+      <rect x="8" y="8" width="56" height="18" rx="9" fill="#e24329" fill-opacity="0.25" stroke="#e24329" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="36" y="21" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="9" font-weight="600">GitLab</text>
+      <rect x="70" y="8" width="64" height="18" rx="9" fill="#ef4444" fill-opacity="0.2" stroke="#ef4444" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="102" y="21" text-anchor="middle" fill="#fca5a5" font-family="system-ui,sans-serif" font-size="9" font-weight="600">Pipeline</text>
+      <rect x="140" y="8" width="52" height="18" rx="9" fill="#ef4444" fill-opacity="0.15" stroke="#ef4444" stroke-opacity="0.4" stroke-width="1"/>
+      <text x="166" y="21" text-anchor="middle" fill="#fca5a5" font-family="system-ui,sans-serif" font-size="9">failed</text>
+      <text x="8" y="44" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12" font-weight="500">Pipeline #28449 failed for feature/auth</text>
+      <text x="460" y="44" text-anchor="end" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">2h ago</text>
+    </g>
+
+    <!-- Email 5: Discussion -->
+    <g transform="translate(12,340)">
+      <rect x="0" y="0" width="476" height="64" rx="6" fill="#2a1508" fill-opacity="0.6"/>
+      <rect x="8" y="8" width="56" height="18" rx="9" fill="#e24329" fill-opacity="0.25" stroke="#e24329" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="36" y="21" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="9" font-weight="600">GitLab</text>
+      <rect x="70" y="8" width="76" height="18" rx="9" fill="#06b6d4" fill-opacity="0.2" stroke="#06b6d4" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="108" y="21" text-anchor="middle" fill="#67e8f9" font-family="system-ui,sans-serif" font-size="9" font-weight="600">Discussion</text>
+      <text x="8" y="44" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="12" font-weight="500">Re: Code review feedback on auth module</text>
+      <text x="460" y="44" text-anchor="end" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">3h ago</text>
+    </g>
+
+    <!-- Email 6: Merged -->
+    <g transform="translate(12,412)">
+      <rect x="0" y="0" width="476" height="56" rx="6" fill="#2a1508" fill-opacity="0.4"/>
+      <rect x="8" y="8" width="56" height="18" rx="9" fill="#e24329" fill-opacity="0.25" stroke="#e24329" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="36" y="21" text-anchor="middle" fill="#fb923c" font-family="system-ui,sans-serif" font-size="9" font-weight="600">GitLab</text>
+      <rect x="70" y="8" width="56" height="18" rx="9" fill="#a855f7" fill-opacity="0.2" stroke="#a855f7" stroke-opacity="0.5" stroke-width="1"/>
+      <text x="98" y="21" text-anchor="middle" fill="#d8b4fe" font-family="system-ui,sans-serif" font-size="9" font-weight="600">Merged</text>
+      <text x="8" y="40" fill="#a8a29e" font-family="system-ui,sans-serif" font-size="12">MR !340 merged into main</text>
+      <text x="460" y="40" text-anchor="end" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">5h ago</text>
+    </g>
+  </g>
+
+  <!-- Right side: Header mapping config -->
+  <g transform="translate(660,100)">
+    <!-- Config card -->
+    <rect x="0" y="0" width="440" height="340" rx="10" fill="#1a0a02" stroke="#9a3412" stroke-width="1.5"/>
+    <text x="220" y="28" text-anchor="middle" fill="#fb923c" font-family="ui-monospace,monospace" font-size="13" font-weight="700">headersMap Configuration</text>
+    <line x1="16" y1="38" x2="424" y2="38" stroke="#9a3412" stroke-opacity="0.4" stroke-width="1"/>
+
+    <!-- Header entries -->
+    <g font-family="ui-monospace,monospace" font-size="11">
+      <text x="20" y="62" fill="#78716c">Header</text>
+      <text x="260" y="62" fill="#78716c">Label</text>
+
+      <text x="20" y="88" fill="#fdba74">X-GitLab-Pipeline-Status</text>
+      <text x="260" y="88" fill="#86efac">Pipeline/{value}</text>
+
+      <text x="20" y="114" fill="#fdba74">X-GitLab-Project</text>
+      <text x="260" y="114" fill="#86efac">Project/{value}</text>
+
+      <text x="20" y="140" fill="#fdba74">X-GitLab-Issue-ID</text>
+      <text x="260" y="140" fill="#fde047">Issue</text>
+
+      <text x="20" y="166" fill="#fdba74">X-GitLab-MergeRequest-ID</text>
+      <text x="260" y="166" fill="#a5b4fc">MergeRequest</text>
+
+      <text x="20" y="192" fill="#fdba74">X-GitLab-Discussion-ID</text>
+      <text x="260" y="192" fill="#67e8f9">Discussion</text>
+
+      <text x="20" y="218" fill="#fdba74">X-GitLab-MergeRequest-State</text>
+      <text x="260" y="218" fill="#d8b4fe">Merged</text>
+
+      <text x="20" y="244" fill="#fdba74">X-GitLab-NotificationReason</text>
+      <text x="260" y="244" fill="#86efac">Reason/{value}</text>
+    </g>
+
+    <!-- Arrow flow -->
+    <g transform="translate(60,270)">
+      <rect x="0" y="0" width="320" height="48" rx="8" fill="#9a3412" fill-opacity="0.15" stroke="#ea580c" stroke-opacity="0.3" stroke-width="1"/>
+      <text x="160" y="20" text-anchor="middle" fill="#78716c" font-family="system-ui,sans-serif" font-size="10">Google Apps Script</text>
+      <text x="160" y="38" text-anchor="middle" fill="#fb923c" font-family="ui-monospace,monospace" font-size="11" font-weight="600">processInbox() → addLabel()</text>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="640" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="18" font-weight="600" opacity="0.5">Label GitLab Notifications in Gmail</text>
+</svg>

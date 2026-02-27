@@ -2,7 +2,7 @@
 title: How to debug Istio Upstream Reset 502 UPE (old 503 UC)
 date: "2022-04-25"
 description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs do not help"
-hero: ./service_mesh.png
+hero: ./hero.svg
 tags:
 - istio
 - kubernetes

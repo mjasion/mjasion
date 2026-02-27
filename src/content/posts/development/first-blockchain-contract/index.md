@@ -2,7 +2,7 @@
 title: Deploy your first blockchain contract to Ethereum
 date: "2022-04-09T10:00:00.000Z"
 description: "Step by step guide to deploy first contract on Ethereum blockchain"
-hero: ./solidity.png
+hero: ./hero.svg
 tags:
 - ethereum
 - blockchain
