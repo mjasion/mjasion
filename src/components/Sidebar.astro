@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import profileImg from '../assets/images/mjasion.jpg';
 import { Sun, Moon } from '@lucide/astro';
 import { author } from '../data/portfolio';
@@ -8,9 +9,30 @@ import SocialLinks from './SocialLinks.astro';
 const pathname = Astro.url.pathname;
 
 const navLinks = [
-  { href: '/', label: 'Blog', match: (p: string) => p === '/' },
+  { href: '/', label: 'Blog', match: (p: string) => p === '/' || p.startsWith('/posts') || p.startsWith('/tags') },
   { href: '/about/', label: 'About', match: (p: string) => p.startsWith('/about') },
 ];
+
+const categoryColors: Record<string, string> = {
+  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+};
+
+const now = new Date();
+const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+const categoryCounts = new Map<string, number>();
+for (const post of posts) {
+  const cat = post.data.category;
+  categoryCounts.set(cat, (categoryCounts.get(cat) ?? 0) + 1);
+}
+const categoryLinks = Array.from(categoryCounts.entries())
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .map(([cat, count]) => ({
+    href: `/posts/${cat}/`,
+    label: cat.charAt(0).toUpperCase() + cat.slice(1),
+    color: categoryColors[cat] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
+  }));
 ---
 
 <!-- Desktop sidebar -->
@@ -47,18 +69,50 @@ const navLinks = [
 
   <nav class="mt-6 space-y-1" aria-label="Main navigation">
     {navLinks.map((link) => (
-      <a
-        href={link.href}
-        aria-current={link.match(pathname) ? 'page' : undefined}
-        class:list={[
-          'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-          link.match(pathname)
-            ? 'bg-gray-100 dark:bg-gray-800 text-accent-600 dark:text-accent-400'
-            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
-        ]}
-      >
-        {link.label}
-      </a>
+      link.label === 'Blog' ? (
+        <div>
+          <a
+            href={link.href}
+            aria-current={link.match(pathname) ? 'page' : undefined}
+            class:list={[
+              'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+              link.match(pathname)
+                ? 'bg-gray-100 dark:bg-gray-800 text-accent-600 dark:text-accent-400'
+                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+            ]}
+          >
+            {link.label}
+          </a>
+          <div class="py-1 ml-3 space-y-0.5">
+            {categoryLinks.map((cat) => (
+              <a
+                href={cat.href}
+                class:list={[
+                  'flex items-center rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                  pathname.startsWith(cat.href)
+                    ? cat.color
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800',
+                ]}
+              >
+                <span>{cat.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <a
+          href={link.href}
+          aria-current={link.match(pathname) ? 'page' : undefined}
+          class:list={[
+            'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+            link.match(pathname)
+              ? 'bg-gray-100 dark:bg-gray-800 text-accent-600 dark:text-accent-400'
+              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+          ]}
+        >
+          {link.label}
+        </a>
+      )
     ))}
   </nav>
 
