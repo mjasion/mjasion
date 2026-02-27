@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { ArrowLeft } from '@lucide/astro';
+
+export async function getStaticPaths() {
+  const MIN_POSTS_FOR_TAG_PAGE = 5;
+  const now = new Date();
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  const tagCounts = new Map<string, typeof posts>();
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const existing = tagCounts.get(tag) ?? [];
+      existing.push(post);
+      tagCounts.set(tag, existing);
+    }
+  }
+
+  return Array.from(tagCounts.entries())
+    .filter(([, tagPosts]) => tagPosts.length >= MIN_POSTS_FOR_TAG_PAGE)
+    .map(([tag, tagPosts]) => ({
+      params: { tag },
+      props: { tag, posts: tagPosts },
+    }));
+}
+
+const { tag, posts } = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+
+const collectionPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `Posts tagged '${tag}'`,
+  description: `Articles about ${tag} by Marcin Jasion`,
+  url: `${siteUrl}/tags/${tag}/`,
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: posts.length,
+    itemListElement: posts.map((post: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${siteUrl}/posts/${post.id}/`,
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title={`Posts tagged '${tag}'`}
+  description={`Articles about ${tag} by Marcin Jasion`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
+  </Fragment>
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
+      <ArrowLeft class="h-4 w-4" />
+      Back to blog
+    </a>
+
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
+      Posts tagged <span class="text-accent-600 dark:text-accent-400">'{tag}'</span>
+    </h1>
+    <p class="mt-2 text-gray-600 dark:text-gray-400">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</p>
+
+    <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post: any) => (
+        <BlogCard post={post} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

@@ -3,8 +3,23 @@ import { getCollection, render } from 'astro:content';
 import PostLayout from '../../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
+  const MIN_POSTS_FOR_TAG_PAGE = 5;
   const now = new Date();
   const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+
+  // Count tags to determine which ones get pages
+  const tagCounts = new Map<string, number>();
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+    }
+  }
+  const popularTags = new Set(
+    Array.from(tagCounts.entries())
+      .filter(([, count]) => count >= MIN_POSTS_FOR_TAG_PAGE)
+      .map(([tag]) => tag)
+  );
+
   return posts.map((post) => {
     // post.id is like "cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm"
     // Extract just the slug (after the category prefix)
@@ -13,12 +28,12 @@ export async function getStaticPaths() {
     const slug = parts.slice(1).join('/');
     return {
       params: { category, slug },
-      props: { post },
+      props: { post, popularTags },
     };
   });
 }
 
-const { post } = Astro.props;
+const { post, popularTags } = Astro.props;
 const { Content, headings } = await render(post);
 const hero = post.data.hero;
 const heroSrc = hero
@@ -40,6 +55,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
   hero={hero}
   headings={headings}
   readingTime={readingTime}
+  popularTags={popularTags}
 >
   <Content />
 </PostLayout>

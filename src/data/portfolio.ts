@@ -13,6 +13,7 @@ export const author = {
       url: 'https://www.linkedin.com/in/marcinjasion',
       icon: 'linkedin',
     },
+    { name: 'Instagram', url: 'https://www.instagram.com/night_fluo/', icon: 'instagram' },
     { name: 'Email', icon: 'mail', obfuscated: true },
   ],
   cvUrl:
