@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2d6b45"/>
+      <stop offset="100%" stop-color="#3d8a5a"/>
+    </linearGradient>
+    <linearGradient id="sproutGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Soft organic shapes in background -->
+  <circle cx="200" cy="500" r="300" fill="#ffffff" opacity="0.03"/>
+  <circle cx="1000" cy="150" r="250" fill="#ffffff" opacity="0.03"/>
+  <circle cx="600" cy="700" r="400" fill="#ffffff" opacity="0.02"/>
+
+  <!-- Subtle leaf pattern -->
+  <g opacity="0.04" fill="#ffffff">
+    <circle cx="150" cy="120" r="40"/>
+    <circle cx="1050" cy="550" r="35"/>
+    <circle cx="950" cy="100" r="25"/>
+    <circle cx="250" cy="580" r="30"/>
+    <circle cx="500" cy="80" r="20"/>
+    <circle cx="700" cy="600" r="22"/>
+    <circle cx="100" cy="350" r="18"/>
+    <circle cx="1100" cy="320" r="28"/>
+  </g>
+
+  <!-- Center circle behind sprout -->
+  <circle cx="600" cy="280" r="120" fill="url(#circleGrad)"/>
+  <circle cx="600" cy="280" r="120" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.15"/>
+
+  <!-- Sprout icon (Lucide) — scaled up and centered -->
+  <g transform="translate(600, 280) scale(5.5)" stroke="url(#sproutGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <g transform="translate(-12, -12)">
+      <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/>
+      <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/>
+      <path d="M5 21h14"/>
+    </g>
+  </g>
+
+  <!-- Small shield icon — bottom-right of sprout, subtle security nod -->
+  <g transform="translate(680, 350) scale(0.7)" opacity="0.5">
+    <path d="M0,-24 L16,-18 L16,4 C16,14 8,22 0,26 C-8,22 -16,14 -16,4 L-16,-18 Z"
+          fill="none" stroke="#ffffff" stroke-width="2"/>
+    <!-- Lock keyhole -->
+    <circle cx="0" cy="0" r="3" fill="#ffffff" opacity="0.6"/>
+    <line x1="0" y1="3" x2="0" y2="8" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="460" text-anchor="middle" fill="#ffffff" font-size="28" font-weight="700" letter-spacing="-0.5" opacity="0.95">Zero-Knowledge Form System</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="500" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="400" opacity="0.6">Cloudflare Workers  ·  AES-256  ·  Workers AI</text>
+
+  <!-- Bottom decorative line -->
+  <line x1="500" y1="540" x2="700" y2="540" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+</svg>

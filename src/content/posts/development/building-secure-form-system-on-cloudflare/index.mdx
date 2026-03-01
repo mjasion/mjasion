@@ -1,0 +1,282 @@
+---
+title: "Building a Zero-Knowledge Form System on Cloudflare Workers"
+date: "2026-07-01"
+description: |
+  How I built a GDPR-compliant medical interview system using Cloudflare Workers,
+  D1, and Workers AI — with encryption at every layer and PII detection at the edge.
+hero: ./hero.svg
+tags:
+  - cloudflare
+  - security
+  - encryption
+  - workers-ai
+  - gdpr
+category: development
+---
+import Mermaid from '../../../../components/mdx/Mermaid.astro';
+import Video from '../../../../components/mdx/Video.astro';
+
+In a [previous post](/posts/development/why-i-chose-cloudflare-and-tanstack/), I explained why I chose Cloudflare and TanStack for my side projects. That post was about the stack. This one is about what happens when you actually build something with real security requirements on it.
+
+My wife needed a system for her pharmacy students to conduct and record patient interviews about herbal medicine usage. I helped her build it. The data turned out to be sensitive — personal health information protected by GDPR (RODO in Poland) — so the system needed encryption at rest, pseudonymized identities, audit trails, and protection against accidental data leaks. I built it entirely on Cloudflare Workers. This post describes the key architectural decisions and why I made them.
+
+{/* TODO: Screenshot — the main form being filled out by a student (with sample/dummy data).
+    Show a multi-stage form with a few question types visible (text, scale, table).
+    This gives readers an immediate feel for what we're building.
+    File: ./form-overview.png */}
+
+{/* ![A multi-stage medical interview form with text, scale, and table questions](./form-overview.png) */}
+
+## 🏗️ Two Workers, one system
+
+The architecture uses two Cloudflare Workers connected via a [service binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/):
+
+<Mermaid chart={`graph TD
+    Browser -->|HTTPS/TLS 1.3| FW[Frontend Worker<br/>TanStack Start + React]
+    FW -->|Service Binding<br/>env.API.fetch| BW[Backend Worker<br/>Hono API]
+    BW --> D1[(D1 Database<br/>SQLite EU)]
+    BW --> KV[(KV Store<br/>Sessions)]
+    BW --> R2[(R2 Storage<br/>File attachments)]
+    BW -->|Workers AI| AI[Llama 3.1 8B<br/>PII Detection]`} />
+
+The frontend worker handles SSR with TanStack Start. The backend worker runs a [Hono](https://hono.dev/) API with all business logic, encryption, and database access. The service binding between them means the frontend calls the backend directly — no HTTP round-trip, no CORS, no public endpoint for the API.
+
+In practice, the API call looks like this:
+
+```typescript
+// Frontend worker calls backend via service binding
+const response = await env.API.fetch(url.toString(), init)
+```
+
+The hostname doesn't matter (`http://api.internal` is a convention). Cloudflare routes the call internally. The two workers share a cookie domain, so auth tokens flow between them seamlessly.
+
+Each environment (local, staging, production) gets its own D1 database, R2 bucket, and KV namespace — all configured in `wrangler.jsonc`. No infrastructure provisioning, just config.
+
+{/* TODO: Screenshot — Cloudflare dashboard showing the two workers side by side
+    (wum-lek-pochodzenia-naturalnego and wum-lek-pochodzenia-naturalnego-api).
+    Alternatively, show the wrangler.jsonc service binding config in a terminal.
+    File: ./two-workers-dashboard.png */}
+
+{/* ![Cloudflare dashboard showing the frontend and backend workers](./two-workers-dashboard.png) */}
+
+## 🗄️ Database design for encrypted data
+
+D1 is the relational store — SQLite managed by Cloudflare in the EU region. I use [Drizzle ORM](https://orm.drizzle.team/) for type-safe queries and migrations.
+
+The interesting design challenge is: **how do you query data that's encrypted?** You can't run `WHERE email = ?` against an AES-256-GCM ciphertext. The solution is a dual-key pattern:
+
+```typescript
+// Users table has two email columns:
+email: text('email'),          // AES-256-GCM encrypted (for display)
+emailHash: text('email_hash'), // SHA-256 hash (for lookup)
+```
+
+When a user logs in, I hash their email to find the row, then decrypt the stored email for display:
+
+```typescript
+export async function hashEmail(email: string, salt: string): Promise<string> {
+  const normalizedEmail = email.toLowerCase().trim()
+  const data = new TextEncoder().encode(normalizedEmail + salt)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  return bufferToHex(hashBuffer)
+}
+```
+
+The hash is salted to prevent rainbow table attacks. The salt is stored as an environment secret — never in code.
+
+**What's encrypted:**
+
+| Data | Method | Why |
+|------|--------|-----|
+| Email, first name, last name | AES-256-GCM | PII under GDPR |
+| Form response values | AES-256-GCM | Medical data |
+| File attachment URLs | AES-256-GCM | Link to sensitive files |
+
+**What's hashed:**
+- Email (SHA-256) — for database lookup without decryption
+
+**What's plaintext:**
+- Form structure, question definitions, plant taxonomy — no PII
+
+R2 handles file attachments (photos, documents) with Cloudflare's built-in encryption at rest. KV stores ephemeral data: sessions with 30-day TTL and magic link tokens with 15-minute TTL. Both auto-expire.
+
+{/* TODO: Screenshot — D1 console or `wrangler d1 execute` output showing a users table row.
+    The key visual: email column is unreadable base64 ciphertext, emailHash is a hex string,
+    while id and role are plaintext. This makes "zero-knowledge storage" tangible.
+    Redact any real data if needed — even ciphertext of real users should be blurred.
+    File: ./d1-encrypted-data.png */}
+
+{/* ![D1 database row showing encrypted email ciphertext alongside plaintext id and role](./d1-encrypted-data.png) */}
+
+## 🔐 Authentication: two paths
+
+The system serves two types of users with different auth flows.
+
+### Magic links for administrators
+
+Admins log in via email. The flow:
+
+1. Admin enters email
+2. Backend generates a one-time token (16 random bytes), stores it in KV with a 15-minute TTL
+3. AWS SES sends the link
+4. Admin clicks the link, token is verified and immediately deleted (one-time use)
+5. JWT access token + KV refresh token are issued
+
+The first user to log in is automatically promoted to admin. No seed data, no manual setup.
+
+```typescript
+const token = generateId() // 16 random bytes → hex string
+await kv.put(`magic:${token}`, JSON.stringify({ email, ... }), {
+  expirationTtl: ttl, // 15 minutes
+})
+```
+
+### Plant-name credentials for students
+
+Students don't use personal emails. Instead, admins generate credentials where usernames are Latin plant names — *Calendula officinalis*, *Hypericum perforatum*. The username itself carries no personal information. Students log in with their plant name and a password.
+
+This is pseudonymization by design. Even if the database leaks, linking a response to a specific student requires knowledge that exists only outside the system.
+
+{/* TODO: Screenshot — student login page showing the plant-name username field and password.
+    Ideally with an example like "Calendula officinalis" visible in the username input.
+    This instantly communicates the pseudonymization concept better than text.
+    File: ./student-login.png */}
+
+{/* ![Student login page with a Latin plant name as the username](./student-login.png) */}
+
+### Session architecture
+
+Both auth flows produce the same session structure:
+
+| Token | Storage | Payload | Lifetime |
+|-------|---------|---------|----------|
+| Access (JWT) | HTTPOnly cookie | `userId` + `role` | 30 minutes |
+| Refresh | HTTPOnly cookie + KV | `userId` + `role` | 30 days |
+
+**Critical detail:** tokens contain only `userId` and `role`. Never a name, email, or any PII. If a token is intercepted, it reveals nothing about the person. The auth middleware auto-refreshes expired access tokens using the KV refresh token — transparent to the frontend.
+
+Rate limiting runs on KV counters: 3 magic link requests per minute, 10 password attempts per minute per IP.
+
+## 🤖 AI-powered PII detection at the edge
+
+Here's the problem: students interview real patients and then type up their findings. They might accidentally include a patient's name, national ID number (PESEL), or home address. In a medical context, this is a serious GDPR violation.
+
+The solution: every time form values are saved, the text is scanned by **Cloudflare Workers AI** running [Llama 3.1 8B](https://developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct-fast/) (FP8 quantized for fast inference).
+
+### How this actually runs
+
+Workers AI is not a wrapper around OpenAI or any external API. Cloudflare runs open-source models on its own GPUs, distributed across [180+ edge locations](https://blog.cloudflare.com/workers-ai/). When my Worker calls `ai.run(...)`, the request is routed to the nearest GPU with available capacity. The model — Meta's Llama 3.1 8B Instruct, quantized to FP8 for faster inference — is loaded and managed by Cloudflare's [Omni platform](https://blog.cloudflare.com/how-cloudflare-runs-more-ai-models-on-fewer-gpus/), which handles scheduling, GPU sharing, and scaling automatically. From the developer's perspective, it's a single function call — no model hosting, no GPU provisioning, no infrastructure.
+
+### Data privacy: inference inputs are not stored or used for training
+
+This matters for medical data. Cloudflare [explicitly states](https://www.cloudflare.com/trust-hub/responsible-ai/) they **do not train any models on customer data or inference inputs**. They don't use your prompts, they don't learn from your usage, and they don't store the content of inference requests. This applies to all Workers AI users, not just enterprise customers.
+
+In practical terms: when a student's form text is sent to Llama 3.1 for PII scanning, the text is processed in Cloudflare's GPU, the result is returned, and the input is discarded. No third party sees the data. No external API is called. The entire round-trip — Worker to GPU to Worker — stays within Cloudflare's infrastructure. For a system handling medical data under GDPR, this is a meaningful guarantee compared to routing prompts through external AI providers.
+
+The system prompt is in Polish, tuned for Polish PII patterns:
+
+```
+Szukaj następujących typów danych osobowych:
+- PESEL: polski numer identyfikacyjny, dokładnie 11 cyfr
+- Imię: polskie imiona własne osób (np. Jan, Anna, Marcin)
+- Nazwisko: polskie nazwiska (np. Kowalski, Nowak)
+- Adres: ulica, numer domu, miasto, kod pocztowy
+- Telefon: polski numer telefonu, 9 cyfr
+- Email: adres email
+```
+
+The AI returns either `"SAFE"` or a JSON object listing violations by question ID:
+
+```json
+{"violations": [{"q": 5, "types": ["imię", "nazwisko"]}, {"q": 12, "types": ["PESEL"]}]}
+```
+
+When a violation is detected:
+- The student sees a warning (educational, not blocking by default)
+- The violation is logged to a `piiViolations` table for admin review
+- The admin can configure whether to block submission entirely
+
+**Graceful degradation** matters here. If the daily Workers AI quota is exhausted or the model is temporarily unavailable, the validation skips silently. The student can still submit their form. PII detection is a safety net, not a gate.
+
+{/* TODO: Recording (webm, ~10-15s) — the PII detection in action.
+    This is the most impactful visual in the entire post.
+    Steps to record:
+    1. Open a form as a student
+    2. Type normal medical text in a text field (e.g. "Pacjent stosuje nalewkę z waleriany")
+    3. Then type something with PII (e.g. "Jan Kowalski, PESEL 90010112345, ul. Marszałkowska 10")
+    4. Save/submit — show the PII warning appearing
+    Keep it short, crop to just the form area. No need to show the full browser.
+    File: ./pii-detection-demo.webm */}
+
+{/* <Video src="pii-detection-demo.webm" type="video/webm" autoplay="true" loop="true" /> */}
+
+```typescript
+const response = await ai.run('@cf/meta/llama-3.1-8b-instruct-fp8', {
+  messages: [
+    { role: 'system', content: SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt },
+  ],
+  max_tokens: 500,
+  temperature: 0.1, // Low temperature for deterministic output
+})
+```
+
+## 🔒 Three layers of encryption
+
+Data is encrypted at three levels:
+
+<Mermaid chart={`flowchart TB
+    subgraph L1["Layer 1: Transport"]
+        T1["TLS 1.3 — browser to Cloudflare edge"]
+    end
+    subgraph L2["Layer 2: Application"]
+        T2["AES-256-GCM — PII and medical data"]
+        T3["SHA-256 — email lookup hash"]
+    end
+    subgraph L3["Layer 3: Infrastructure"]
+        T4["Encrypted at rest — D1 and R2 storage"]
+    end
+    L1 --> L2
+    L2 --> L3`} />
+
+The application-layer encryption uses the Web Crypto API — native to Workers, no npm dependencies:
+
+```typescript
+export async function encrypt(plaintext: string, keyBase64: string): Promise<string> {
+  const key = await importKey(keyBase64)
+  const iv = crypto.getRandomValues(new Uint8Array(12)) // Random IV per operation
+
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    new TextEncoder().encode(plaintext)
+  )
+
+  // Output: base64(IV + ciphertext + authTag)
+  const combined = new Uint8Array(12 + ciphertext.byteLength)
+  combined.set(iv, 0)
+  combined.set(new Uint8Array(ciphertext), 12)
+  return bufferToBase64(combined)
+}
+```
+
+Every encryption produces a different ciphertext (random IV), so identical inputs don't produce identical outputs. The encryption key is a 32-byte secret stored as a Cloudflare environment variable — accessible only at runtime, never logged, never committed.
+
+## 📋 Audit trail
+
+Every significant action is logged to an `auditLogs` table: form creation, update, deletion, login, logout, response submission, admin actions — over 35 action types in total. Each log entry stores a JSON diff of old and new values, enabling both compliance auditing and debugging.
+
+This isn't just for security theater. When a student reports a lost response or an admin needs to verify who accessed what, the audit trail provides a complete, queryable history.
+
+{/* TODO: Screenshot — admin audit log view showing a few recent entries.
+    Ideally showing a mix of action types (login, form_updated, response_submitted).
+    Blur/redact any real user data visible in the log details.
+    File: ./audit-log.png */}
+
+{/* ![Admin audit log showing login, form update, and response submission entries](./audit-log.png) */}
+
+## 💡 Closing thoughts
+
+The entire system — two Workers, D1 database, R2 storage, KV sessions, Workers AI for PII detection — runs within Cloudflare's free tier for the current usage levels. No AWS account, no managed Postgres, no separate AI API subscription.
+
+If you're building something that handles sensitive data, you don't need a dedicated security team or enterprise infrastructure. You need good encryption primitives, sensible architecture, and a platform that gives you the building blocks. Cloudflare Workers — with Web Crypto, D1, KV, and Workers AI — turned out to be exactly that.
