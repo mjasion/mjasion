@@ -20,7 +20,7 @@ const categoryColors: Record<string, string> = {
 };
 
 const now = new Date();
-const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || import.meta.env.PUBLIC_PREVIEW || data.date <= now));
+const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || process.env.PUBLIC_PREVIEW || data.date <= now));
 const categoryCounts = new Map<string, number>();
 for (const post of posts) {
   const cat = post.data.category;

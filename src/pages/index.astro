@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 
 const now = new Date();
-const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || import.meta.env.PUBLIC_PREVIEW || data.date <= now)))
+const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || process.env.PUBLIC_PREVIEW || data.date <= now)))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 // Resolve LCP hero image URL for preloading
