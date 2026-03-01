@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 export const GET: APIRoute = async ({ site }) => {
   const siteUrl = site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
   const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || import.meta.env.PUBLIC_PREVIEW || data.date <= now)))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     .slice(0, 10);
 
