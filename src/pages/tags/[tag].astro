@@ -7,7 +7,7 @@ import { ArrowLeft } from '@lucide/astro';
 export async function getStaticPaths() {
   const MIN_POSTS_FOR_TAG_PAGE = 5;
   const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || import.meta.env.PUBLIC_PREVIEW || data.date <= now)))
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || process.env.PUBLIC_PREVIEW || data.date <= now)))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const tagCounts = new Map<string, typeof posts>();

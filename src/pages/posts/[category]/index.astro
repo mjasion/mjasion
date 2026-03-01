@@ -18,7 +18,7 @@ const categoryDescriptions: Record<string, string> = {
 
 export async function getStaticPaths() {
   const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || import.meta.env.PUBLIC_PREVIEW || data.date <= now)))
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || process.env.PUBLIC_PREVIEW || data.date <= now)))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const categories = new Map<string, typeof posts>();
