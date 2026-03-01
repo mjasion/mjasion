@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 10 1120 630" font-family="system-ui, -apple-system, sans-serif">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#2d6b45"/>
@@ -55,13 +55,4 @@
     <circle cx="0" cy="0" r="3" fill="#ffffff" opacity="0.6"/>
     <line x1="0" y1="3" x2="0" y2="8" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
   </g>
-
-  <!-- Title -->
-  <text x="600" y="460" text-anchor="middle" fill="#ffffff" font-size="28" font-weight="700" letter-spacing="-0.5" opacity="0.95">Zero-Knowledge Form System</text>
-
-  <!-- Subtitle -->
-  <text x="600" y="500" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="400" opacity="0.6">Cloudflare Workers  ·  AES-256  ·  Workers AI</text>
-
-  <!-- Bottom decorative line -->
-  <line x1="500" y1="540" x2="700" y2="540" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
 </svg>
