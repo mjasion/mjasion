@@ -6,8 +6,17 @@ interface Props {
 const { chart } = Astro.props;
 ---
 
-<div class="my-6 flex justify-center rounded-xl bg-gray-50 dark:bg-transparent p-4 dark:p-0 [&_svg]:max-w-full [&_svg]:min-w-[min(100%,600px)]">
+<div class="mermaid-container group my-6 flex cursor-pointer justify-center rounded-xl bg-gray-50 p-4 transition-shadow duration-200 hover:shadow-md dark:bg-transparent dark:p-0 [&_svg]:max-w-full [&_svg]:min-w-[min(100%,600px)]" title="Click to enlarge">
   <pre class="mermaid not-prose bg-transparent! p-0! text-lg" set:html={chart} />
+</div>
+
+<div id="mermaid-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+  <button id="mermaid-modal-close" class="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <div id="mermaid-modal-content" class="max-h-[90vh] w-[min(90vw,1200px)] overflow-auto rounded-2xl bg-white p-6 dark:bg-gray-900 [&_svg]:max-w-full"></div>
 </div>
 
 <script>
@@ -30,6 +39,36 @@ const { chart } = Astro.props;
     mermaid.run({ querySelector: '.mermaid' });
   }
 
+  function getModal() {
+    return document.getElementById('mermaid-modal')!;
+  }
+
+  function openModal(svgHtml: string) {
+    const modal = getModal();
+    const content = document.getElementById('mermaid-modal-content')!;
+    content.innerHTML = svgHtml;
+    // Scale SVG to fill modal — remove fixed dimensions, use viewBox for scaling
+    const svg = content.querySelector('svg');
+    if (svg) {
+      svg.removeAttribute('width');
+      svg.style.maxWidth = 'none';
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+      svg.style.maxHeight = '80vh';
+    }
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    const modal = getModal();
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.getElementById('mermaid-modal-content')!.innerHTML = '';
+    document.body.style.overflow = '';
+  }
+
   function init() {
     // Store original chart source for re-rendering on theme change
     document.querySelectorAll<HTMLElement>('.mermaid').forEach((el) => {
@@ -38,6 +77,23 @@ const { chart } = Astro.props;
       }
     });
     renderMermaid();
+
+    // Click to enlarge
+    document.querySelectorAll('.mermaid-container').forEach((container) => {
+      container.addEventListener('click', () => {
+        const svg = container.querySelector('svg');
+        if (svg) openModal(svg.outerHTML);
+      });
+    });
+
+    // Close modal
+    document.getElementById('mermaid-modal-close')!.addEventListener('click', closeModal);
+    getModal().addEventListener('click', (e) => {
+      if (e.target === getModal()) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
 
     // Watch for dark class toggle on <html>
     new MutationObserver(() => renderMermaid()).observe(document.documentElement, {
