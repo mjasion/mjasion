@@ -9,6 +9,7 @@ interface Props {
   image?: string;
   canonicalUrl?: string;
   articleDate?: Date;
+  articleModifiedDate?: Date;
   articleTags?: string[];
   articleCategory?: string;
   twitterCardType?: 'summary' | 'summary_large_image';
@@ -20,6 +21,7 @@ const {
   image = '/images/mjasion.jpg',
   canonicalUrl,
   articleDate,
+  articleModifiedDate,
   articleTags,
   articleCategory,
   twitterCardType = 'summary',
@@ -46,10 +48,17 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Marcin Jasion" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={title} />
     {articleDate && <meta property="article:published_time" content={articleDate.toISOString()} />}
-    {articleDate && <meta property="article:author" content="Marcin Jasion" />}
+    {articleModifiedDate && <meta property="article:modified_time" content={articleModifiedDate.toISOString()} />}
+    {articleDate && <meta property="article:author" content="https://mjasion.pl/about/" />}
     {articleCategory && <meta property="article:section" content={articleCategory} />}
     {articleTags?.map((tag) => <meta property="article:tag" content={tag} />)}
 
@@ -58,6 +67,7 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={title} />
 
     <!-- Favicon & Feeds -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
