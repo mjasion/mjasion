@@ -232,6 +232,48 @@ const breadcrumbSchema = {
           </div>
         </div>
         <Comments />
+
+        <!-- Prev/Next navigation -->
+        {(prevPost || nextPost) && (
+          <nav class="mt-12" aria-label="Post navigation">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {prevPost ? (
+                <a
+                  href={prevPost.href}
+                  class="group flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    Older post
+                  </span>
+                  <span class={`mt-1 inline-block self-start rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[prevPost.category] ?? ''}`}>
+                    {prevPost.category}
+                  </span>
+                  <span class="mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
+                    {prevPost.title}
+                  </span>
+                </a>
+              ) : <div />}
+              {nextPost ? (
+                <a
+                  href={nextPost.href}
+                  class="group flex flex-col items-end text-right rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                    Newer post
+                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  </span>
+                  <span class={`mt-1 inline-block self-end rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[nextPost.category] ?? ''}`}>
+                    {nextPost.category}
+                  </span>
+                  <span class="mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
+                    {nextPost.title}
+                  </span>
+                </a>
+              ) : <div />}
+            </div>
+          </nav>
+        )}
       </div>
 
       <aside class="hidden xl:block">
@@ -295,14 +337,9 @@ const breadcrumbSchema = {
                 {relatedPosts.map((related) => (
                   <a
                     href={related.href}
-                    class="block group"
+                    class="block group text-sm leading-snug text-gray-600 dark:text-gray-400 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2"
                   >
-                    <span class={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[related.category]}`}>
-                      {related.category}
-                    </span>
-                    <p class="mt-1 text-sm leading-snug text-gray-600 dark:text-gray-400 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2">
-                      {related.title}
-                    </p>
+                    {related.title}
                   </a>
                 ))}
               </div>
@@ -322,10 +359,7 @@ const breadcrumbSchema = {
               href={related.href}
               class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
-              <span class={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[related.category]}`}>
-                {related.category}
-              </span>
-              <p class="mt-2 text-sm font-medium leading-snug text-gray-900 dark:text-gray-100 line-clamp-2">
+              <p class="text-sm font-medium leading-snug text-gray-900 dark:text-gray-100 line-clamp-2">
                 {related.title}
               </p>
               <time class="mt-1.5 block text-xs text-gray-500 dark:text-gray-500" datetime={related.date.toISOString()}>
@@ -335,48 +369,6 @@ const breadcrumbSchema = {
           ))}
         </div>
       </div>
-    )}
-
-    <!-- Prev/Next navigation -->
-    {(prevPost || nextPost) && (
-      <nav class="mx-auto mt-12 max-w-3xl" aria-label="Post navigation">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {prevPost ? (
-            <a
-              href={prevPost.href}
-              class="group flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                Older post
-              </span>
-              <span class={`mt-1 inline-block self-start rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[prevPost.category] ?? ''}`}>
-                {prevPost.category}
-              </span>
-              <span class="mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
-                {prevPost.title}
-              </span>
-            </a>
-          ) : <div />}
-          {nextPost ? (
-            <a
-              href={nextPost.href}
-              class="group flex flex-col items-end text-right rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                Newer post
-                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-              </span>
-              <span class={`mt-1 inline-block self-end rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[nextPost.category] ?? ''}`}>
-                {nextPost.category}
-              </span>
-              <span class="mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
-                {nextPost.title}
-              </span>
-            </a>
-          ) : <div />}
-        </div>
-      </nav>
     )}
 
   </article>
