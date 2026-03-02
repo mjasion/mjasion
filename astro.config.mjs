@@ -9,7 +9,7 @@ import {
 } from '@shikijs/transformers';
 
 export default defineConfig({
-  site: 'https://mjasion.pl',
+  site: process.env.SITE_URL || 'https://mjasion.pl',
   output: 'static',
   publicDir: 'static',
   build: {
