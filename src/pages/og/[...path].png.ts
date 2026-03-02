@@ -56,23 +56,18 @@ function buildTextOnlyLayout(
         height: '100%',
         display: 'flex',
         fontFamily: 'Inter',
+        background: `linear-gradient(to right, ${categoryColor} 0%, ${categoryColor} 10%, white 30%)`,
       },
       children: [
-        // Left color stripe with category badge
+        // Left color area (no badge)
         {
           type: 'div',
           props: {
             style: {
               width: '300px',
               height: '100%',
-              background: categoryColor,
               flexShrink: 0,
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              paddingTop: '50px',
             },
-            children: [buildCategoryBadgeWhite(category)],
           },
         },
         // Right content area
@@ -85,21 +80,33 @@ function buildTextOnlyLayout(
               flexDirection: 'column',
               justifyContent: 'space-between',
               padding: '50px',
-              background: '#ffffff',
             },
             children: [
               {
                 type: 'div',
                 props: {
                   style: {
-                    fontSize: title.length > 60 ? '46px' : '54px',
-                    fontWeight: 700,
-                    color: '#0f172a',
-                    lineHeight: 1.2,
-                    maxHeight: '400px',
-                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '16px',
                   },
-                  children: title,
+                  children: [
+                    buildCategoryBadgeDark(category, categoryColor),
+                    {
+                      type: 'div',
+                      props: {
+                        style: {
+                          fontSize: title.length > 60 ? '56px' : '72px',
+                          fontWeight: 700,
+                          color: '#0f172a',
+                          lineHeight: 1.2,
+                          maxHeight: '400px',
+                          overflow: 'hidden',
+                        },
+                        children: title,
+                      },
+                    },
+                  ],
                 },
               },
               buildBottomBar(),
@@ -117,7 +124,7 @@ function buildHeroLayout(
   category: string,
   categoryColor: string,
 ) {
-  const titleFontSize = title.length > 60 ? 40 : title.length > 40 ? 48 : 52;
+  const titleFontSize = title.length > 60 ? 56 : 72;
 
   return {
     type: 'div',
@@ -127,33 +134,31 @@ function buildHeroLayout(
         height: '100%',
         display: 'flex',
         fontFamily: 'Inter',
+        background: `linear-gradient(to right, ${categoryColor} 0%, ${categoryColor} 10%, white 35%)`,
       },
       children: [
-        // Left color stripe with category badge + hero image
+        // Left area with hero image only
         {
           type: 'div',
           props: {
             style: {
               width: '420px',
               height: '100%',
-              background: categoryColor,
               flexShrink: 0,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               padding: '40px',
-              gap: '30px',
             },
             children: [
-              buildCategoryBadgeWhite(category),
               {
                 type: 'img',
                 props: {
                   src: heroDataUri,
                   style: {
-                    width: '340px',
-                    height: '340px',
+                    width: '400px',
+                    height: '400px',
                     objectFit: 'contain',
                     borderRadius: '20px',
                   },
@@ -171,11 +176,11 @@ function buildHeroLayout(
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              gap: '30px',
+              gap: '24px',
               padding: '50px',
-              background: '#ffffff',
             },
             children: [
+              buildCategoryBadgeDark(category, categoryColor),
               {
                 type: 'div',
                 props: {
@@ -199,19 +204,29 @@ function buildHeroLayout(
   };
 }
 
-function buildCategoryBadgeWhite(category: string) {
+function buildCategoryBadgeDark(category: string, categoryColor: string) {
   return {
-    type: 'span',
+    type: 'div',
     props: {
       style: {
-        background: 'rgba(255, 255, 255, 0.25)',
-        color: 'white',
-        padding: '8px 20px',
-        borderRadius: '9999px',
-        fontSize: '20px',
-        fontWeight: 700,
+        display: 'flex',
       },
-      children: category,
+      children: [
+        {
+          type: 'span',
+          props: {
+            style: {
+              background: `${categoryColor}20`,
+              color: categoryColor,
+              padding: '8px 20px',
+              borderRadius: '9999px',
+              fontSize: '20px',
+              fontWeight: 700,
+            },
+            children: category,
+          },
+        },
+      ],
     },
   };
 }
