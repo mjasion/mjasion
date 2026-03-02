@@ -47,7 +47,6 @@ function buildTextOnlyLayout(
   title: string,
   category: string,
   categoryColor: string,
-  formattedDate: string,
 ) {
   return {
     type: 'div',
@@ -59,7 +58,7 @@ function buildTextOnlyLayout(
         fontFamily: 'Inter',
       },
       children: [
-        // Left color stripe
+        // Left color stripe with category badge
         {
           type: 'div',
           props: {
@@ -68,7 +67,12 @@ function buildTextOnlyLayout(
               height: '100%',
               background: categoryColor,
               flexShrink: 0,
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              paddingTop: '50px',
             },
+            children: [buildCategoryBadgeWhite(category)],
           },
         },
         // Right content area
@@ -80,31 +84,22 @@ function buildTextOnlyLayout(
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: '50px 50px 50px 50px',
+              padding: '50px',
               background: '#ffffff',
             },
             children: [
               {
                 type: 'div',
                 props: {
-                  style: { display: 'flex', flexDirection: 'column', gap: '20px' },
-                  children: [
-                    buildCategoryBadge(category, categoryColor, formattedDate),
-                    {
-                      type: 'div',
-                      props: {
-                        style: {
-                          fontSize: title.length > 60 ? '40px' : '48px',
-                          fontWeight: 700,
-                          color: '#0f172a',
-                          lineHeight: 1.2,
-                          maxHeight: '300px',
-                          overflow: 'hidden',
-                        },
-                        children: title,
-                      },
-                    },
-                  ],
+                  style: {
+                    fontSize: title.length > 60 ? '46px' : '54px',
+                    fontWeight: 700,
+                    color: '#0f172a',
+                    lineHeight: 1.2,
+                    maxHeight: '400px',
+                    overflow: 'hidden',
+                  },
+                  children: title,
                 },
               },
               buildBottomBar(),
@@ -121,9 +116,8 @@ function buildHeroLayout(
   title: string,
   category: string,
   categoryColor: string,
-  formattedDate: string,
 ) {
-  const titleFontSize = title.length > 60 ? 36 : title.length > 40 ? 40 : 44;
+  const titleFontSize = title.length > 60 ? 40 : title.length > 40 ? 48 : 52;
 
   return {
     type: 'div',
@@ -135,7 +129,7 @@ function buildHeroLayout(
         fontFamily: 'Inter',
       },
       children: [
-        // Left color stripe with hero image centered
+        // Left color stripe with category badge + hero image
         {
           type: 'div',
           props: {
@@ -145,11 +139,14 @@ function buildHeroLayout(
               background: categoryColor,
               flexShrink: 0,
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               padding: '40px',
+              gap: '30px',
             },
             children: [
+              buildCategoryBadgeWhite(category),
               {
                 type: 'img',
                 props: {
@@ -182,24 +179,15 @@ function buildHeroLayout(
               {
                 type: 'div',
                 props: {
-                  style: { display: 'flex', flexDirection: 'column', gap: '18px' },
-                  children: [
-                    buildCategoryBadge(category, categoryColor, formattedDate),
-                    {
-                      type: 'div',
-                      props: {
-                        style: {
-                          fontSize: `${titleFontSize}px`,
-                          fontWeight: 700,
-                          color: '#0f172a',
-                          lineHeight: 1.2,
-                          maxHeight: '280px',
-                          overflow: 'hidden',
-                        },
-                        children: title,
-                      },
-                    },
-                  ],
+                  style: {
+                    fontSize: `${titleFontSize}px`,
+                    fontWeight: 700,
+                    color: '#0f172a',
+                    lineHeight: 1.2,
+                    maxHeight: '380px',
+                    overflow: 'hidden',
+                  },
+                  children: title,
                 },
               },
               buildBottomBar(),
@@ -211,41 +199,19 @@ function buildHeroLayout(
   };
 }
 
-function buildCategoryBadge(category: string, categoryColor: string, formattedDate: string) {
+function buildCategoryBadgeWhite(category: string) {
   return {
-    type: 'div',
+    type: 'span',
     props: {
       style: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
+        background: 'rgba(255, 255, 255, 0.25)',
+        color: 'white',
+        padding: '8px 20px',
+        borderRadius: '9999px',
+        fontSize: '20px',
+        fontWeight: 700,
       },
-      children: [
-        {
-          type: 'span',
-          props: {
-            style: {
-              background: categoryColor,
-              color: 'white',
-              padding: '6px 16px',
-              borderRadius: '9999px',
-              fontSize: '18px',
-              fontWeight: 700,
-            },
-            children: category,
-          },
-        },
-        {
-          type: 'span',
-          props: {
-            style: {
-              color: '#64748b',
-              fontSize: '18px',
-            },
-            children: formattedDate,
-          },
-        },
-      ],
+      children: category,
     },
   };
 }
@@ -274,8 +240,8 @@ function buildBottomBar() {
                 props: {
                   src: profilePhotoBase64,
                   style: {
-                    width: '44px',
-                    height: '44px',
+                    width: '52px',
+                    height: '52px',
                     borderRadius: '50%',
                   },
                 },
@@ -285,7 +251,7 @@ function buildBottomBar() {
                 props: {
                   style: {
                     color: '#1e293b',
-                    fontSize: '22px',
+                    fontSize: '26px',
                     fontWeight: 700,
                   },
                   children: 'Marcin Jasion',
@@ -317,7 +283,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     props: {
       title: post.data.title,
       category: post.data.category,
-      date: post.data.date,
       hasHero: !!post.data.hero,
       postId: post.id,
     },
@@ -325,22 +290,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const GET: APIRoute = async ({ props }) => {
-  const { title, category, date, hasHero, postId } = props as {
+  const { title, category, hasHero, postId } = props as {
     title: string;
     category: string;
-    date: Date;
     hasHero: boolean;
     postId: string;
   };
   const categoryColor = categoryColorMap[category] ?? '#6366f1';
-  const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const sanitizedTitle = title.replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, '').trim();
 
   const heroDataUri = hasHero ? loadHeroImage(postId) : null;
 
   const layout = heroDataUri
-    ? buildHeroLayout(heroDataUri, sanitizedTitle, category, categoryColor, formattedDate)
-    : buildTextOnlyLayout(sanitizedTitle, category, categoryColor, formattedDate);
+    ? buildHeroLayout(heroDataUri, sanitizedTitle, category, categoryColor)
+    : buildTextOnlyLayout(sanitizedTitle, category, categoryColor);
 
   const svg = await satori(layout, {
     width: 1200,
