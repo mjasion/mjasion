@@ -74,6 +74,53 @@
   background-color: var(--shiki-dark-bg) !important;
 }
 
+/* Shiki transformers: code block enhancements */
+.astro-code {
+  position: relative;
+}
+
+.astro-code .line.diff.add {
+  background-color: rgba(16, 185, 129, 0.14);
+  border-left: 3px solid #10b981;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+}
+
+.astro-code .line.diff.remove {
+  background-color: rgba(239, 68, 68, 0.14);
+  border-left: 3px solid #ef4444;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+}
+
+.astro-code .line.highlighted {
+  background-color: rgba(234, 179, 8, 0.10);
+  border-left: 3px solid #eab308;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+}
+
+.astro-code .has-focused .line:not(.focused) {
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+
+.astro-code:hover .has-focused .line:not(.focused) {
+  opacity: 1;
+}
+
+.dark .astro-code .line.diff.add {
+  background-color: rgba(16, 185, 129, 0.18);
+}
+
+.dark .astro-code .line.diff.remove {
+  background-color: rgba(239, 68, 68, 0.18);
+}
+
+.dark .astro-code .line.highlighted {
+  background-color: rgba(234, 179, 8, 0.12);
+}
+
 @keyframes bento-in {
   from {
     opacity: 0;

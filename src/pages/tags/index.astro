@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ArrowLeft } from '@lucide/astro';
+
+const MIN_POSTS_FOR_TAG_PAGE = 5;
+const now = new Date();
+const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+
+const sortedTags = Array.from(tagCounts.entries())
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Tags' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Tags"
+  description="Browse all tags on Marcin Jasion's blog"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
+      <ArrowLeft class="h-4 w-4" />
+      Back to blog
+    </a>
+
+    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Tags</h1>
+    <p class="mt-2 text-gray-600 dark:text-gray-400">{sortedTags.length} tags across {posts.length} posts</p>
+
+    <div class="mt-8 flex flex-wrap gap-3">
+      {sortedTags.map(([tag, count]) => {
+        const isPopular = count >= MIN_POSTS_FOR_TAG_PAGE;
+        return isPopular ? (
+          <a
+            href={`/tags/${tag}/`}
+            class="inline-flex items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-accent-500 dark:hover:border-accent-400 hover:text-accent-600 dark:hover:text-accent-400 hover:shadow-sm transition-all"
+          >
+            <span>{tag}</span>
+            <span class="rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs text-gray-500 dark:text-gray-400">{count}</span>
+          </a>
+        ) : (
+          <span
+            class="inline-flex items-center gap-2 rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 px-4 py-2 text-sm text-gray-500 dark:text-gray-500"
+          >
+            <span>{tag}</span>
+            <span class="rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-xs text-gray-400 dark:text-gray-500">{count}</span>
+          </span>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>

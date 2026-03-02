@@ -19,7 +19,12 @@
       "Bash(curl:*)",
       "mcp__playwright__browser_install",
       "WebFetch(domain:mjasion.pl)",
-      "Bash(xmllint:*)"
+      "Bash(xmllint:*)",
+      "mcp__playwright__browser_press_key",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "WebFetch(domain:fonts.googleapis.com)"
     ],
     "deny": [],
     "ask": []

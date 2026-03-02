@@ -2,6 +2,11 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import {
+  transformerNotationDiff,
+  transformerNotationHighlight,
+  transformerNotationFocus,
+} from '@shikijs/transformers';
 
 export default defineConfig({
   site: 'https://mjasion.pl',
@@ -23,6 +28,11 @@ export default defineConfig({
         light: 'github-light',
         dark: 'github-dark',
       },
+      transformers: [
+        transformerNotationDiff(),
+        transformerNotationHighlight(),
+        transformerNotationFocus(),
+      ],
     },
   },
 });

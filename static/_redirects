@@ -24,9 +24,6 @@
 # Old category rename (golang → kubernetes)
 /posts/golang/implementing-leader-election-in-go-using-kubernetes-api/ /posts/kubernetes/implementing-leader-election-in-go-using-kubernetes-api/ 301
 
-# Old tag pages → posts listing
-/tags/ /posts/ 301
-
 # --- Splat rules below (exact rules must be above for Cloudflare Pages performance) ---
 
 # Old Hugo pagination
@@ -34,9 +31,6 @@
 /posts/cloud/page/* /posts/cloud/ 301
 /posts/development/page/* /posts/development/ 301
 /posts/kubernetes/page/* /posts/kubernetes/ 301
-
-# Old tag pages (catch-all)
-/tags/* /posts/ 301
 
 # Old notes section (removed)
 /notes/* / 301

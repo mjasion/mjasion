@@ -21,7 +21,7 @@ export async function getStaticPaths() {
       .map(([tag]) => tag)
   );
 
-  return posts.map((post) => {
+  return posts.map((post, index) => {
     const parts = post.id.split('/');
     const category = parts[0];
     const slug = parts.slice(1).join('/');
@@ -37,14 +37,22 @@ export async function getStaticPaths() {
         date: p.data.date,
       }));
 
+    // Posts are sorted DESC (newest first), so older = index+1, newer = index-1
+    const olderPost = index < posts.length - 1
+      ? { title: posts[index + 1].data.title, href: `/posts/${posts[index + 1].id}/`, category: posts[index + 1].data.category }
+      : null;
+    const newerPost = index > 0
+      ? { title: posts[index - 1].data.title, href: `/posts/${posts[index - 1].id}/`, category: posts[index - 1].data.category }
+      : null;
+
     return {
       params: { category, slug },
-      props: { post, popularTags, relatedPosts: related },
+      props: { post, popularTags, relatedPosts: related, prevPost: olderPost, nextPost: newerPost },
     };
   });
 }
 
-const { post, popularTags, relatedPosts } = Astro.props;
+const { post, popularTags, relatedPosts, prevPost, nextPost } = Astro.props;
 const { Content, headings } = await render(post);
 const hero = post.data.hero;
 const heroSrc = hero
@@ -69,6 +77,8 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
   readingTime={readingTime}
   popularTags={popularTags}
   relatedPosts={relatedPosts}
+  prevPost={prevPost}
+  nextPost={nextPost}
 >
   <Content />
 </PostLayout>

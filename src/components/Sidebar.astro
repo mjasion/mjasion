@@ -10,6 +10,7 @@ const pathname = Astro.url.pathname;
 
 const navLinks = [
   { href: '/', label: 'Blog', match: (p: string) => p === '/' || p.startsWith('/posts') || p.startsWith('/tags') },
+  { href: '/archives/', label: 'Archives', match: (p: string) => p.startsWith('/archives') },
   { href: '/about/', label: 'About', match: (p: string) => p.startsWith('/about') },
 ];
 

@@ -7,6 +7,12 @@ import { author } from '@/data/portfolio';
 import type { MarkdownHeading } from 'astro';
 import Comments from '@/components/Comments.astro';
 
+interface NavPost {
+  title: string;
+  href: string;
+  category: string;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -20,9 +26,11 @@ interface Props {
   readingTime: number;
   popularTags?: Set<string>;
   relatedPosts?: { title: string; href: string; category: string; date: Date }[];
+  prevPost?: NavPost | null;
+  nextPost?: NavPost | null;
 }
 
-const { title, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [] } = Astro.props;
+const { title, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
 
 const categoryColors: Record<string, string> = {
   cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
@@ -40,7 +48,8 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
-const ogImage = heroSrc?.startsWith('http') ? heroSrc : heroSrc ? `${siteUrl}${heroSrc}` : `${siteUrl}${author.image}`;
+const postPath = Astro.url.pathname.replace(/^\/posts\//, '').replace(/\/$/, '');
+const ogImage = `${siteUrl}/og/${postPath}.png`;
 
 const blogPostingSchema = {
   '@context': 'https://schema.org',
@@ -81,16 +90,29 @@ const breadcrumbSchema = {
 <BaseLayout
   title={title}
   description={description}
-  image={heroSrc}
+  image={`/og/${postPath}.png`}
   articleDate={date}
   articleTags={tags}
   articleCategory={category}
-  twitterCardType={heroSrc ? 'summary_large_image' : 'summary'}
+  twitterCardType="summary_large_image"
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </Fragment>
+  <!-- Reading progress bar -->
+  <div
+    id="reading-progress"
+    class="fixed top-0 left-0 right-0 h-0.5 z-[60] pointer-events-none print:hidden"
+    role="progressbar"
+    aria-valuenow={0}
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-label="Reading progress"
+  >
+    <div id="reading-progress-bar" class="h-full bg-accent-500 transition-[width] duration-150 ease-out" style="width: 0%"></div>
+  </div>
+
   <article class="mx-auto max-w-5xl px-4 py-8">
     <!-- Header -->
     <header class="animate-bento-in">
@@ -130,6 +152,35 @@ const breadcrumbSchema = {
           ))}
         </div>
       )}
+
+      <!-- Share buttons (mobile/tablet fallback — hidden on xl when sidebar shows) -->
+      <div class="mt-4 flex items-center gap-1 xl:hidden">
+        <a
+          href={`https://x.com/intent/tweet?url=${encodeURIComponent(canonical)}&text=${encodeURIComponent(title)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          aria-label="Share on X"
+        >
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a
+          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonical)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          aria-label="Share on LinkedIn"
+        >
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <button
+          class="copy-link-btn-trigger inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          aria-label="Copy link"
+        >
+          <svg class="copy-link-icon-el h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          <svg class="copy-link-check-el h-4 w-4 hidden text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </button>
+      </div>
     </header>
 
     {hero && (
@@ -183,31 +234,87 @@ const breadcrumbSchema = {
         <Comments />
       </div>
 
-      {tocHeadings.length > 2 && (
-        <aside class="hidden xl:block">
-          <nav class="sticky top-8 text-sm" id="toc-nav">
-            <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">On this page</h2>
-            <ul class="space-y-2 text-gray-500 dark:text-gray-400">
-              {tocHeadings.map((heading) => (
-                <li style={`padding-left: ${(heading.depth - 2) * 0.75}rem`}>
+      <aside class="hidden xl:block">
+        <div class="sticky top-8 space-y-6 text-sm">
+          {tocHeadings.length > 2 && (
+            <nav id="toc-nav">
+              <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">On this page</h2>
+              <ul class="space-y-2 text-gray-500 dark:text-gray-400">
+                {tocHeadings.map((heading) => (
+                  <li style={`padding-left: ${(heading.depth - 2) * 0.75}rem`}>
+                    <a
+                      href={`#${heading.slug}`}
+                      data-toc={heading.slug}
+                      class="toc-link block transition-colors duration-150 hover:text-gray-900 dark:hover:text-gray-100"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
+          <!-- Share -->
+          <div>
+            <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">Share</h2>
+            <div class="flex items-center gap-1">
+              <a
+                href={`https://x.com/intent/tweet?url=${encodeURIComponent(canonical)}&text=${encodeURIComponent(title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                aria-label="Share on X"
+              >
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonical)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                aria-label="Share on LinkedIn"
+              >
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+              <button
+                class="copy-link-btn-trigger inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                aria-label="Copy link"
+              >
+                <svg class="copy-link-icon-el h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                <svg class="copy-link-check-el h-4 w-4 hidden text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Related posts (sidebar) -->
+          {relatedPosts.length > 0 && (
+            <div>
+              <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">Related</h2>
+              <div class="space-y-3">
+                {relatedPosts.map((related) => (
                   <a
-                    href={`#${heading.slug}`}
-                    data-toc={heading.slug}
-                    class="toc-link block transition-colors duration-150 hover:text-gray-900 dark:hover:text-gray-100"
+                    href={related.href}
+                    class="block group"
                   >
-                    {heading.text}
+                    <span class={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[related.category]}`}>
+                      {related.category}
+                    </span>
+                    <p class="mt-1 text-sm leading-snug text-gray-600 dark:text-gray-400 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2">
+                      {related.title}
+                    </p>
                   </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
-      )}
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </aside>
     </div>
 
-    <!-- Related posts -->
+    <!-- Related posts (mobile/tablet fallback — hidden on xl when sidebar shows) -->
     {relatedPosts.length > 0 && (
-      <div class="mx-auto mt-12 max-w-3xl">
+      <div class="mx-auto mt-12 max-w-3xl xl:hidden">
         <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Related posts</h2>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {relatedPosts.map((related) => (
@@ -230,7 +337,62 @@ const breadcrumbSchema = {
       </div>
     )}
 
+    <!-- Prev/Next navigation -->
+    {(prevPost || nextPost) && (
+      <nav class="mx-auto mt-12 max-w-3xl" aria-label="Post navigation">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {prevPost ? (
+            <a
+              href={prevPost.href}
+              class="group flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                Older post
+              </span>
+              <span class={`mt-1 inline-block self-start rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[prevPost.category] ?? ''}`}>
+                {prevPost.category}
+              </span>
+              <span class="mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
+                {prevPost.title}
+              </span>
+            </a>
+          ) : <div />}
+          {nextPost ? (
+            <a
+              href={nextPost.href}
+              class="group flex flex-col items-end text-right rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                Newer post
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </span>
+              <span class={`mt-1 inline-block self-end rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[nextPost.category] ?? ''}`}>
+                {nextPost.category}
+              </span>
+              <span class="mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
+                {nextPost.title}
+              </span>
+            </a>
+          ) : <div />}
+        </div>
+      </nav>
+    )}
+
   </article>
+
+  <!-- Back to top button with progress ring -->
+  <button
+    id="back-to-top"
+    class="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:shadow-xl print:hidden"
+    aria-label="Back to top"
+  >
+    <svg class="h-14 w-14" viewBox="0 0 56 56">
+      <circle cx="28" cy="28" r="24" fill="none" stroke-width="2.5" class="stroke-gray-200 dark:stroke-gray-700" />
+      <circle id="btt-ring" cx="28" cy="28" r="24" fill="none" stroke-width="2.5" class="stroke-accent-500" stroke-linecap="round" stroke-dasharray="150.796" stroke-dashoffset="150.796" transform="rotate(-90 28 28)" />
+    </svg>
+    <svg class="absolute inset-0 m-auto h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+  </button>
 
   <!-- Lightbox overlay -->
   <div
@@ -256,6 +418,69 @@ const breadcrumbSchema = {
 
   :global(.dark) .toc-link.is-active {
     color: var(--color-accent-400, #60a5fa);
+  }
+
+  /* Heading anchor links */
+  .prose :global(.heading-anchor) {
+    position: absolute;
+    left: -1.5em;
+    opacity: 0;
+    color: var(--color-gray-400, #94a3b8);
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity 0.2s;
+  }
+  .prose :global(h2:hover .heading-anchor),
+  .prose :global(h3:hover .heading-anchor),
+  .prose :global(h4:hover .heading-anchor),
+  .prose :global(h5:hover .heading-anchor),
+  .prose :global(h6:hover .heading-anchor) {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    .prose :global(.heading-anchor) {
+      opacity: 0.4;
+    }
+  }
+
+  /* Copy button on code blocks */
+  .prose :global(pre) {
+    position: relative;
+  }
+  :global(.copy-btn) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-gray-200, #cbd5e1);
+    background: var(--color-glass, rgba(248, 250, 252, 0.7));
+    color: var(--color-gray-500, #475569);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s;
+    backdrop-filter: blur(4px);
+  }
+  :global(.dark .copy-btn) {
+    border-color: var(--color-gray-700, #1e293b);
+    background: rgba(15, 23, 42, 0.7);
+    color: var(--color-gray-400, #64748b);
+  }
+  :global(pre:hover .copy-btn) {
+    opacity: 1;
+  }
+  :global(.copy-btn:hover) {
+    background: var(--color-gray-100, #e2e8f0);
+  }
+  :global(.dark .copy-btn:hover) {
+    background: var(--color-gray-800, #0f172a);
+  }
+  @media (hover: none) {
+    :global(.copy-btn) {
+      opacity: 1;
+    }
   }
 </style>
 
@@ -328,5 +553,108 @@ const breadcrumbSchema = {
     if (e.key === 'Escape' && !lightbox!.classList.contains('hidden')) {
       closeLightbox();
     }
+  });
+
+  // Copy button on code blocks
+  document.querySelectorAll('.prose pre').forEach((pre) => {
+    const code = pre.querySelector('code');
+    if (!code) return;
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? '');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+      } catch {
+        btn.textContent = 'Error';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+      }
+    });
+    pre.appendChild(btn);
+  });
+
+  // Heading anchor links
+  document.querySelectorAll('.prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]').forEach((heading) => {
+    const el = heading as HTMLElement;
+    el.style.position = 'relative';
+    const anchor = document.createElement('a');
+    anchor.className = 'heading-anchor';
+    anchor.href = `#${el.id}`;
+    anchor.textContent = '#';
+    anchor.setAttribute('aria-label', `Link to ${el.textContent}`);
+    el.prepend(anchor);
+  });
+
+  // Reading progress bar
+  const progressBar = document.getElementById('reading-progress-bar');
+  const progressContainer = document.getElementById('reading-progress');
+  if (progressBar && progressContainer) {
+    let progressTicking = false;
+    function updateProgress() {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
+      const pct = Math.round(scrolled * 100);
+      progressBar!.style.width = `${pct}%`;
+      progressContainer!.setAttribute('aria-valuenow', String(pct));
+    }
+    window.addEventListener('scroll', () => {
+      if (!progressTicking) {
+        requestAnimationFrame(() => { updateProgress(); progressTicking = false; });
+        progressTicking = true;
+      }
+    }, { passive: true });
+    updateProgress();
+  }
+
+  // Back to top button with progress ring
+  const bttBtn = document.getElementById('back-to-top');
+  const bttRing = document.getElementById('btt-ring');
+  const CIRCUMFERENCE = 2 * Math.PI * 24; // r=24
+  if (bttBtn && bttRing) {
+    let bttTicking = false;
+    function updateBackToTop() {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
+      const offset = CIRCUMFERENCE - scrolled * CIRCUMFERENCE;
+      bttRing!.style.strokeDashoffset = String(offset);
+      if (scrolled > 0.2) {
+        bttBtn!.style.opacity = '1';
+        bttBtn!.style.pointerEvents = 'auto';
+      } else {
+        bttBtn!.style.opacity = '0';
+        bttBtn!.style.pointerEvents = 'none';
+      }
+    }
+    window.addEventListener('scroll', () => {
+      if (!bttTicking) {
+        requestAnimationFrame(() => { updateBackToTop(); bttTicking = false; });
+        bttTicking = true;
+      }
+    }, { passive: true });
+    bttBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    updateBackToTop();
+  }
+
+  // Copy link share buttons (multiple instances: mobile + sidebar)
+  document.querySelectorAll('.copy-link-btn-trigger').forEach((btn) => {
+    const icon = btn.querySelector('.copy-link-icon-el');
+    const check = btn.querySelector('.copy-link-check-el');
+    if (!icon || !check) return;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        icon.classList.add('hidden');
+        check.classList.remove('hidden');
+        setTimeout(() => {
+          icon.classList.remove('hidden');
+          check.classList.add('hidden');
+        }, 1500);
+      } catch {}
+    });
   });
 </script>
