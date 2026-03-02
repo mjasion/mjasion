@@ -32,7 +32,7 @@ function loadHeroImage(postId: string): string | null {
 
     const svgContent = readFileSync(heroPath, 'utf-8');
     const resvg = new Resvg(svgContent, {
-      fitTo: { mode: 'width', value: 600 },
+      fitTo: { mode: 'width', value: 800 },
     });
     const pngData = resvg.render();
     const pngBuffer = pngData.asPng();
@@ -109,7 +109,7 @@ function buildTextOnlyLayout(
                   ],
                 },
               },
-              buildBottomBar(),
+              buildBottomBar(categoryColor),
             ],
           },
         },
@@ -142,14 +142,13 @@ function buildHeroLayout(
           type: 'div',
           props: {
             style: {
-              width: '420px',
+              width: '480px',
               height: '100%',
               flexShrink: 0,
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '40px',
+              overflow: 'hidden',
             },
             children: [
               {
@@ -157,10 +156,9 @@ function buildHeroLayout(
                 props: {
                   src: heroDataUri,
                   style: {
-                    width: '400px',
-                    height: '400px',
+                    width: '550px',
+                    height: '550px',
                     objectFit: 'contain',
-                    borderRadius: '20px',
                   },
                 },
               },
@@ -195,7 +193,7 @@ function buildHeroLayout(
                   children: title,
                 },
               },
-              buildBottomBar(),
+              buildBottomBar(categoryColor),
             ],
           },
         },
@@ -231,7 +229,7 @@ function buildCategoryBadgeDark(category: string, categoryColor: string) {
   };
 }
 
-function buildBottomBar() {
+function buildBottomBar(categoryColor: string) {
   return {
     type: 'div',
     props: {
@@ -276,13 +274,30 @@ function buildBottomBar() {
           },
         },
         {
-          type: 'span',
+          type: 'div',
           props: {
             style: {
-              color: '#94a3b8',
-              fontSize: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: `${categoryColor}15`,
+              border: `2px solid ${categoryColor}40`,
+              padding: '10px 20px',
+              borderRadius: '9999px',
             },
-            children: 'mjasion.pl',
+            children: [
+              {
+                type: 'span',
+                props: {
+                  style: {
+                    color: categoryColor,
+                    fontSize: '18px',
+                    fontWeight: 600,
+                  },
+                  children: 'Read on mjasion.pl ->',
+                },
+              },
+            ],
           },
         },
       ],
