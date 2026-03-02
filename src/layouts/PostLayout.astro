@@ -277,29 +277,10 @@ const breadcrumbSchema = {
       </div>
 
       <aside class="hidden xl:block">
-        <div class="sticky top-8 space-y-6 text-sm">
-          {tocHeadings.length > 2 && (
-            <nav id="toc-nav">
-              <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">On this page</h2>
-              <ul class="space-y-2 text-gray-500 dark:text-gray-400">
-                {tocHeadings.map((heading) => (
-                  <li style={`padding-left: ${(heading.depth - 2) * 0.75}rem`}>
-                    <a
-                      href={`#${heading.slug}`}
-                      data-toc={heading.slug}
-                      class="toc-link block transition-colors duration-150 hover:text-gray-900 dark:hover:text-gray-100"
-                    >
-                      {heading.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-
+        <div class="sticky top-8 divide-y divide-gray-200 dark:divide-gray-800 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 text-sm">
           <!-- Share -->
-          <div>
-            <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">Share</h2>
+          <div class="flex items-center justify-between p-5">
+            <h2 class="font-semibold text-gray-900 dark:text-gray-100">Share</h2>
             <div class="flex items-center gap-1">
               <a
                 href={`https://x.com/intent/tweet?url=${encodeURIComponent(canonical)}&text=${encodeURIComponent(title)}`}
@@ -329,9 +310,28 @@ const breadcrumbSchema = {
             </div>
           </div>
 
+          {tocHeadings.length > 2 && (
+            <nav id="toc-nav" class="p-5">
+              <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">On this page</h2>
+              <ul class="space-y-2 text-gray-500 dark:text-gray-400">
+                {tocHeadings.map((heading) => (
+                  <li style={`padding-left: ${(heading.depth - 2) * 0.75}rem`}>
+                    <a
+                      href={`#${heading.slug}`}
+                      data-toc={heading.slug}
+                      class="toc-link block transition-colors duration-150 hover:text-gray-900 dark:hover:text-gray-100"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
           <!-- Related posts (sidebar) -->
           {relatedPosts.length > 0 && (
-            <div>
+            <div class="p-5">
               <h2 class="mb-3 font-semibold text-gray-900 dark:text-gray-100">Related</h2>
               <div class="space-y-3">
                 {relatedPosts.map((related) => (
