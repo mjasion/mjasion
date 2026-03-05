@@ -24,7 +24,9 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:registry.npmjs.org)",
       "WebFetch(domain:cdn.jsdelivr.net)",
-      "WebFetch(domain:fonts.googleapis.com)"
+      "WebFetch(domain:fonts.googleapis.com)",
+      "Bash(GIT_SEQUENCE_EDITOR=\"sed -i '''' ''s/^pick/edit/g''\" git rebase -i HEAD~7)",
+      "mcp__playwright__browser_wait_for"
     ],
     "deny": [],
     "ask": []
