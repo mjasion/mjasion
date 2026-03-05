@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 
@@ -7,16 +8,24 @@ const now = new Date();
 const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Resolve LCP hero image URL for preloading
+// Resolve LCP hero image URL for preloading (WebP via custom image service)
 const lcpHero = posts[0]?.data.hero;
-const lcpHeroSrc = lcpHero
-  ? typeof lcpHero === 'string' ? lcpHero : lcpHero.src
-  : undefined;
+let lcpPreloadSrc: string | undefined;
+if (lcpHero && typeof lcpHero !== 'string') {
+  const resolved = await getImage({
+    src: lcpHero,
+    widths: [400, 662, 800],
+    sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw',
+    format: 'webp',
+    quality: 100,
+  });
+  lcpPreloadSrc = resolved.src;
+}
 ---
 
 <BaseLayout title="Marcin Jasion">
   <Fragment slot="head">
-    {lcpHeroSrc && <link rel="preload" as="image" href={lcpHeroSrc} fetchpriority="high" />}
+    {lcpPreloadSrc && <link rel="preload" as="image" href={lcpPreloadSrc} fetchpriority="high" />}
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',

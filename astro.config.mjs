@@ -11,6 +11,11 @@ import {
 export default defineConfig({
   site: process.env.SITE_URL || 'https://mjasion.pl',
   output: 'static',
+  image: {
+    service: {
+      entrypoint: './src/image-service.ts',
+    },
+  },
   publicDir: 'static',
   build: {
     format: 'directory',

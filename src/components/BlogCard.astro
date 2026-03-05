@@ -37,27 +37,17 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 >
   {hero && (
     <div class="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800">
-      {typeof hero !== 'string' && hero.format !== 'svg' ? (
-        <Image
-          src={hero}
-          alt={title}
-          widths={[400, 662, 800]}
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          format="webp"
-          quality={80}
-          class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
-          loading={priority ? 'eager' : 'lazy'}
-          fetchpriority={priority ? 'high' : undefined}
-        />
-      ) : (
-        <img
-          src={typeof hero === 'string' ? hero : hero.src}
-          alt={title}
-          class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
-          loading={priority ? 'eager' : 'lazy'}
-          fetchpriority={priority ? 'high' : undefined}
-        />
-      )}
+      <Image
+        src={hero}
+        alt={title}
+        widths={[400, 662, 800]}
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        format="webp"
+        quality={100}
+        class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
+      />
     </div>
   )}
 

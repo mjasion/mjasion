@@ -186,26 +186,16 @@ const breadcrumbSchema = {
 
     {hero && (
       <div class="mt-8 animate-bento-in" style="animation-delay: 100ms">
-        {typeof hero !== 'string' && hero.format !== 'svg' ? (
-          <Image
-            src={hero}
-            alt={title}
-            width={1024}
-            format="webp"
-            quality={85}
-            class="w-full rounded-2xl"
-            loading="eager"
-            fetchpriority="high"
-          />
-        ) : (
-          <img
-            src={typeof hero === 'string' ? hero : hero.src}
-            alt={title}
-            class="w-full rounded-2xl"
-            loading="eager"
-            fetchpriority="high"
-          />
-        )}
+        <Image
+          src={hero}
+          alt={title}
+          width={1024}
+          format="webp"
+          quality={100}
+          class="w-full rounded-2xl"
+          loading="eager"
+          fetchpriority="high"
+        />
       </div>
     )}
 
