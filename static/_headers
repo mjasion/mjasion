@@ -1,0 +1,20 @@
+# ===========================================
+# Security Headers — mjasion.pl
+# ===========================================
+
+# Global security headers for all pages
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), usb=()
+  X-XSS-Protection: 0
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' www.googletagmanager.com giscus.app; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' www.googletagmanager.com www.google-analytics.com analytics.google.com; frame-src giscus.app; media-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; manifest-src 'self'
+
+# Block indexing on non-production domains
+https://mjasion.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
