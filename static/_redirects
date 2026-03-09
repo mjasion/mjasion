@@ -10,7 +10,11 @@
 /search/ / 301
 /categories/ /posts/ 301
 
+# Old Hugo artifacts
+/index.json /index.xml 301
+
 # Old flat post URLs (before category structure was added)
+/how-to-enable-debug-in-terraform-cloud/ /posts/cloud/how-to-enable-debug-in-terraform-cloud/ 301
 /label-gitlab-notifications/ /posts/development/label-gitlab-notifications/ 301
 /posts/label-gitlab-notifications/ /posts/development/label-gitlab-notifications/ 301
 /posts/first-blockchain-contract/ /posts/development/first-blockchain-contract/ 301
@@ -34,3 +38,6 @@
 
 # Old notes section (removed)
 /notes/* / 301
+
+# Non-existent tag pages (tags with < 5 posts have no dedicated page)
+/tags/* /tags/ 301
