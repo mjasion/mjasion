@@ -9,12 +9,12 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.14",
+    "@astrojs/mdx": "^5.0.0",
     "@astrojs/sitemap": "^3.7.1",
     "@fontsource/inter": "^5.2.8",
     "@lucide/astro": "^0.577.0",
     "@resvg/resvg-js": "^2.6.2",
-    "astro": "^5.18.1",
+    "astro": "^6.0.0",
     "mermaid": "^11.13.0",
     "satori": "^0.25.0",
     "sharp": "^0.34.5"
