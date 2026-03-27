@@ -12,7 +12,7 @@
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/sitemap": "^3.7.1",
     "@fontsource/inter": "^5.2.8",
-    "@lucide/astro": "^0.577.0",
+    "@lucide/astro": "^1.0.0",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^6.0.4",
     "mermaid": "^11.13.0",
