@@ -9,12 +9,12 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "^5.0.0",
-    "@astrojs/sitemap": "^3.7.1",
+    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/sitemap": "^3.7.2",
     "@fontsource/inter": "^5.2.8",
     "@lucide/astro": "^0.577.0",
     "@resvg/resvg-js": "^2.6.2",
-    "astro": "^6.0.4",
+    "astro": "^6.1.1",
     "mermaid": "^11.13.0",
     "satori": "^0.26.0",
     "sharp": "^0.34.5"
@@ -22,8 +22,8 @@
   "devDependencies": {
     "@shikijs/transformers": "^4.0.2",
     "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.2.1",
-    "tailwindcss": "^4.2.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.32.1",
