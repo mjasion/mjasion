@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Youtube } from '@lucide/astro';
+import { Play } from '@lucide/astro';
 import { author, skills, skillCategories, experiences, certifications, presentations } from '../data/portfolio';
 ---
 
@@ -185,7 +185,7 @@ import { author, skills, skillCategories, experiences, certifications, presentat
                     rel="noopener noreferrer"
                     class="inline-flex items-center gap-1 rounded-full bg-red-100 dark:bg-red-900/30 px-3 py-1 text-xs font-medium text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
                   >
-                    <Youtube class="h-3.5 w-3.5" />
+                    <Play class="h-3.5 w-3.5" />
                     {asset.title}
                   </a>
                 ))}
