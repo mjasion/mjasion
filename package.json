@@ -24,7 +24,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.0"
   },
   "packageManager": "pnpm@10.33.0",
   "pnpm": {
