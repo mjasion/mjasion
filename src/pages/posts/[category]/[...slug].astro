@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import PostLayout from '../../../layouts/PostLayout.astro';
+import { getReadingTime } from '../../../data/portfolio';
 
 export async function getStaticPaths() {
   const MIN_POSTS_FOR_TAG_PAGE = 5;
@@ -60,8 +61,7 @@ const heroSrc = hero
     ? hero
     : hero.src
   : undefined;
-const wordCount = post.body?.split(/\s+/).length ?? 0;
-const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+const readingTime = getReadingTime(post.body);
 ---
 
 <PostLayout

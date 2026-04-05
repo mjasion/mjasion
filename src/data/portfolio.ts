@@ -1,3 +1,19 @@
+export function getReadingTime(body: string | undefined): number {
+  return Math.max(1, Math.ceil((body?.split(/\s+/).length ?? 0) / 200));
+}
+
+export const categoryColors: Record<string, string> = {
+  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+};
+
+export const categoryLabels: Record<string, string> = {
+  cloud: 'Cloud',
+  development: 'Development',
+  kubernetes: 'Kubernetes',
+};
+
 export const author = {
   name: 'Marcin Jasion',
   nickname: 'Marcin',
@@ -82,14 +98,6 @@ export const skills = [
       '8+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.',
     categories: ['tools'],
   },
-];
-
-export const skillCategories = [
-  'All',
-  'Container',
-  'Cloud',
-  'Programming',
-  'Tools',
 ];
 
 export interface Experience {

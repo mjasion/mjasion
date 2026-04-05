@@ -3,9 +3,10 @@ import BaseLayout from './BaseLayout.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { ArrowLeft } from '@lucide/astro';
-import { author } from '@/data/portfolio';
+import { author, categoryColors } from '@/data/portfolio';
 import type { MarkdownHeading } from 'astro';
 import Comments from '@/components/Comments.astro';
+import ShareButtons from '@/components/ShareButtons.astro';
 
 interface NavPost {
   title: string;
@@ -31,12 +32,6 @@ interface Props {
 }
 
 const { title, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
-
-const categoryColors: Record<string, string> = {
-  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-};
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -156,31 +151,7 @@ const breadcrumbSchema = {
 
       <!-- Share buttons (mobile/tablet fallback — hidden on xl when sidebar shows) -->
       <div class="mt-4 flex items-center gap-1 xl:hidden">
-        <a
-          href={`https://x.com/intent/tweet?url=${encodeURIComponent(canonical)}&text=${encodeURIComponent(title)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-          aria-label="Share on X"
-        >
-          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-        <a
-          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonical)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-          aria-label="Share on LinkedIn"
-        >
-          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <button
-          class="copy-link-btn-trigger inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-          aria-label="Copy link"
-        >
-          <svg class="copy-link-icon-el h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-          <svg class="copy-link-check-el h-4 w-4 hidden text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        </button>
+        <ShareButtons canonical={canonical} title={title} />
       </div>
     </header>
 
@@ -273,31 +244,7 @@ const breadcrumbSchema = {
           <div class="flex items-center justify-between p-5">
             <h2 class="font-semibold text-gray-900 dark:text-gray-100">Share</h2>
             <div class="flex items-center gap-1">
-              <a
-                href={`https://x.com/intent/tweet?url=${encodeURIComponent(canonical)}&text=${encodeURIComponent(title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                aria-label="Share on X"
-              >
-                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </a>
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonical)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                aria-label="Share on LinkedIn"
-              >
-                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-              </a>
-              <button
-                class="copy-link-btn-trigger inline-flex items-center justify-center h-8 w-8 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                aria-label="Copy link"
-              >
-                <svg class="copy-link-icon-el h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                <svg class="copy-link-check-el h-4 w-4 hidden text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              </button>
+              <ShareButtons canonical={canonical} title={title} />
             </div>
           </div>
 
@@ -328,7 +275,7 @@ const breadcrumbSchema = {
                 {relatedPosts.map((related) => (
                   <a
                     href={related.href}
-                    class="block group text-sm leading-snug text-gray-600 dark:text-gray-400 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2"
+                    class="block text-sm leading-snug text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors line-clamp-2"
                   >
                     {related.title}
                   </a>
@@ -348,7 +295,7 @@ const breadcrumbSchema = {
           {relatedPosts.map((related) => (
             <a
               href={related.href}
-              class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              class="block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
               <p class="text-sm font-medium leading-snug text-gray-900 dark:text-gray-100 line-clamp-2">
                 {related.title}
@@ -382,7 +329,9 @@ const breadcrumbSchema = {
     id="lightbox"
     class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm cursor-zoom-out print:hidden"
     role="dialog"
+    aria-modal="true"
     aria-label="Image preview"
+    tabindex="-1"
   >
     <img id="lightbox-img" class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain" alt="" />
   </div>
@@ -509,25 +458,30 @@ const breadcrumbSchema = {
   // Lightbox for prose images
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  let lightboxTrigger: HTMLElement | null = null;
 
-  function openLightbox(src: string, alt: string) {
+  function openLightbox(src: string, alt: string, trigger: HTMLElement) {
+    lightboxTrigger = trigger;
     lightboxImg.src = src;
     lightboxImg.alt = alt;
     lightbox!.classList.remove('hidden');
     lightbox!.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    lightbox!.focus();
   }
 
   function closeLightbox() {
     lightbox!.classList.add('hidden');
     lightbox!.classList.remove('flex');
     document.body.style.overflow = '';
+    lightboxTrigger?.focus();
+    lightboxTrigger = null;
   }
 
   document.querySelectorAll('.prose img').forEach((img) => {
     const el = img as HTMLImageElement;
     el.style.cursor = 'zoom-in';
-    el.addEventListener('click', () => openLightbox(el.src, el.alt));
+    el.addEventListener('click', () => openLightbox(el.src, el.alt, el));
   });
 
   lightbox?.addEventListener('click', closeLightbox);

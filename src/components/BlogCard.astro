@@ -10,11 +10,7 @@ interface Props {
 const { post, priority = false } = Astro.props;
 const { title, date, description, category, tags, hero } = post.data;
 
-const categoryColors: Record<string, string> = {
-  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-};
+import { categoryColors, getReadingTime } from '../data/portfolio';
 
 // post.id is like "cloud/how-to-setup-aws..." (includes category)
 const href = `/posts/${post.id}/`;
@@ -25,9 +21,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
-// Estimate reading time
-const wordCount = (post.body?.split(/\s+/).length ?? 0);
-const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+const readingTime = getReadingTime(post.body);
 ---
 
 <a
@@ -43,7 +37,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
         widths={[400, 540, 720, 960, 1120]}
         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         format="webp"
-        quality={100}
+        quality={80}
         class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
         loading={priority ? 'eager' : 'lazy'}
         fetchpriority={priority ? 'high' : undefined}

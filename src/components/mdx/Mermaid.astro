@@ -10,7 +10,7 @@ const { chart } = Astro.props;
   <pre class="mermaid not-prose bg-transparent! p-0! text-lg" set:html={chart} />
 </div>
 
-<div id="mermaid-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+<div id="mermaid-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Enlarged diagram">
   <button id="mermaid-modal-close" class="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20" aria-label="Close">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -43,7 +43,10 @@ const { chart } = Astro.props;
     return document.getElementById('mermaid-modal')!;
   }
 
-  function openModal(svgHtml: string) {
+  let triggerEl: HTMLElement | null = null;
+
+  function openModal(svgHtml: string, trigger?: HTMLElement) {
+    triggerEl = trigger ?? null;
     const modal = getModal();
     const content = document.getElementById('mermaid-modal-content')!;
     content.innerHTML = svgHtml;
@@ -59,6 +62,7 @@ const { chart } = Astro.props;
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    document.getElementById('mermaid-modal-close')?.focus();
   }
 
   function closeModal() {
@@ -67,6 +71,8 @@ const { chart } = Astro.props;
     modal.classList.remove('flex');
     document.getElementById('mermaid-modal-content')!.innerHTML = '';
     document.body.style.overflow = '';
+    triggerEl?.focus();
+    triggerEl = null;
   }
 
   function init() {
@@ -79,10 +85,10 @@ const { chart } = Astro.props;
     renderMermaid();
 
     // Click to enlarge
-    document.querySelectorAll('.mermaid-container').forEach((container) => {
+    document.querySelectorAll<HTMLElement>('.mermaid-container').forEach((container) => {
       container.addEventListener('click', () => {
         const svg = container.querySelector('svg');
-        if (svg) openModal(svg.outerHTML);
+        if (svg) openModal(svg.outerHTML, container);
       });
     });
 
@@ -95,8 +101,12 @@ const { chart } = Astro.props;
       if (e.key === 'Escape') closeModal();
     });
 
-    // Watch for dark class toggle on <html>
-    new MutationObserver(() => renderMermaid()).observe(document.documentElement, {
+    // Watch for dark class toggle on <html> (debounced to prevent double-renders)
+    let themeTimer: number;
+    new MutationObserver(() => {
+      clearTimeout(themeTimer);
+      themeTimer = window.setTimeout(renderMermaid, 100);
+    }).observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });

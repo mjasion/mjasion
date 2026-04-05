@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import profileImg from '../assets/images/mjasion.jpg';
 import { Sun, Moon } from '@lucide/astro';
-import { author } from '../data/portfolio';
+import { author, categoryColors } from '../data/portfolio';
 import SocialLinks from './SocialLinks.astro';
 
 const pathname = Astro.url.pathname;
@@ -13,12 +13,6 @@ const navLinks = [
   { href: '/archives/', label: 'Archives', match: (p: string) => p.startsWith('/archives') },
   { href: '/about/', label: 'About', match: (p: string) => p.startsWith('/about') },
 ];
-
-const categoryColors: Record<string, string> = {
-  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-};
 
 const now = new Date();
 const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));

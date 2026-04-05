@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ArrowLeft } from '@lucide/astro';
+import { categoryColors } from '../data/portfolio';
 
 const now = new Date();
 const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
@@ -14,12 +15,6 @@ for (const post of posts) {
   yearPosts.push(post);
   postsByYear.set(year, yearPosts);
 }
-
-const categoryColors: Record<string, string> = {
-  cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  kubernetes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-};
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
 
