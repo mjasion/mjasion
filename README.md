@@ -1,21 +1,14 @@
 # Hi, I'm Marcin
 
-SRE & Platform Engineer from Warsaw, Poland.
+Senior Platform Engineer from Warsaw, Poland with 12 years of experience building reliable systems and platforms.
 
-I build reliable systems with **Kubernetes**, write code in **Go**, and deploy on **Cloudflare** and **Vercel**. On the side, I explore **TanStack**, build with **Claude Code**, and tinker with new tools.
+I design and operate cloud infrastructure with **Kubernetes**, **AWS**, and **GCP**, write tools and services in **Go**, and care deeply about developer experience and platform reliability.
 
-I write about what I learn at [mjasion.pl/blog](https://mjasion.pl/posts/).
+I write about what I learn at [mjasion.pl](https://mjasion.pl/posts/).
 
-### Features
+### What I work with
 
-- Blog with category-based routing and tag pages
-- Archives page with year-grouped timeline
-- Dynamic OG images generated with Satori + Resvg
-- Shiki code blocks with diff, highlight, and focus annotations
-- Reading progress bar, back-to-top button, copy-to-clipboard on code blocks
-- Social sharing (X, LinkedIn, copy link), prev/next post navigation
-- Dark mode with system preference detection
-- Atom RSS feed, JSON-LD structured data, sitemap
+`Kubernetes` `Go` `AWS` `GCP` `Docker` `Istio` `Linux` `GitHub Actions` `Terraform`
 
 ### Connect
 
