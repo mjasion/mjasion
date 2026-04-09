@@ -27,7 +27,8 @@
       "WebFetch(domain:fonts.googleapis.com)",
       "Bash(GIT_SEQUENCE_EDITOR=\"sed -i '''' ''s/^pick/edit/g''\" git rebase -i HEAD~7)",
       "mcp__playwright__browser_wait_for",
-      "mcp__playwright__browser_resize"
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_console_messages"
     ],
     "deny": [],
     "ask": []

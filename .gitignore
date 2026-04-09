@@ -74,3 +74,4 @@ resources/
 
 themes/toha/content/
 .pnpm-store/
+/.playwright-mcp/
