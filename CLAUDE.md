@@ -90,11 +90,25 @@ title: "Post Title"
 date: "YYYY-MM-DD"
 description: |
   Multi-line description
-hero: ./hero-image.svg          # Relative path for image optimization
+hero: ./hero.svg                # REQUIRED. Relative path for image optimization.
 tags: [tag1, tag2]
 category: cloud                 # cloud | development | kubernetes
 draft: false                    # Optional, defaults to false
 ```
+
+### Hero Image — Required
+
+Every new blog post **MUST** ship with a hero image co-located in the post directory
+(`src/content/posts/<category>/<slug>/hero.svg`). Do not create a post without one,
+and do not ask the user whether they want one — generate it as part of the same task.
+
+- Format: SVG preferred (sharp at any size, small file, easy to author by hand).
+  PNG/JPG acceptable when SVG cannot represent the subject (photos, screenshots).
+- Aspect: 1200×675 viewBox (matches the dynamic OG image template).
+- Style: dark gradient background, theme-colored accents, system-ui sans-serif.
+  Reference: `src/content/posts/development/why-i-chose-cloudflare-and-tanstack/hero.svg`.
+- The `hero` front-matter field is currently `.optional()` in `src/content.config.ts`
+  for legacy posts only. New posts must always set it.
 
 ### MDX Posts
 
