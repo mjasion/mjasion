@@ -1,0 +1,193 @@
+---
+title: "Two Agents, One MCP Server: Using a Second Claude as a Harness for the First"
+date: "2026-05-02"
+description: |
+  One agent built my tax-calculator app and exposed it over MCP. A second agent, with no
+  shared context, used that MCP server plus the raw broker data to audit the math — and
+  found three real bugs. This is what "harness engineering" looks like in practice.
+hero: ./hero.svg
+tags:
+- ai
+- mcp
+- claude-code
+- testing
+- harness-engineering
+- cloudflare
+
+category: development
+---
+import Mermaid from '../../../../components/mdx/Mermaid.astro';
+
+A few months ago I built a small personal app — `portal.mjasion.dev` — to do my Polish PIT-38 tax calculation from raw IBKR / XTB / Dif broker exports. FIFO matching, NBP currency rates, dividend section, the works. I built it with Claude Code, in the way most people build with Claude Code now: I described what I wanted, the agent wrote the code, I reviewed and pushed.
+
+The thing nobody talks about enough: when an agent writes the code, your tests are also code an agent wrote. If both lean on the same misreading of the spec, you don't notice until tax time.
+
+This post is about the loop I ended up using to catch that. One agent builds the app **and exposes an MCP server** describing its own outputs. A second agent — fresh context, no memory of the build — uses that MCP plus the raw broker files to independently re-derive the numbers. Where the two diverge, that's the bug list.
+
+It found three. They were not small.
+
+## What "harness engineering" means
+
+The framing comes from Mitchell Hashimoto in his "new way of writing code" interview. His thesis, paraphrased: traditional tests cover one happy case + one edge case + one bad case, which was fine when a *human* held the actual problem in their head. AI agents are goal-oriented — if there isn't a spec or a test saying "this also matters", they will cheerfully break it on the way to their goal.
+
+His proposed fix: **harness engineering**. Every time you see an AI do something wrong, build a tool — a piece of the harness — that the agent can call to prevent or correct it. Shift effort from the product itself to the rig around the product.
+
+The piece I want to add: the harness doesn't have to be deterministic. A second agent, given the right interface and the raw ground truth, *is* a harness. MCP turns out to be an excellent way to wire that harness in.
+
+## The setup
+
+<Mermaid chart={`%%{init: {'flowchart': {'nodeSpacing': 70, 'rankSpacing': 110, 'padding': 20}, 'themeVariables': {'fontSize': '20px'}}}%%
+graph TD
+    A["<b>Agent A</b><br/>Claude Code · build session<br/>writes app + tests<br/>publishes MCP server"]
+    App["<b>portal.mjasion.dev</b><br/>FIFO · PIT-38 · MCP"]
+    MCP["<b>MCP tools + descriptions</b><br/>tax_get_year_summary<br/>tax_get_currency_rates<br/>= the contract under audit"]
+    Raw["<b>Raw broker CSVs</b><br/>IBKR · XTB · Dif<br/>independent ground truth"]
+    B["<b>Agent B</b><br/>Claude Code · audit session<br/>fresh context<br/>recomputes everything"]
+    Bugs["<b>Divergences = bug list</b><br/>fed back to Agent A"]
+
+    A -->|builds + exposes| App
+    App --> MCP
+    MCP -->|queried by| B
+    Raw -->|fed to| B
+    B -->|surfaces| Bugs
+    Bugs -.->|fix loop| A
+
+    classDef agent fill:#1e293b,stroke:#3b82f6,color:#e2e8f0,stroke-width:2px
+    classDef audit fill:#1e293b,stroke:#10b981,color:#e2e8f0,stroke-width:2px
+    classDef app fill:#1c1917,stroke:#f59e0b,color:#fde68a,stroke-width:2px
+    classDef mcp fill:#1c1917,stroke:#f59e0b,color:#fcd34d,stroke-width:2px
+    classDef raw fill:#0f172a,stroke:#475569,color:#cbd5e1,stroke-width:1.5px
+    classDef bug fill:#1e293b,stroke:#ef4444,color:#fca5a5,stroke-width:2px
+    class A agent
+    class B audit
+    class App app
+    class MCP mcp
+    class Raw raw
+    class Bugs bug`} />
+
+Agent A wrote the backend (Hono on Cloudflare Workers + D1 + KV), the TanStack Start frontend, and an MCP server that exposes endpoints like `tax_get_year_summary({ year, includeGroups: true })`. Each tool description tells a model what fields it returns and what they mean. That description is what the second agent reads to decide what to verify.
+
+Agent B was a separate Claude Code session. It got two things:
+
+1. The raw IBKR / Dif / XTB statements I had on disk.
+2. A connection to the running MCP server.
+
+I asked it: "compute the 2023, 2024 and 2025 PIT-38 values from the raw files independently. Then call the MCP server for the same years. Tell me where they disagree."
+
+That was it. No hand-holding about which functions to look at, no "check this file". It read the MCP descriptions, looked at the broker formats, did its own FIFO, and then started flagging deltas.
+
+## Bug #1 — Cost basis at the wrong currency rate
+
+This is the one that mattered most for actual tax owed.
+
+PIT-38 is denominated in PLN, but trades happen in USD/EUR/etc. Polish tax law (art. 11a ust. 2 PIT) is unambiguous: revenue from a sale uses the NBP mid rate from **D-1 of the sale**, and cost basis uses the NBP mid rate from **D-1 of each individual purchase**. For a FIFO match where one sale eats five different lots bought across three years, that's five different historical buy rates plus one sell rate.
+
+What the app actually did:
+
+```ts
+// backend/src/routes/tax-calculator.ts (before)
+const revenuePln = first.sellPrice * totalQuantity * rateInfo.rate;
+const costPln = groupRows.reduce((sum, r) => {
+  return sum + (r.buyPrice * r.quantity + r.buyCommission + r.sellCommission)
+              * rateInfo.rate;       // ← sell-day rate applied to every buy lot
+}, 0);
+```
+
+`rateInfo.rate` is the rate from D-1 of the sale. The reducer used that same rate for every lot in the FIFO group — including lots bought years earlier at very different USD/PLN rates.
+
+USD/PLN went from ~4.85 in late 2022 to ~3.93 in late 2023. If you bought at 4.85 and sold at 3.93, the *real* PLN cost is higher than the PLN revenue — you have a tax loss in PLN even though the USD numbers look flat. The app valued the cost at the sell-day rate, which made the cost smaller in PLN than it should be, which made the PLN profit look bigger, which would have generated a fictitious tax bill.
+
+Agent B caught this by noticing that for every multi-year FIFO group it ran, app cost basis was lower than its independent calculation by exactly the ratio of the two NBP rates. Across 2023–2025 the app over-stated profit by roughly 65,000 PLN cumulatively — about 8,800 PLN of tax that wasn't actually owed, plus a 2023 *loss* the app failed to recognise (which would normally carry forward and offset future gains).
+
+Agent A's fix was the obvious one once you've seen it: pre-fetch all the (currency, date) pairs needed across both buy and sell legs, build a `Map`, and look up per-lot at FIFO time. After the fix, my independent recomputation matches the app to the grosz on the IBKR delta, with a ~500 PLN/year residual on the Dif broker — and that residual turned out to be the app *correctly* including monthly custody fees that my hand calc hadn't picked up. The app was now more right than I was.
+
+## Bug #2 — PIT-38 Section G fields swapped
+
+This one is what made me appreciate the harness pattern most, because the *visible numbers* on the page were "right" by the labels, but those labels were wrong relative to the actual PIT-38 form.
+
+PIT-38 Section G (foreign dividends, for the years where it still mattered) has three fields:
+
+- **G.45** — Polish flat-rate 19% tax computed on the foreign-dividend gross.
+- **G.46** — Foreign withholding tax that was already deducted, expressed in PLN.
+- **G.47** — Top-up to pay (G.45 minus G.46, per row, never negative).
+
+The aggregator in the backend:
+
+```ts
+acc.g45 += d.grossPln;                    // gross stored as g45
+// ...
+const g46 = r(0.19 * acc.g45);            // 0.19 × gross stored as g46
+```
+
+So `g45` was the gross dividend total and `g46` was 19% of gross. That's the *opposite* of the form. The frontend mirrored the same misreading in the per-person aggregator, and the i18n labels matched the wrong-but-consistent semantics ("G 45 Dividend gross"), so end-to-end nothing visibly looked off — until a second pair of eyes who actually had the official PIT-38 spec next to them said "your G.45 should be a tax amount, not a gross."
+
+The harness loop here is interesting: Agent B didn't find this by reading the code. It found it by reading the *MCP tool description* (`pit-G dividends per broker: g45, g46, g47, count`) and noticing the description didn't match the official field semantics it had verified independently. The MCP description itself was part of the surface area that needed to be right.
+
+The fix was a clean swap: the backend aggregator was extracted to a pure `aggregatePitGDividends()` helper (so it could finally be unit-tested without standing up a Hono+D1 context), four targeted tests were added covering the canonical case + per-row top-up floor + multi-broker split + empty input, and the MCP server version was bumped 1.1.0 → 1.2.0 specifically to mark "the field semantics on the wire have changed". That last bit matters: bumping the MCP version is how you signal to a future agent on the other side of the wire that its prior assumptions are stale.
+
+## Bug #3 — Dividend rows had `price = 0`
+
+This one was hidden behind the previous one. After fixing Section G semantics, G.45 came out to **0 PLN** for IBKR 2023 — which is impossible if there were dividends at all.
+
+The IBKR dividend parser:
+
+```ts
+// backend/src/lib/parsers/ibkr-dividends.ts (before)
+case 'Dividends':
+  type = TransactionType.Dividend;
+  amount += Math.abs(d.amount);     // sets amount
+  hasValidTransactions = true;
+  break;
+```
+
+Compare with the sibling case for broker interest in the same file:
+
+```ts
+case 'Broker Interest Received':
+  symbol = 'IBKR Interest';
+  quantity = 1;
+  type = TransactionType.OtherFees;
+  price += Math.abs(d.amount);      // sets price ← !
+```
+
+The dividend case set `amount` but never set `price`. Downstream, FIFO computes `grossFx = sellPrice × quantity` to derive Section G inputs. With `price = 0` and `quantity = 0` it dutifully produced `grossFx = 0` for every dividend row, which propagated to G.45 = 0.
+
+Why this passed the existing tests: the parser test asserted on `amount` and `fee` but not on `price`. Classic "test coverage ≠ test adequacy". The harness loop caught it because Agent B was comparing computed PLN dividend totals against the broker's own statement totals — and the totals from the API were flatly wrong, while `tax_get_year_summary` happily returned a non-zero G.46 (foreign WHT was parsed correctly via a different code path), which is what made the bug pattern even visible.
+
+Three lines of fix, plus a regression test seeded with the actual AVGO and MSFT dividend rows from my real CSV, plus a SQL backfill to retroactively repair existing data:
+
+```sql
+UPDATE transactions
+SET price = amount, quantity = 1
+WHERE broker = 'IBKR' AND type = 'Dividend' AND price = 0 AND amount > 0;
+```
+
+## Why MCP is the right harness interface
+
+You could imagine doing this audit a few different ways. You could ask Agent B to read the source code directly. You could expose a giant SQL dump and let it grep. You could write a separate "verifier" CLI.
+
+MCP is better than any of those for one reason: **it forces the description.**
+
+Every MCP tool comes with a natural-language schema: what it does, what it returns, what each field means. To expose your code over MCP at all, you have to write that down. And the moment you write it down, you've created a contract that a second agent can audit against the ground truth. The auditor doesn't need to read your code. It needs to read your *description* and compare what you claim against what an independent computation says.
+
+In the Section G case, the bug wasn't even in the math — the math was internally consistent. The bug was that the field labels lied about which PIT-38 box they corresponded to. That's a kind of bug that is *only* findable through external description-vs-truth comparison. No amount of unit testing inside the build agent's session would have caught it, because the build agent was the one who wrote both the tests and the labels.
+
+This is what makes MCP a natural fit for harness engineering: **the tool description is the contract, and a second agent is a cheap, parallelisable contract auditor.**
+
+## What I changed about how I work
+
+Three things stuck after this experiment.
+
+**1. The build agent must publish an MCP server, even for "internal" apps.** I had originally exposed MCP because I wanted my Claude Code sessions to be able to query my own tax data. The audit use case was a happy accident. I now treat it as the primary reason: if there's no MCP, there's no harness surface, and I'm flying blind on AI-written code.
+
+**2. The audit agent gets the raw inputs, not the code.** When I ran Agent B I deliberately did not show it `tax-calculator.ts`. I showed it the IBKR / Dif / XTB CSVs and the MCP connection. The point of harness engineering is to produce a verifier that has *no shared assumptions* with the code under test. The moment the auditor reads the implementation, it starts pattern-matching against what's there instead of against what should be there.
+
+**3. MCP description changes are versioned like API changes.** Section G fix bumped `MCP_SERVER_VERSION` from 1.1.0 to 1.2.0 even though only the description and field semantics changed. The wire format was the same. But a downstream agent has to know its prior reading of the world is invalid, and version is the signal.
+
+## What this isn't
+
+I'm not claiming a second agent replaces tests. The unit test for `aggregatePitGDividends` still exists, still runs in CI, still catches regressions in seconds. That's the deterministic harness — it's fast, cheap, and ungameable.
+
+The second-agent audit is a slower, more expensive layer that catches a different *class* of bug: the ones where the tests and the code agree because they share an authorial misunderstanding. Those bugs don't surface in a green CI run. They surface when something outside the bubble — the official PIT-38 form, the broker's own statement totals, a friend doing it in Excel — disagrees with the bubble. MCP is just the cheapest way I've found to plug "outside the bubble" into the loop.
+
+If Hashimoto is right that testing fundamentally has to change in the AI era, my small data point from one personal project is: **yes, and the change looks like building APIs the next agent can audit you with.** The MCP server isn't there to make your app extensible. It's there so the *next* agent doesn't have to trust you.
