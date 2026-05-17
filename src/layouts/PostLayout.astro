@@ -95,6 +95,7 @@ const breadcrumbSchema = {
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <link rel="alternate" type="text/markdown" href={`/posts/${postPath}.md`} title={`${title} (Markdown)`} />
   </Fragment>
   <!-- Reading progress bar -->
   <div

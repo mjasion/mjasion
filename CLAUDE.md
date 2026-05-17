@@ -433,4 +433,4 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 7. **Zero client JS by default** — Only add `<script>` tags when truly needed (dark mode, email decode, mermaid). No JS frameworks.
 8. **Content-first URLs** — Blog posts at `/posts/{category}/{slug}/`. No URL changes without redirect.
 9. **Package manager** — Always use `pnpm`, never `npm` or `yarn`.
-10. **Static output only** — `output: 'static'` in Astro config. No SSR, no server endpoints.
+10. **Static output only** — `output: 'static'` in Astro config. No SSR. Cloudflare Pages Functions allowed only as thin content-negotiation middleware in `functions/_middleware.ts` (no business logic, no DB access, no auth).
