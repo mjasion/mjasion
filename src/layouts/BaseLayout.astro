@@ -34,6 +34,12 @@ const ogImageType = /\.jpe?g($|\?)/i.test(ogImage) ? 'image/jpeg'
   : /\.webp($|\?)/i.test(ogImage) ? 'image/webp'
   : 'image/png';
 const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`;
+
+// Markdown-for-agents discovery hint — every page has a .md sibling.
+// Middleware in functions/_middleware.ts content-negotiates this based on Accept.
+const mdHref = Astro.url.pathname === '/'
+  ? '/index.md'
+  : Astro.url.pathname.replace(/\/$/, '') + '.md';
 ---
 
 <html lang="en" class="scroll-smooth">
@@ -75,6 +81,7 @@ const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`
     <!-- Favicon & Feeds -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/atom+xml" title="Marcin Jasion" href="/index.xml" />
+    <link rel="alternate" type="text/markdown" title={`${fullTitle} (Markdown)`} href={mdHref} />
 
     <!-- Preconnect for deferred analytics -->
     <link rel="preconnect" href="https://www.googletagmanager.com" />

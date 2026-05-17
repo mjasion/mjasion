@@ -1,6 +1,6 @@
 // Cloudflare Pages Function — thin content-negotiation middleware.
-// Rewrites /posts/<category>/<slug>/ to /posts/<category>/<slug>.md when the client
-// prefers text/markdown via the Accept header. No business logic, no DB, no auth.
+// Rewrites page URLs to their .md sibling when the client prefers text/markdown.
+// No business logic, no DB, no auth.
 // Discovery: PostLayout emits <link rel="alternate" type="text/markdown" ...>.
 
 interface PagesContext {
@@ -8,12 +8,11 @@ interface PagesContext {
   next: (input?: Request | string, init?: RequestInit) => Promise<Response>;
 }
 
-const POST_PATH = /^\/posts\/[^/]+\/[^/]+(?:\/[^/]+)*\/?$/;
+const ASSET_EXT = /\.[a-z0-9]+$/i;
 
 function prefersMarkdown(accept: string | null): boolean {
   if (!accept) return false;
 
-  // Parse "type/subtype;q=0.x" entries. Anything with q=0 is excluded.
   const entries = accept.split(',').map((part) => {
     const [type, ...params] = part.trim().split(';');
     let q = 1;
@@ -31,36 +30,53 @@ function prefersMarkdown(accept: string | null): boolean {
   if (!md) return false;
 
   const html = entries.find((e) => e.type === 'text/html' && e.q > 0);
-  // Pick markdown only if it's at least as preferred as HTML, or HTML isn't requested.
   return !html || md.q >= html.q;
+}
+
+function rewriteToMd(pathname: string): string | null {
+  if (pathname === '/') return '/index.md';
+  const last = pathname.split('/').filter(Boolean).pop() ?? '';
+  if (ASSET_EXT.test(last)) return null; // asset request — leave it alone
+  return pathname.replace(/\/$/, '') + '.md';
+}
+
+function approxTokens(byteLength: number): number {
+  // Rough heuristic: ~4 chars per token. Good enough for an x-markdown-tokens hint.
+  return Math.max(1, Math.round(byteLength / 4));
 }
 
 export const onRequest = async (context: PagesContext): Promise<Response> => {
   const { request, next } = context;
   const url = new URL(request.url);
+  const isPage = !ASSET_EXT.test(url.pathname.split('/').filter(Boolean).pop() ?? '');
 
-  if (request.method === 'GET' && POST_PATH.test(url.pathname) && prefersMarkdown(request.headers.get('accept'))) {
-    const cleanPath = url.pathname.replace(/\/$/, '');
-    const mdUrl = new URL(url.toString());
-    mdUrl.pathname = cleanPath + '.md';
-
-    const mdResponse = await next(new Request(mdUrl.toString(), request));
-    if (mdResponse.status === 200) {
-      const headers = new Headers(mdResponse.headers);
-      headers.set('Content-Type', 'text/markdown; charset=utf-8');
-      headers.append('Vary', 'Accept');
-      return new Response(mdResponse.body, {
-        status: mdResponse.status,
-        statusText: mdResponse.statusText,
-        headers,
-      });
+  if (request.method === 'GET' && isPage && prefersMarkdown(request.headers.get('accept'))) {
+    const mdPath = rewriteToMd(url.pathname);
+    if (mdPath) {
+      const mdUrl = new URL(url.toString());
+      mdUrl.pathname = mdPath;
+      const mdResponse = await next(new Request(mdUrl.toString(), request));
+      if (mdResponse.status === 200) {
+        const body = await mdResponse.arrayBuffer();
+        const headers = new Headers(mdResponse.headers);
+        headers.set('Content-Type', 'text/markdown; charset=utf-8');
+        headers.set('x-markdown-tokens', String(approxTokens(body.byteLength)));
+        const existingVary = headers.get('Vary');
+        if (!existingVary || !/\baccept\b/i.test(existingVary)) {
+          headers.append('Vary', 'Accept');
+        }
+        return new Response(body, {
+          status: mdResponse.status,
+          statusText: mdResponse.statusText,
+          headers,
+        });
+      }
+      // Fall through to HTML if the .md asset is missing for this path.
     }
-    // Fall through to HTML if the .md asset is missing.
   }
 
   const response = await next();
-  // Advertise Accept-based variance for crawlers/CDN, even on HTML responses.
-  if (POST_PATH.test(url.pathname)) {
+  if (isPage) {
     const headers = new Headers(response.headers);
     const existingVary = headers.get('Vary');
     if (!existingVary || !/\baccept\b/i.test(existingVary)) {
