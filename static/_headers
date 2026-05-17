@@ -10,7 +10,7 @@
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), usb=()
   X-XSS-Protection: 0
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' www.googletagmanager.com giscus.app; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' www.googletagmanager.com www.google-analytics.com analytics.google.com; frame-src giscus.app; media-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; manifest-src 'self'
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' www.googletagmanager.com giscus.app static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' www.googletagmanager.com www.google-analytics.com analytics.google.com cloudflareinsights.com; frame-src giscus.app; media-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; manifest-src 'self'
   Link: </index.xml>; rel="alternate"; type="application/atom+xml"; title="Marcin Jasion"
   Link: </sitemap-index.xml>; rel="sitemap"; type="application/xml"
 
