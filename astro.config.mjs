@@ -19,6 +19,9 @@ export default defineConfig({
   publicDir: 'static',
   build: {
     format: 'directory',
+    // CSS bundle is small (~10 KiB gzipped) and shared across pages — inline to
+    // eliminate the render-blocking round-trip on first paint.
+    inlineStylesheets: 'always',
   },
   vite: {
     plugins: [tailwindcss()],
