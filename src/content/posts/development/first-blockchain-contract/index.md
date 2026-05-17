@@ -1,6 +1,7 @@
 ---
 title: Deploy your first blockchain contract to Ethereum
 date: "2022-04-09T10:00:00.000Z"
+dateModified: "2026-05-17"
 description: "Step by step guide to deploy first contract on Ethereum blockchain"
 hero: ./hero.svg
 tags:
@@ -11,6 +12,9 @@ tags:
 
 category: development
 ---
+
+> ⚠️ **Heads up — Rinkeby testnet is no longer available.**
+> This guide was written in 2022 using the Rinkeby test network, which was shut down by the Ethereum Foundation in October 2023. The Solidity contract code and the Remix workflow below are still valid, but to actually deploy you'll need to switch to the **Sepolia** testnet (or Holesky for staking testing): pick "Sepolia" instead of "Rinkeby" in MetaMask, and use a current faucet such as [sepoliafaucet.com](https://sepoliafaucet.com) or [Alchemy's Sepolia faucet](https://www.alchemy.com/faucets/ethereum-sepolia). Transactions are visible on [sepolia.etherscan.io](https://sepolia.etherscan.io) instead of rinkeby.etherscan.io.
 
 ## First contract - Pet owners
 

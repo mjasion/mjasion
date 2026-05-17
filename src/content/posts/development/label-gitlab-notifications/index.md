@@ -1,6 +1,7 @@
 ---
 title: How to label GitLab notification in Gmail by headers?
 date: "2020-04-17T10:00:00.000Z"
+dateModified: "2026-02-24"
 description: "You can label emails by headers in Gmail. To do this you have to create a script that periodically scans for new emails in your inbox. To demonstrate it I will use Gitlab notifications and we will add labels to messages basing on their headers"
 hero: ./hero.svg
 tags:

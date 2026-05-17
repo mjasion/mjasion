@@ -1,6 +1,7 @@
 ---
 title: How to configure parallelism in Terraform Cloud
 date: "2022-06-14"
+dateModified: "2026-05-17"
 description: "Remote terraform execution runs on default parallelism value. There is a simple way to improve execution speed 4 times"
 hero: ./hero.svg
 tags:
@@ -10,6 +11,9 @@ tags:
 
 category: cloud
 ---
+
+> **Note on naming (2026):** HashiCorp rebranded **Terraform Cloud → HCP Terraform** in April 2024. The `TFE_PARALLELISM` environment variable and the workflow below are unchanged. The UI labelling now reads "HCP Terraform" but the workspace variable settings work identically. Terraform Enterprise (self-hosted) keeps its name and supports the same variable.
+
 In my previous [post](../how-to-enable-debug-in-terraform-cloud/) I showed how to enable debug logs. Today I want to present how to improve `terraform plan` and `terraform apply` speed by configuring **parallelism**.
 
 

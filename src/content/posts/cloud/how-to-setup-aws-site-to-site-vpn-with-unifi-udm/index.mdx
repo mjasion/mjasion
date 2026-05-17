@@ -1,6 +1,7 @@
 ---
 title: How to setup AWS Site-to-Site VPN with Unifi UDM 🔒
 date: "2022-06-29"
+dateModified: "2026-05-17"
 description: "Site-to-Site VPN allows connecting local network with AWS VPC. This blog is a step-by-step instruction to establish connection"
 hero: ./hero.svg
 tags:
@@ -12,6 +13,10 @@ tags:
 category: cloud
 ---
 import Alert from '../../../../components/mdx/Alert.astro';
+
+<Alert variant="warning">
+**UI drift since 2022.** Both the AWS VPC console and UniFi OS have been redesigned since this post was written. Menu paths and screenshots may not match exactly what you see today (UniFi OS 4.x has restructured the Network application; AWS VPC moved Customer/Virtual Private Gateway management around). The **underlying configuration is unchanged**: IPSec parameters, the role of Customer Gateway / Virtual Private Gateway / VPN Connection on AWS, and the IPSec tunnel definition on UDM are identical. Use this guide for the concepts and field values, and locate the equivalent screens in the current UI.
+</Alert>
 
 By default resources, you launch on the cloud (EC2, RDS, and others) cannot communicate with your local networks like home or office. To allow this you can create a Site-to-Site VPN. This VPN connection will be established between your router and AWS VPC.
 

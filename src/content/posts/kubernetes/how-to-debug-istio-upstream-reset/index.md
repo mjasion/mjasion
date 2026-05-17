@@ -1,6 +1,7 @@
 ---
 title: How to debug Istio Upstream Reset 502 UPE (old 503 UC)
 date: "2022-04-25"
+dateModified: "2026-05-17"
 description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs do not help"
 hero: ./hero.svg
 tags:
@@ -11,6 +12,8 @@ tags:
 
 category: kubernetes
 ---
+
+> **Verified 2026-05-17.** The debugging methodology described here — reading Envoy access logs, `istioctl proxy-config`, and tcpdump on the sidecar — has remained stable across Istio 1.13 through the current 1.x line. Response flag codes (`UPE`, `UC`, `UT`, `NR`) are part of Envoy's stable contract. Exact CLI output formatting may differ slightly between Istio versions, but the diagnostic flow applies as-is.
 
 [Istio](https://istio.io) is a complex system. For the applications, the main component is the sidecar container Istio-Proxy, which proxies all traffic from all containers in Pod. And this can lead to some issues.
 

@@ -1,6 +1,7 @@
 ---
 title: How to enable debug and trace logs in Terraform Cloud and Enterprise
 date: "2022-06-10"
+dateModified: "2026-05-17"
 description: "Remote terraform execution does not forward CLI parameters. This post covers how to do this."
 hero: ./hero.svg
 tags:
@@ -10,6 +11,9 @@ tags:
 
 category: cloud
 ---
+
+> **Note on naming (2026):** HashiCorp rebranded **Terraform Cloud → HCP Terraform** in April 2024. The product, environment variables (`TF_LOG`), and workflow described below remain the same. The UI labelling now reads "HCP Terraform", but every step in this guide still applies. Terraform Enterprise (self-hosted) keeps its name.
+
 [Terraform Cloud](https://cloud.hashicorp.com/products/terraform) is an application that helps teams use Terraform together. I am using it for side projects like my cloud infrastructure. Last time I had to see trace logs to find an issue with one of the managed resources.
 
 [Terraform](https://www.terraform.io/) has detailed logs which can be enabled by setting the `TF_LOG` environment variable to any value. This will cause detailed logs to appear on execution.

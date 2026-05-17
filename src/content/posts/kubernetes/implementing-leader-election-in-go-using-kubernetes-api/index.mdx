@@ -1,6 +1,7 @@
 ---
 title: Implementing Leader Election in Golang using Kubernetes API
 date: "2023-06-25"
+dateModified: "2026-05-17"
 description: |
   Learn how to implement a leader election mechanism in Golang using the Kubernetes API, leveraging
   lease locks and distributed coordination to ensure reliable task execution in distributed systems.
@@ -14,6 +15,8 @@ tags:
 category: kubernetes
 ---
 import Video from '../../../../components/mdx/Video.astro';
+
+> **Verified 2026-05-17.** The `coordination.k8s.io/v1` Lease API and the `client-go` leaderelection package shown here have been stable since Kubernetes 1.14. The patterns in this post apply unchanged on current Kubernetes (1.28+).
 
 ## Introduction
 
