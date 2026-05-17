@@ -8,24 +8,37 @@ const now = new Date();
 const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Resolve LCP hero image URL for preloading (WebP via custom image service)
+// Resolve LCP hero image URL for preloading (WebP via custom image service).
+// Must mirror BlogCard's widths/sizes/quality so the preload matches the rendered srcset variant.
 const lcpHero = posts[0]?.data.hero;
+const lcpSizes = '(min-width: 1392px) 360px, (min-width: 1024px) calc((100vw - 304px) / 3), (min-width: 768px) calc((100vw - 48px) / 2), calc(100vw - 32px)';
 let lcpPreloadSrc: string | undefined;
+let lcpPreloadSrcSet: string | undefined;
 if (lcpHero && typeof lcpHero !== 'string') {
   const resolved = await getImage({
     src: lcpHero,
-    widths: [400, 662, 800],
-    sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw',
+    widths: [240, 360, 480, 720],
+    sizes: lcpSizes,
     format: 'webp',
-    quality: 100,
+    quality: 80,
   });
   lcpPreloadSrc = resolved.src;
+  lcpPreloadSrcSet = resolved.srcSet?.attribute;
 }
 ---
 
 <BaseLayout title="Marcin Jasion">
   <Fragment slot="head">
-    {lcpPreloadSrc && <link rel="preload" as="image" href={lcpPreloadSrc} fetchpriority="high" />}
+    {lcpPreloadSrc && (
+      <link
+        rel="preload"
+        as="image"
+        href={lcpPreloadSrc}
+        imagesrcset={lcpPreloadSrcSet}
+        imagesizes={lcpSizes}
+        fetchpriority="high"
+      />
+    )}
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',

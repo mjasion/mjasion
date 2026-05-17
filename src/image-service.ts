@@ -8,9 +8,7 @@ import sharp from 'sharp';
  * Sharp converts the SVG to the requested raster format at build time.
  */
 const service: LocalImageService = {
-  getURL: sharpService.getURL,
-  parseURL: sharpService.parseURL,
-  getHTMLAttributes: sharpService.getHTMLAttributes,
+  ...sharpService,
 
   async transform(inputBuffer, transform, config) {
     const header = new TextDecoder().decode(inputBuffer.slice(0, 200));

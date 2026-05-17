@@ -34,8 +34,8 @@ const readingTime = getReadingTime(post.body);
       <Image
         src={hero}
         alt={title}
-        widths={[400, 540, 720, 960, 1120]}
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        widths={[240, 360, 480, 720]}
+        sizes="(min-width: 1392px) 360px, (min-width: 1024px) calc((100vw - 304px) / 3), (min-width: 768px) calc((100vw - 48px) / 2), calc(100vw - 32px)"
         format="webp"
         quality={80}
         class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
