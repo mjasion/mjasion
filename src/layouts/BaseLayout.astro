@@ -83,9 +83,6 @@ const mdHref = Astro.url.pathname === '/'
     <link rel="alternate" type="application/atom+xml" title="Marcin Jasion" href="/index.xml" />
     <link rel="alternate" type="text/markdown" title={`${fullTitle} (Markdown)`} href={mdHref} />
 
-    <!-- Preconnect for deferred analytics -->
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-
     <!-- Per-page head content (JSON-LD, etc.) -->
     <slot name="head" />
 
@@ -97,20 +94,6 @@ const mdHref = Astro.url.pathname === '/'
           document.documentElement.classList.add('dark');
         }
       })();
-    </script>
-
-    <!-- Google Analytics (deferred to avoid blocking render) -->
-    <script is:inline>
-      window.addEventListener('load', function() {
-        var s = document.createElement('script');
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-0B464DB9YX';
-        s.async = true;
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-0B464DB9YX');
-      });
     </script>
   </head>
   <body class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased">
