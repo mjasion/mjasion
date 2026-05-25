@@ -1,8 +1,8 @@
 ---
-title: How to configure parallelism in Terraform Cloud
+title: How to configure parallelism in HCP Terraform
 date: "2022-06-14"
 dateModified: "2026-05-17"
-description: "Remote terraform execution runs on default parallelism value. There is a simple way to improve execution speed 4 times"
+description: "Speed up terraform plan and apply 4x in HCP Terraform. Configure TFE_PARALLELISM or per-stage TF_CLI_ARGS_plan/apply via workspace variable sets."
 hero: ./hero.svg
 tags:
 - terraform

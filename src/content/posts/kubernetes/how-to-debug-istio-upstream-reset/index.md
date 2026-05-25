@@ -2,7 +2,7 @@
 title: How to debug Istio Upstream Reset 502 UPE (old 503 UC)
 date: "2022-04-25"
 dateModified: "2026-05-17"
-description: "Istio can reset processing the request. This blog post shows how to analyze the issue if logs do not help"
+description: "Fix Istio 502 UPE upstream_reset_before_response_started{protocol_error} errors. Real debug walkthrough using Envoy logs, Wireshark, and ksniff."
 hero: ./hero.svg
 tags:
 - istio
