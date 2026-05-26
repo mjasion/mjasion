@@ -15,6 +15,8 @@ tags:
 category: kubernetes
 ---
 import Video from '../../../../components/mdx/Video.astro';
+import videoLogAndLease from './1_log_and_lease.webm';
+import videoMultiInstance from './2_multi_instance.webm';
 
 > **Verified 2026-05-17.** The `coordination.k8s.io/v1` Lease API and the `client-go` leaderelection package shown here have been stable since Kubernetes 1.14. The patterns in this post apply unchanged on current Kubernetes (1.28+).
 
@@ -133,7 +135,7 @@ current node, to easily check which Pod is being the leader.
 
 In this demo, we will deploy a single Pod to a Kubernetes cluster and observe how the leader election works.
 
-<Video src="1_log_and_lease.webm" type="video/webm" preload="auto" loop="true" autoplay="true" />
+<Video src={videoLogAndLease} type="video/webm" preload="auto" loop="true" autoplay="true" />
 
 As you can see here, the pod is elected as a leader and performs leader-specific tasks. The `lease` object
 contains the information about the current leader in the `HOLDER` column.
@@ -157,7 +159,7 @@ The leader election mechanism will attempt to renew the lease every 5 seconds. I
 within 5 seconds, the leader election mechanism will attempt to acquire the lease. If the lease is not acquired
 within 1 second, the leader election mechanism will retry to acquire the lease.
 
-<Video src="2_multi_instance.webm" type="video/webm" preload="auto" loop="true" autoplay="true" />
+<Video src={videoMultiInstance} type="video/webm" preload="auto" loop="true" autoplay="true" />
 
 Running command `kubectl get lease --watch` allows to observe the leader election process. The `lease` object
 contains first the information about the previous leader, when the leader is killed, and then the information
