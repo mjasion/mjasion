@@ -10,6 +10,11 @@
 /search/ / 301
 /categories/ /posts/ 301
 
+# /now/ — dev-only, return real 404 in production (safety net; build also rm's dist/now)
+/now /404 404
+/now/ /404 404
+/now.md /404 404
+
 # Old Hugo artifacts
 /index.json /index.xml 301
 

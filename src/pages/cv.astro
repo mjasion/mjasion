@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
+import { Printer } from '@lucide/astro';
+import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
+
+const education = [
+  {
+    school: 'Warsaw University of Technology',
+    degree: 'M.Sc. in Engineering, Computer Science',
+    years: '2013 – 2016',
+  },
+  {
+    school: 'Warsaw University of Technology',
+    degree: "Engineer's degree, Computer Science",
+    years: '2009 – 2013',
+  },
+];
+
+const languages = [
+  { name: 'Polish', level: 'Native' },
+  { name: 'English', level: 'Professional working' },
+];
+
+const publications = [
+  {
+    title: 'DNS query metrics plugin for Telegraf',
+    url: 'https://github.com/influxdata/telegraf/tree/master/plugins/inputs/dns_query',
+  },
+];
+---
+
+<BaseLayout
+  title="CV"
+  description={`Curriculum vitae of ${author.name} — ${author.designation}.`}
+>
+  <div class="mx-auto max-w-4xl px-4 py-12 print:px-0 print:py-0">
+
+    <!-- Toolbar (hidden on print) -->
+    <div class="mb-6 flex items-center justify-between print:hidden">
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Printable view. Use <kbd class="rounded border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 text-xs">Cmd/Ctrl + P</kbd> to save as PDF.
+      </p>
+      <button
+        id="print-cv"
+        type="button"
+        class="inline-flex items-center gap-2 rounded-full bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+      >
+        <Printer class="h-4 w-4" />
+        Print / Save as PDF
+      </button>
+    </div>
+
+    <article class="cv rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento print:rounded-none print:border-none print:bg-white print:p-0 print:shadow-none">
+
+      <!-- Header -->
+      <header class="border-b border-gray-200 dark:border-gray-800 pb-4 print:pb-3">
+        <h1 class="text-3xl font-bold tracking-tight print:text-2xl">{author.name}</h1>
+        <p class="mt-1 text-lg text-gray-600 dark:text-gray-300 print:text-base">{author.designation}</p>
+        <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400 print:text-xs">
+          <span>Warsaw, Poland</span>
+          <ObfuscatedEmail email={author.email} class="hover:text-accent-600 dark:hover:text-accent-400">
+            {author.email}
+          </ObfuscatedEmail>
+          <a href="https://mjasion.pl" class="hover:text-accent-600 dark:hover:text-accent-400">mjasion.pl</a>
+          <a href="https://www.linkedin.com/in/marcinjasion" class="hover:text-accent-600 dark:hover:text-accent-400">linkedin.com/in/marcinjasion</a>
+          <a href="https://www.github.com/mjasion" class="hover:text-accent-600 dark:hover:text-accent-400">github.com/mjasion</a>
+        </div>
+      </header>
+
+      <!-- Summary -->
+      <section class="mt-5 print:mt-4">
+        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed print:text-[11.5px]">
+          {author.summary}
+        </p>
+      </section>
+
+      <!-- Experience -->
+      <section class="mt-6 print:mt-5">
+        <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Experience</h2>
+        <div class="mt-3 space-y-5 print:space-y-3">
+          {experiences.map((exp) => (
+            <div class="break-inside-avoid">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                <h3 class="text-base font-semibold print:text-sm">
+                  <a href={exp.url} class="hover:text-accent-600 dark:hover:text-accent-400">{exp.company}</a>
+                </h3>
+                <span class="text-xs text-gray-500 dark:text-gray-400">{exp.location}</span>
+              </div>
+              <p class="mt-0.5 text-xs text-gray-600 dark:text-gray-400 leading-snug print:text-[10.5px]">
+                {exp.overview}
+              </p>
+              {exp.positions.map((pos) => (
+                <div class="mt-2 print:mt-1.5">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <span class="text-sm font-medium print:text-[12px]">{pos.designation}</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                      {pos.start} — {pos.end ?? 'Present'}
+                    </span>
+                  </div>
+                  <ul class="mt-1 space-y-0.5 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
+                    {pos.responsibilities.map((r) => (
+                      <li class="flex gap-2">
+                        <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500 print:bg-gray-600" />
+                        <span>{r}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="mt-6 break-inside-avoid print:mt-5">
+        <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Skills</h2>
+        <ul class="mt-2 flex flex-wrap gap-1.5">
+          {skills.map((skill) => (
+            <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">
+              {skill.name}
+            </li>
+          ))}
+          <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">Terraform</li>
+          <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">Helm</li>
+          <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">Prometheus / Grafana</li>
+        </ul>
+      </section>
+
+      <!-- Certifications -->
+      <section class="mt-6 break-inside-avoid print:mt-5">
+        <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Certifications</h2>
+        <ul class="mt-2 space-y-1 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
+          {certifications.map((cert) => (
+            <li class="flex flex-wrap items-baseline justify-between gap-x-3">
+              <span>
+                <a href={cert.certificateUrl} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{cert.name}</a>
+                <span class="text-gray-500 dark:text-gray-400"> — {cert.organization}</span>
+              </span>
+              <span class="text-gray-500 dark:text-gray-400">{cert.timeline}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Talks & Publications -->
+      <section class="mt-6 break-inside-avoid print:mt-5">
+        <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Talks & Publications</h2>
+        <ul class="mt-2 space-y-1 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
+          {presentations.map((talk) => (
+            <li class="flex flex-wrap items-baseline justify-between gap-x-3">
+              <span>
+                <span class="font-medium">{talk.name}</span>
+                <span class="text-gray-500 dark:text-gray-400"> — {talk.meetup}</span>
+              </span>
+              <span class="text-gray-500 dark:text-gray-400">{talk.date}</span>
+            </li>
+          ))}
+          {publications.map((pub) => (
+            <li>
+              <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{pub.title}</a>
+              <span class="text-gray-500 dark:text-gray-400"> — open-source contribution</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Education & Languages (side by side) -->
+      <div class="mt-6 grid grid-cols-1 gap-6 break-inside-avoid sm:grid-cols-2 print:mt-5 print:grid-cols-2">
+        <section>
+          <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Education</h2>
+          <ul class="mt-2 space-y-1 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
+            {education.map((ed) => (
+              <li>
+                <div class="font-medium">{ed.degree}</div>
+                <div class="text-gray-500 dark:text-gray-400">{ed.school} · {ed.years}</div>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section>
+          <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Languages</h2>
+          <ul class="mt-2 space-y-1 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
+            {languages.map((lang) => (
+              <li>
+                <span class="font-medium">{lang.name}</span>
+                <span class="text-gray-500 dark:text-gray-400"> — {lang.level}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  @media print {
+    :global(html), :global(body) {
+      background: white !important;
+      color: black !important;
+    }
+    :global(.dark .cv) {
+      color: black !important;
+    }
+    .cv :global(a) {
+      color: inherit !important;
+      text-decoration: none;
+    }
+    .cv :global(h2),
+    .cv :global(h3) {
+      page-break-after: avoid;
+    }
+    @page {
+      margin: 14mm 14mm 14mm 14mm;
+      size: A4;
+    }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('print-cv');
+  btn?.addEventListener('click', () => window.print());
+</script>

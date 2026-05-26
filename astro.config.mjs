@@ -29,7 +29,12 @@ export default defineConfig({
       include: ['mermaid'],
     },
   },
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      filter: (page) => !page.includes('/now/') && !page.endsWith('/now'),
+    }),
+  ],
   markdown: {
     shikiConfig: {
       themes: {
