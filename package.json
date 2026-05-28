@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && rm -rf dist/now",
+    "build": "astro build",
     "preview": "astro preview"
   },
   "dependencies": {
