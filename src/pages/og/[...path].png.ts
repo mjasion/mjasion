@@ -2,11 +2,27 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { resolve } from 'node:path';
+import { createHash } from 'node:crypto';
+import { resolve, join } from 'node:path';
 
 const require = createRequire(import.meta.url);
+
+// Content-hash disk cache. Generating an OG image (hero SVG -> PNG via Resvg,
+// then satori -> SVG -> PNG via Resvg again) costs ~0.5-3s each and is the bulk
+// of build time. The output is a pure function of the rendering inputs, so we
+// cache by hash and skip all rendering on a hit. Bump CACHE_VERSION whenever the
+// layout, fonts, or profile photo change (inputs not captured by the per-post hash).
+const CACHE_VERSION = '1';
+// Lives under Astro's cache dir (node_modules/.astro) so it persists locally and
+// rides along with the same cache Astro uses for optimized images.
+const OG_CACHE_DIR = resolve(process.cwd(), 'node_modules/.astro/og-cache');
+try {
+  mkdirSync(OG_CACHE_DIR, { recursive: true });
+} catch {
+  // Read-only FS (some CI sandboxes) — caching is best-effort, generation still works.
+}
 
 const categoryColorMap: Record<string, string> = {
   cloud: '#3b82f6',
@@ -25,17 +41,22 @@ const interBold = readFileSync(interBoldPath);
 const profilePhotoPath = resolve(process.cwd(), 'src/assets/images/mjasion.jpg');
 const profilePhotoBase64 = `data:image/jpeg;base64,${readFileSync(profilePhotoPath).toString('base64')}`;
 
-function loadHeroImage(postId: string): string | null {
+function readHeroSvg(postId: string): string | null {
+  const heroPath = resolve(process.cwd(), `src/content/posts/${postId}/hero.svg`);
+  if (!existsSync(heroPath)) return null;
   try {
-    const heroPath = resolve(process.cwd(), `src/content/posts/${postId}/hero.svg`);
-    if (!existsSync(heroPath)) return null;
+    return readFileSync(heroPath, 'utf-8');
+  } catch {
+    return null;
+  }
+}
 
-    const svgContent = readFileSync(heroPath, 'utf-8');
+function renderHeroToDataUri(svgContent: string): string | null {
+  try {
     const resvg = new Resvg(svgContent, {
       fitTo: { mode: 'width', value: 800 },
     });
-    const pngData = resvg.render();
-    const pngBuffer = pngData.asPng();
+    const pngBuffer = resvg.render().asPng();
     const base64 = Buffer.from(pngBuffer).toString('base64');
     return `data:image/png;base64,${base64}`;
   } catch {
@@ -329,7 +350,24 @@ export const GET: APIRoute = async ({ props }) => {
   const categoryColor = categoryColorMap[category] ?? '#6366f1';
   const sanitizedTitle = title.replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, '').trim();
 
-  const heroDataUri = hasHero ? loadHeroImage(postId) : null;
+  const heroSvg = hasHero ? readHeroSvg(postId) : null;
+
+  // Cache key covers every per-post input that affects the rendered pixels.
+  // Profile photo and fonts are global — invalidate those via CACHE_VERSION.
+  const cacheKey = createHash('sha256')
+    .update(`${CACHE_VERSION}\0${sanitizedTitle}\0${category}\0${heroSvg ?? ''}`)
+    .digest('hex');
+  const cachePath = join(OG_CACHE_DIR, `${cacheKey}.png`);
+
+  if (existsSync(cachePath)) {
+    try {
+      return pngResponse(readFileSync(cachePath));
+    } catch {
+      // Corrupt/unreadable cache entry — fall through and regenerate.
+    }
+  }
+
+  const heroDataUri = heroSvg ? renderHeroToDataUri(heroSvg) : null;
 
   const layout = heroDataUri
     ? buildHeroLayout(heroDataUri, sanitizedTitle, category, categoryColor)
@@ -357,13 +395,22 @@ export const GET: APIRoute = async ({ props }) => {
   const resvg = new Resvg(svg, {
     fitTo: { mode: 'width', value: 1200 },
   });
-  const pngData = resvg.render();
-  const pngBuffer = pngData.asPng();
+  const pngBuffer = Buffer.from(resvg.render().asPng());
 
+  try {
+    writeFileSync(cachePath, pngBuffer);
+  } catch {
+    // Best-effort cache write; never fail the build over it.
+  }
+
+  return pngResponse(pngBuffer);
+};
+
+function pngResponse(pngBuffer: Buffer): Response {
   return new Response(pngBuffer, {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, max-age=31536000, immutable',
     },
   });
-};
+}
