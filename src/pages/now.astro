@@ -3,10 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { author } from '../data/portfolio';
 import { Clock, Briefcase, Sparkles, Hammer, Headphones, Dumbbell, MessageCircle } from '@lucide/astro';
 
-if (import.meta.env.PROD) {
-  return new Response(null, { status: 404 });
-}
-
 const lastUpdated = new Date('2026-05-28');
 
 const formatDate = (d: Date) =>

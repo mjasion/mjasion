@@ -31,9 +31,7 @@ export default defineConfig({
   },
   integrations: [
     mdx(),
-    sitemap({
-      filter: (page) => !page.includes('/now/') && !page.endsWith('/now'),
-    }),
+    sitemap(),
   ],
   markdown: {
     shikiConfig: {

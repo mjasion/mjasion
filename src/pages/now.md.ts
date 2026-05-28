@@ -2,10 +2,6 @@ import type { APIRoute } from 'astro';
 import { author } from '../data/portfolio';
 
 export const GET: APIRoute = () => {
-  if (import.meta.env.PROD) {
-    return new Response(null, { status: 404 });
-  }
-
   const lines: string[] = [
     '---',
     `title: "Now - ${author.name}"`,
