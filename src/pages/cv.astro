@@ -32,7 +32,7 @@ const publications = [
 
 <BaseLayout
   title="CV"
-  description={`Curriculum vitae of ${author.name} — ${author.designation}.`}
+  description={`Curriculum vitae of ${author.name} - ${author.designation}.`}
 >
   <div class="mx-auto max-w-4xl px-4 py-12 print:px-0 print:py-0">
 
@@ -44,9 +44,9 @@ const publications = [
       <button
         id="print-cv"
         type="button"
-        class="inline-flex items-center gap-2 rounded-full bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+        class="group inline-flex items-center gap-2 rounded-full bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
       >
-        <Printer class="h-4 w-4" />
+        <Printer class="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110 group-hover:-rotate-6" />
         Print / Save as PDF
       </button>
     </div>
@@ -95,7 +95,7 @@ const publications = [
                   <div class="flex flex-wrap items-baseline justify-between gap-x-3">
                     <span class="text-sm font-medium print:text-[12px]">{pos.designation}</span>
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                      {pos.start} — {pos.end ?? 'Present'}
+                      {pos.start} - {pos.end ?? 'Present'}
                     </span>
                   </div>
                   <ul class="mt-1 space-y-0.5 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
@@ -136,7 +136,7 @@ const publications = [
             <li class="flex flex-wrap items-baseline justify-between gap-x-3">
               <span>
                 <a href={cert.certificateUrl} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{cert.name}</a>
-                <span class="text-gray-500 dark:text-gray-400"> — {cert.organization}</span>
+                <span class="text-gray-500 dark:text-gray-400"> - {cert.organization}</span>
               </span>
               <span class="text-gray-500 dark:text-gray-400">{cert.timeline}</span>
             </li>
@@ -152,7 +152,7 @@ const publications = [
             <li class="flex flex-wrap items-baseline justify-between gap-x-3">
               <span>
                 <span class="font-medium">{talk.name}</span>
-                <span class="text-gray-500 dark:text-gray-400"> — {talk.meetup}</span>
+                <span class="text-gray-500 dark:text-gray-400"> - {talk.meetup}</span>
               </span>
               <span class="text-gray-500 dark:text-gray-400">{talk.date}</span>
             </li>
@@ -160,7 +160,7 @@ const publications = [
           {publications.map((pub) => (
             <li>
               <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{pub.title}</a>
-              <span class="text-gray-500 dark:text-gray-400"> — open-source contribution</span>
+              <span class="text-gray-500 dark:text-gray-400"> - open-source contribution</span>
             </li>
           ))}
         </ul>
@@ -185,7 +185,7 @@ const publications = [
             {languages.map((lang) => (
               <li>
                 <span class="font-medium">{lang.name}</span>
-                <span class="text-gray-500 dark:text-gray-400"> — {lang.level}</span>
+                <span class="text-gray-500 dark:text-gray-400"> - {lang.level}</span>
               </li>
             ))}
           </ul>

@@ -38,7 +38,7 @@ export const GET: APIRoute = ({ props }) => {
   const frontmatter = frontmatterLines.join('\n') + '\n\n';
 
   // Strip MDX import statements so the body parses as plain markdown.
-  // JSX components (e.g. <Alert>, <Video>) are left in place — agents can read them as inline tags.
+  // JSX components (e.g. <Alert>, <Video>) are left in place - agents can read them as inline tags.
   const body = post.body
     ? post.body.replace(/^import\s+[^;]+;?\s*$/gm, '').replace(/\n{3,}/g, '\n\n').trimStart()
     : '';

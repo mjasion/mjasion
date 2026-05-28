@@ -30,7 +30,7 @@ export const GET: APIRoute = ({ props }) => {
 
   const lines: string[] = [
     '---',
-    `title: "${label} posts — Marcin Jasion"`,
+    `title: "${label} posts - Marcin Jasion"`,
     `description: ${JSON.stringify(`All ${label} posts by Marcin Jasion. ${posts.length} ${posts.length === 1 ? 'post' : 'posts'}.`)}`,
     `canonical: https://mjasion.pl/posts/${category}/`,
     '---',
@@ -44,7 +44,7 @@ export const GET: APIRoute = ({ props }) => {
   for (const post of posts) {
     const date = post.data.date.toISOString().slice(0, 10);
     lines.push(
-      `- ${date} — [${post.data.title}](https://mjasion.pl/posts/${post.id}/) — ${post.data.description.replace(/\n/g, ' ').trim()}`,
+      `- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/) - ${post.data.description.replace(/\n/g, ' ').trim()}`,
     );
   }
 

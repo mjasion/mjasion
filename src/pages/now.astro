@@ -7,40 +7,47 @@ if (import.meta.env.PROD) {
   return new Response(null, { status: 404 });
 }
 
-const lastUpdated = new Date('2026-05-26');
+const lastUpdated = new Date('2026-05-28');
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const iconBaseAnim = 'transition-transform duration-300 ease-out';
 
 const sections = [
   {
     heading: 'Work',
     icon: Briefcase,
     tone: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    iconAnim: 'group-hover:-rotate-6 group-hover:scale-110',
     body: `Senior SRE consultant at NatWest Boxed in Warsaw. Supporting almost 30 engineering teams operating a system of 1000+ services. Beyond observability, I'm building agents for incident handling and streamlining the resolution process. Teams are organised using <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Team Topologies</a> - mine is an enabling team, so it cuts across many different stream-aligned squads.`,
   },
   {
     heading: 'Learning',
     icon: Sparkles,
     tone: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+    iconAnim: 'group-hover:rotate-12 group-hover:scale-125',
     body: `Currently playing with LLM-driven incident triage - can a model usefully pre-summarise an alert before a human looks at it?`,
   },
   {
     heading: 'Building',
     icon: Hammer,
     tone: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
+    iconAnim: 'origin-bottom-left group-hover:-rotate-12',
     body: `Slowly refreshing this blog - new About, new CV, this page. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family.`,
   },
   {
     heading: 'Sport',
     icon: Dumbbell,
     tone: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
+    iconAnim: 'group-hover:-translate-y-0.5 group-hover:rotate-12',
     body: `After two Hyrox finishes - solo in '25 and doubles in '26 here in Warsaw - I'm dialling CrossFit intensity back up and chasing a first strict muscle-up. Also putting more miles on the bike through 2026.`,
   },
   {
     heading: 'Reading',
     icon: Headphones,
     tone: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+    iconAnim: 'group-hover:scale-110 group-hover:-translate-y-0.5',
     body: `Working through "Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes' "I Am Pilgrim" and working through Jo Nesbø's catalogue.`,
   },
 ];
@@ -57,10 +64,10 @@ const sections = [
   <div class="mx-auto max-w-3xl px-4 py-12 space-y-8">
 
     <!-- Header -->
-    <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
+    <section class="group rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
       <div class="flex items-center gap-3">
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-300">
-          <Clock class="h-5 w-5" />
+          <Clock class={`h-5 w-5 ${iconBaseAnim} group-hover:rotate-[360deg] duration-700`} />
         </span>
         <h1 class="text-3xl font-bold tracking-tight">Now</h1>
       </div>
@@ -74,10 +81,10 @@ const sections = [
 
     <!-- Sections -->
     {sections.map((s) => (
-      <section class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
+      <section class="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
         <div class="flex items-center gap-3">
           <span class:list={["flex h-10 w-10 items-center justify-center rounded-xl shrink-0", s.tone]}>
-            <s.icon class="h-5 w-5" />
+            <s.icon class:list={["h-5 w-5", iconBaseAnim, s.iconAnim]} />
           </span>
           <h2 class="text-lg font-semibold">{s.heading}</h2>
         </div>
@@ -86,9 +93,9 @@ const sections = [
     ))}
 
     <!-- Footer note -->
-    <section class="rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-6 text-sm text-gray-500 dark:text-gray-400">
+    <section class="group rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-6 text-sm text-gray-500 dark:text-gray-400">
       <div class="flex items-start gap-3">
-        <MessageCircle class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5" />
+        <MessageCircle class={`h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5 ${iconBaseAnim} group-hover:scale-110 group-hover:text-accent-500`} />
         <p>Want to compare notes on incident response, observability, or running large fleets? <a href="/about/" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
       </div>
     </section>

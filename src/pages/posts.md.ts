@@ -19,7 +19,7 @@ export const GET: APIRoute = async () => {
 
   const lines: string[] = [
     '---',
-    'title: "All Posts — Marcin Jasion"',
+    'title: "All Posts - Marcin Jasion"',
     `description: "Browse all ${posts.length} articles by Marcin Jasion, grouped by category."`,
     'canonical: https://mjasion.pl/posts/',
     '---',
@@ -38,7 +38,7 @@ export const GET: APIRoute = async () => {
     );
     for (const post of catPosts) {
       const date = post.data.date.toISOString().slice(0, 10);
-      lines.push(`- ${date} — [${post.data.title}](https://mjasion.pl/posts/${post.id}/)`);
+      lines.push(`- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/)`);
     }
     lines.push('');
   }

@@ -1,4 +1,4 @@
-// Cloudflare Pages Function — thin content-negotiation middleware.
+// Cloudflare Pages Function - thin content-negotiation middleware.
 // Rewrites page URLs to their .md sibling when the client prefers text/markdown.
 // No business logic, no DB, no auth.
 // Discovery: PostLayout emits <link rel="alternate" type="text/markdown" ...>.
@@ -36,7 +36,7 @@ function prefersMarkdown(accept: string | null): boolean {
 function rewriteToMd(pathname: string): string | null {
   if (pathname === '/') return '/index.md';
   const last = pathname.split('/').filter(Boolean).pop() ?? '';
-  if (ASSET_EXT.test(last)) return null; // asset request — leave it alone
+  if (ASSET_EXT.test(last)) return null; // asset request - leave it alone
   return pathname.replace(/\/$/, '') + '.md';
 }
 

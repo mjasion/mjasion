@@ -4,8 +4,8 @@ import { author, skills, experiences, certifications, presentations } from '../d
 export const GET: APIRoute = () => {
   const lines: string[] = [
     '---',
-    `title: "CV — ${author.name}"`,
-    `description: ${JSON.stringify(`Curriculum vitae of ${author.name} — ${author.designation}.`)}`,
+    `title: "CV - ${author.name}"`,
+    `description: ${JSON.stringify(`Curriculum vitae of ${author.name} - ${author.designation}.`)}`,
     'canonical: https://mjasion.pl/cv/',
     '---',
     '',
@@ -27,7 +27,7 @@ export const GET: APIRoute = () => {
   ];
 
   for (const exp of experiences) {
-    lines.push(`### [${exp.company}](${exp.url}) — ${exp.location}`, '', exp.overview, '');
+    lines.push(`### [${exp.company}](${exp.url}) - ${exp.location}`, '', exp.overview, '');
     for (const pos of exp.positions) {
       lines.push(`**${pos.designation}** (${pos.start} – ${pos.end ?? 'Present'})`, '');
       for (const r of pos.responsibilities) {
@@ -39,30 +39,30 @@ export const GET: APIRoute = () => {
 
   lines.push('## Skills', '');
   for (const skill of skills) {
-    lines.push(`- **${skill.name}** — ${skill.summary}`);
+    lines.push(`- **${skill.name}** - ${skill.summary}`);
   }
   lines.push('- **Terraform**, **Helm**, **Prometheus / Grafana**', '');
 
   lines.push('## Certifications', '');
   for (const cert of certifications) {
-    lines.push(`- [${cert.name}](${cert.certificateUrl}) — ${cert.organization} · ${cert.timeline}`);
+    lines.push(`- [${cert.name}](${cert.certificateUrl}) - ${cert.organization} · ${cert.timeline}`);
   }
   lines.push('');
 
   lines.push('## Talks & Publications', '');
   for (const talk of presentations) {
-    lines.push(`- ${talk.name} — ${talk.meetup} · ${talk.date}`);
+    lines.push(`- ${talk.name} - ${talk.meetup} · ${talk.date}`);
   }
-  lines.push('- DNS query metrics plugin for Telegraf — open-source contribution', '');
+  lines.push('- DNS query metrics plugin for Telegraf - open-source contribution', '');
 
   lines.push('## Education', '');
-  lines.push('- M.Sc. in Engineering, Computer Science — Warsaw University of Technology (2013–2016)');
-  lines.push("- Engineer's degree, Computer Science — Warsaw University of Technology (2009–2013)");
+  lines.push('- M.Sc. in Engineering, Computer Science - Warsaw University of Technology (2013–2016)');
+  lines.push("- Engineer's degree, Computer Science - Warsaw University of Technology (2009–2013)");
   lines.push('');
 
   lines.push('## Languages', '');
-  lines.push('- Polish — Native');
-  lines.push('- English — Professional working');
+  lines.push('- Polish - Native');
+  lines.push('- English - Professional working');
   lines.push('');
 
   return new Response(lines.join('\n'), {

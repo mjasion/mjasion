@@ -43,7 +43,7 @@
     <circle cx="38" cy="18" r="5" fill="#eab308" fill-opacity="0.8"/>
     <circle cx="56" cy="18" r="5" fill="#22c55e" fill-opacity="0.8"/>
     <!-- Title -->
-    <text x="400" y="22" text-anchor="middle" fill="#5eead4" font-family="ui-monospace,monospace" font-size="12">terraform plan — DEBUG</text>
+    <text x="400" y="22" text-anchor="middle" fill="#5eead4" font-family="ui-monospace,monospace" font-size="12">terraform plan - DEBUG</text>
 
     <!-- Log lines -->
     <g font-family="ui-monospace,monospace" font-size="13">

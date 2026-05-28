@@ -18,7 +18,7 @@ pnpm build
 # Preview production build
 pnpm preview
 
-# Package management — uses pnpm, NOT npm
+# Package management - uses pnpm, NOT npm
 pnpm install
 ```
 
@@ -27,10 +27,12 @@ pnpm install
 ```
 src/
 ├── components/
-│   ├── BioCard.astro           # Bio sidebar card (landing page)
+│   ├── Sidebar.astro           # Sticky sidebar with nav + categories (desktop) / compact bar (mobile)
 │   ├── BlogCard.astro          # Blog post card
-│   ├── Header.astro            # Sticky header with nav + dark mode toggle
 │   ├── Footer.astro            # Footer with social links
+│   ├── SocialLinks.astro       # Social icon row (used by Sidebar + Footer)
+│   ├── ShareButtons.astro      # Post share buttons (X, LinkedIn, copy)
+│   ├── Comments.astro          # Giscus comments (client-side)
 │   ├── ObfuscatedEmail.astro   # Email obfuscation (ROT13 + reverse)
 │   └── mdx/
 │       ├── Alert.astro         # Alert boxes (success/warning/info/danger)
@@ -41,7 +43,7 @@ src/
 ├── data/
 │   └── portfolio.ts            # Author, skills, experience, certifications, talks
 ├── layouts/
-│   ├── BaseLayout.astro        # Base HTML with SEO meta, dark mode, GA4
+│   ├── BaseLayout.astro        # Base HTML with SEO meta, OG/Twitter cards, RSS link
 │   └── PostLayout.astro        # Blog post layout with TOC sidebar
 ├── pages/
 │   ├── index.astro             # Landing page (bento grid: bio + posts)
@@ -96,11 +98,11 @@ category: cloud                 # cloud | development | kubernetes
 draft: false                    # Optional, defaults to false
 ```
 
-### Hero Image — Required
+### Hero Image - Required
 
 Every new blog post **MUST** ship with a hero image co-located in the post directory
 (`src/content/posts/<category>/<slug>/hero.svg`). Do not create a post without one,
-and do not ask the user whether they want one — generate it as part of the same task.
+and do not ask the user whether they want one - generate it as part of the same task.
 
 - Format: SVG preferred (sharp at any size, small file, easy to author by hand).
   PNG/JPG acceptable when SVG cannot represent the subject (photos, screenshots).
@@ -132,21 +134,20 @@ import Mermaid from '../../../components/mdx/Mermaid.astro';
 # Theme Implementation
 
 ### Key Files
-- **Tokens**: `src/styles/global.css` — `@theme` block with fonts and category colors
-- **Toggle**: `src/components/Header.astro` — Sun/Moon button (vanilla JS)
-- **FOUC prevention**: Inline `<script is:inline>` in `BaseLayout.astro` reads `localStorage('theme')` before first paint
+- **Tokens**: `src/styles/global.css` - `@theme` block with fonts and category colors
+- **Tailwind dark variant**: `@custom-variant dark (&:where(.dark, .dark *))` is defined but the `.dark` class is **never added at runtime** — the site is light-only.
 
-### Theme Persistence
-- Stored in `localStorage` key `theme`
-- Light = default (no class), Dark = `.dark` class on `<html>`
-- SSR-safe: inline script runs before paint, reads `localStorage` / `prefers-color-scheme`
-- Tailwind custom variant: `@custom-variant dark (&:where(.dark, .dark *))`
+### Light-only Policy
+- No theme toggle, no FOUC script, no `localStorage('theme')`, no `prefers-color-scheme` handling.
+- Existing `dark:` Tailwind variants throughout the codebase are kept (never break light) and may be left in place when editing — they simply don't fire. Don't strip them as a cleanup task.
+- When writing NEW styles you may pair `dark:` variants, but it isn't required. Don't add a dark variant when the design isn't being tested in dark mode.
+- If the user ever asks to re-enable dark mode, add back: (1) FOUC `is:inline` script in `BaseLayout.astro` head, (2) toggle button in `Sidebar.astro` desktop + mobile bars, (3) click handler that toggles `.dark` and writes `localStorage`.
 
 ## Color Usage Rules
 
-Use Tailwind `dark:` variants for all color values. Every visible element needs both light and dark styles.
+Color tokens come from `global.css` `@theme` block. `dark:` variants exist but never activate (see Light-only Policy above).
 
-### Dark Mode Pattern
+### Light/Dark Pattern (legacy — dark side never renders)
 
 ```html
 <!-- Background -->
@@ -186,8 +187,8 @@ bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm  <!-- BioCard -->
 ```
 
 ## Fonts
-- **Body**: Inter — loaded via system font stack (`--font-sans`)
-- **Code**: JetBrains Mono — loaded via system font stack (`--font-mono`)
+- **Body**: Inter - loaded via system font stack (`--font-sans`)
+- **Code**: JetBrains Mono - loaded via system font stack (`--font-mono`)
 - Syntax highlighting: Shiki with `github-light` / `github-dark` themes
 
 ## Shiki Code Block Transformers
@@ -206,16 +207,16 @@ CSS for these lives in `src/styles/global.css` (`.astro-code .line.diff.add`, `.
 ### Post Layout Interactive Features
 
 `PostLayout.astro` includes vanilla JS scripts for:
-- **Copy button** on code blocks — injected into `.prose pre` elements, uses `navigator.clipboard`
-- **Heading anchor links** — `#` prepended to h2-h6 with IDs, visible on hover
-- **Reading progress bar** — fixed at top of viewport, accent-colored, `requestAnimationFrame` throttled
-- **Back-to-top button** — 56px circle with SVG progress ring, appears after 20% scroll
-- **Social share buttons** — X, LinkedIn, copy-link with icon swap feedback
-- **Prev/next navigation** — computed in `[...slug].astro`, displayed as two-column card grid
+- **Copy button** on code blocks - injected into `.prose pre` elements, uses `navigator.clipboard`
+- **Heading anchor links** - `#` prepended to h2-h6 with IDs, visible on hover
+- **Reading progress bar** - fixed at top of viewport, accent-colored, `requestAnimationFrame` throttled
+- **Back-to-top button** - 56px circle with SVG progress ring, appears after 20% scroll
+- **Social share buttons** - X, LinkedIn, copy-link with icon swap feedback
+- **Prev/next navigation** - computed in `[...slug].astro`, displayed as two-column card grid
 
 ---
 
-# Design System — Bento Grid
+# Design System - Bento Grid
 
 The site uses a bento grid layout as its primary visual language. The landing page features a two-column layout (bio sidebar + post cards), and the about page uses bento-style section cards.
 
@@ -323,14 +324,49 @@ class="group-hover:scale-105 transition-transform duration-300"
 
 Keep effects subtle. Never scale entire cards.
 
-## Anti-Patterns — Do NOT
+### Icon Micro-animations — Required
+
+Every Lucide icon inside an interactive element (`<a>`, `<button>`, or a card with hover) MUST animate on hover of its parent. This is the project's signature feel; do not ship a new icon without it. The pattern is CSS-only (no JS, no extra deps):
+
+1. Add `group` to the parent interactive element.
+2. Add `transition-transform duration-200 ease-out` + a semantic `group-hover:*` transform on the icon.
+
+```astro
+<a href="/" class="group inline-flex items-center gap-1 ...">
+  <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
+  Back to blog
+</a>
+```
+
+Match the animation to the icon's semantics — the icon should look like it's *doing the verb it represents*:
+
+| Icon | Semantic motion | Tailwind |
+|---|---|---|
+| `ArrowLeft` / `ArrowRight` | slide in direction | `group-hover:-translate-x-0.5` / `group-hover:translate-x-0.5` |
+| `Clock` | tick / wind | `group-hover:rotate-[360deg] duration-700` |
+| `Briefcase` | tilt | `group-hover:-rotate-6 group-hover:scale-110` |
+| `Sparkles` | sparkle | `group-hover:rotate-12 group-hover:scale-125` |
+| `Hammer` | swing | `origin-bottom-left group-hover:-rotate-12` |
+| `Dumbbell` | press up | `group-hover:-translate-y-0.5 group-hover:rotate-12` |
+| `Headphones` | bob | `group-hover:scale-110 group-hover:-translate-y-0.5` |
+| `Printer` | nudge | `group-hover:scale-110 group-hover:-rotate-6` |
+| `Play` | push forward | `group-hover:scale-125 group-hover:translate-x-0.5` |
+| `MessageCircle`, social icons | scale | `group-hover:scale-110` |
+
+Rules:
+- Always pair the transform with `transition-transform duration-200 ease-out` (or `duration-300` for larger transforms like Clock's full rotation).
+- Skip icons that are **purely informational** and not inside a hover target (e.g. icons in `Alert.astro`, status badges, decorative bullet points).
+- Reusable icon components (e.g. `SocialLinks.astro`) bake the animation into their default `iconClass` and put `group` in their `linkClass`, so consumers get it for free.
+- The animation must remain on the icon SVG itself — wrapping in an extra `<span>` is fine for icon tiles but the transform always sits on the icon.
+
+## Anti-Patterns - Do NOT
 
 - Never mix gap sizes in the same grid
 - Never use heavy drop shadows or glowing borders
 - Never scale cards on hover (only translate + shadow)
 - Never nest grids inside grid cards
 - Never create cards without clear content purpose
-- Never hardcode pixel widths on cards — they must be fluid within the grid
+- Never hardcode pixel widths on cards - they must be fluid within the grid
 - Never use inconsistent border-radius values across cards at the same level
 
 ---
@@ -374,13 +410,13 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 ## Static SEO Files
 
-- `static/robots.txt` — Blocks TurnitinBot, NPBot, SlySearch; points to sitemap
-- `static/_redirects` — Cloudflare Pages redirects (`/blog` -> `/`, `/talks` -> `/about/#presentations`)
+- `static/robots.txt` - Blocks TurnitinBot, NPBot, SlySearch; points to sitemap
+- `static/_redirects` - Cloudflare Pages redirects (`/blog` -> `/`, `/talks` -> `/about/#presentations`)
 - Sitemap auto-generated by `@astrojs/sitemap` at `/sitemap-index.xml`
 
 ## RSS Feed
 
-`src/pages/index.xml.ts` — Atom feed at `/index.xml`:
+`src/pages/index.xml.ts` - Atom feed at `/index.xml`:
 - 10 most recent posts
 - UTM parameters (`?utm_source=atom_feed`)
 - CDATA content wrapping
@@ -388,13 +424,13 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 ## Tags & Archives Pages
 
-- **Tags index** (`/tags/`) — all tags sorted by frequency with post counts. Tags with 5+ posts link to `/tags/{tag}/`, others are static badges.
-- **Tag pages** (`/tags/{tag}/`) — generated only for tags with `MIN_POSTS_FOR_TAG_PAGE = 5` posts.
-- **Archives** (`/archives/`) — all posts grouped by year in a timeline view. Linked in sidebar nav between Blog and About.
+- **Tags index** (`/tags/`) - all tags sorted by frequency with post counts. Tags with 5+ posts link to `/tags/{tag}/`, others are static badges.
+- **Tag pages** (`/tags/{tag}/`) - generated only for tags with `MIN_POSTS_FOR_TAG_PAGE = 5` posts.
+- **Archives** (`/archives/`) - all posts grouped by year in a timeline view. Linked in sidebar nav between Blog and About.
 
 ## Performance
 
-- Static site generation (zero JS by default, except dark mode toggle + mermaid)
+- Static site generation (zero JS by default, except mermaid + post-page interactivity)
 - Image optimization via Sharp (auto WebP conversion)
 - Shiki syntax highlighting (built-in, no client JS)
 - `loading="lazy"` on all images except hero/profile
@@ -406,17 +442,17 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 ## Component Structure
 
-- **Astro components** (`.astro`) for all UI — no React/Vue/Svelte
+- **Astro components** (`.astro`) for all UI - no React/Vue/Svelte
 - **TypeScript** in frontmatter for type safety
-- **Vanilla JS** in `<script>` tags for client interactivity (dark mode, email decode)
-- Use `is:inline` for scripts that must run before hydration (dark mode in `<head>`)
+- **Vanilla JS** in `<script>` tags only when truly needed (email decode, mermaid, copy-button, share buttons, reading progress)
+- **Icons**: `@lucide/astro` only. Inline animated icon libraries (e.g. lucide-animated) are **not allowed** — they require React + Framer Motion runtime which violates the zero-JS policy. CSS `group-hover` micro-animations on plain Lucide SVGs are the project standard (see "Icon Micro-animations").
 
 ## Naming Conventions
 
-- **Components**: PascalCase — `BioCard.astro`, `BlogCard.astro`
-- **Layouts**: PascalCase — `BaseLayout.astro`, `PostLayout.astro`
-- **Data files**: camelCase — `portfolio.ts`
-- **Content**: kebab-case directories — `posts/cloud/how-to-setup-aws.../`
+- **Components**: PascalCase - `BioCard.astro`, `BlogCard.astro`
+- **Layouts**: PascalCase - `BaseLayout.astro`, `PostLayout.astro`
+- **Data files**: camelCase - `portfolio.ts`
+- **Content**: kebab-case directories - `posts/cloud/how-to-setup-aws.../`
 - **CSS variables**: `--color-*` prefix for theme tokens, `--font-*` for fonts
 
 ## TypeScript
@@ -428,7 +464,7 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 ## Component Guidelines
 
-- Keep components focused — one clear purpose per file
+- Keep components focused - one clear purpose per file
 - Use `class:list` for conditional Tailwind classes
 - All images need `alt` text, `loading="lazy"` (except above-the-fold)
 - Social link icons are inline SVGs (no icon library dependency)
@@ -438,13 +474,13 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 # Critical Rules
 
-1. **NEVER auto-commit changes** — Only commit when the user explicitly asks or uses /commit.
+1. **NEVER auto-commit changes** - Only commit when the user explicitly asks or uses /commit.
 2. **Never push to remote without explicit user request.**
-3. **Always pair light and dark styles** — Every `bg-*`, `text-*`, `border-*` needs a `dark:` variant.
-4. **Bento grid consistency** — New pages/sections must follow the bento card system. No one-off layouts.
-5. **Mobile-first** — Responsive styles start from mobile, scale up. Test at 375px, 768px, 1280px.
-6. **Accessibility** — Every interactive element needs keyboard support. Every image needs alt text. Semantic HTML (`<nav>`, `<article>`, `<section>`, `<aside>`).
-7. **Zero client JS by default** — Only add `<script>` tags when truly needed (dark mode, email decode, mermaid). No JS frameworks.
-8. **Content-first URLs** — Blog posts at `/posts/{category}/{slug}/`. No URL changes without redirect.
-9. **Package manager** — Always use `pnpm`, never `npm` or `yarn`.
-10. **Static output only** — `output: 'static'` in Astro config. No SSR. Cloudflare Pages Functions allowed only as thin content-negotiation middleware in `functions/_middleware.ts` (no business logic, no DB access, no auth).
+3. **Light-only site** - No dark mode at runtime. Existing `dark:` Tailwind variants in the codebase are dormant and may stay. Don't add new `dark:` variants unless the user re-enables the theme toggle.
+4. **Bento grid consistency** - New pages/sections must follow the bento card system. No one-off layouts.
+5. **Mobile-first** - Responsive styles start from mobile, scale up. Test at 375px, 768px, 1280px.
+6. **Accessibility** - Every interactive element needs keyboard support. Every image needs alt text. Semantic HTML (`<nav>`, `<article>`, `<section>`, `<aside>`).
+7. **Zero client JS by default** - Only add `<script>` tags when truly needed (email decode, mermaid, post-page interactions). No JS frameworks. No React/Vue/Svelte islands. This rules out React-based icon/animation libraries (lucide-animated, motion components, etc.) — use CSS `group-hover` on Lucide SVGs instead.
+8. **Content-first URLs** - Blog posts at `/posts/{category}/{slug}/`. No URL changes without redirect.
+9. **Package manager** - Always use `pnpm`, never `npm` or `yarn`.
+10. **Static output only** - `output: 'static'` in Astro config. No SSR. Cloudflare Pages Functions allowed only as thin content-negotiation middleware in `functions/_middleware.ts` (no business logic, no DB access, no auth).

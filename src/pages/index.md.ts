@@ -35,7 +35,7 @@ export const GET: APIRoute = async () => {
   for (const post of posts) {
     const date = post.data.date.toISOString().slice(0, 10);
     lines.push(
-      `- ${date} — [${post.data.title}](https://mjasion.pl/posts/${post.id}/) (${post.data.category}) — ${post.data.description.replace(/\n/g, ' ').trim()}`,
+      `- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/) (${post.data.category}) - ${post.data.description.replace(/\n/g, ' ').trim()}`,
     );
   }
 

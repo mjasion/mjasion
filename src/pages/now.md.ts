@@ -17,7 +17,7 @@ export const GET: APIRoute = () => {
     '',
     "A snapshot of what I'm focused on right now - inspired by Derek Sivers' /now page idea.",
     '',
-    'Last updated 2026-05-26.',
+    'Last updated 2026-05-28.',
     '',
     '## Work',
     '',

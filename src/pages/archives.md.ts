@@ -18,7 +18,7 @@ export const GET: APIRoute = async () => {
 
   const lines: string[] = [
     '---',
-    'title: "Archives — Marcin Jasion"',
+    'title: "Archives - Marcin Jasion"',
     `description: "All blog posts by Marcin Jasion, organized by year. ${posts.length} posts since ${oldestYear}."`,
     'canonical: https://mjasion.pl/archives/',
     '---',
@@ -33,7 +33,7 @@ export const GET: APIRoute = async () => {
     lines.push(`## ${year} (${yearPosts.length} ${yearPosts.length === 1 ? 'post' : 'posts'})`, '');
     for (const post of yearPosts) {
       const date = post.data.date.toISOString().slice(0, 10);
-      lines.push(`- ${date} — [${post.data.title}](https://mjasion.pl/posts/${post.id}/) (${post.data.category})`);
+      lines.push(`- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/) (${post.data.category})`);
     }
     lines.push('');
   }

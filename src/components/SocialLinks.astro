@@ -8,8 +8,8 @@ interface Props {
   iconClass?: string;
 }
 
-const { class: className = 'gap-3', iconClass = 'h-5 w-5' } = Astro.props;
-const linkClass = 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors';
+const { class: className = 'gap-3', iconClass = 'h-5 w-5 transition-transform duration-200 ease-out group-hover:scale-110' } = Astro.props;
+const linkClass = 'group text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors';
 ---
 
 <div class:list={['flex items-center', className]}>

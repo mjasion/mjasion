@@ -50,7 +50,7 @@ const { chart } = Astro.props;
     const modal = getModal();
     const content = document.getElementById('mermaid-modal-content')!;
     content.innerHTML = svgHtml;
-    // Scale SVG to fill modal — remove fixed dimensions, use viewBox for scaling
+    // Scale SVG to fill modal - remove fixed dimensions, use viewBox for scaling
     const svg = content.querySelector('svg');
     if (svg) {
       svg.removeAttribute('width');

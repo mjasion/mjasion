@@ -113,8 +113,8 @@ const breadcrumbSchema = {
     <!-- Header -->
     <header class="animate-bento-in">
       <div class="flex items-center gap-3 mb-6">
-        <a href="/" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-          <ArrowLeft class="h-4 w-4" />
+        <a href="/" class="group inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+          <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
           Back to blog
         </a>
         <span class="text-gray-300 dark:text-gray-600">/</span>
@@ -149,7 +149,7 @@ const breadcrumbSchema = {
         </div>
       )}
 
-      <!-- Share buttons (mobile/tablet fallback — hidden on xl when sidebar shows) -->
+      <!-- Share buttons (mobile/tablet fallback - hidden on xl when sidebar shows) -->
       <div class="mt-4 flex items-center gap-1 xl:hidden">
         <ShareButtons canonical={canonical} title={title} />
       </div>
@@ -289,7 +289,7 @@ const breadcrumbSchema = {
       </aside>
     </div>
 
-    <!-- Related posts (mobile/tablet fallback — hidden on xl when sidebar shows) -->
+    <!-- Related posts (mobile/tablet fallback - hidden on xl when sidebar shows) -->
     {relatedPosts.length > 0 && (
       <div class="mx-auto mt-12 max-w-3xl xl:hidden">
         <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Related posts</h2>

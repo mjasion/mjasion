@@ -56,7 +56,7 @@
       <circle cx="28" cy="28" r="26" fill="url(#agentA)" opacity="0.95"/>
       <text x="28" y="36" text-anchor="middle" fill="#0b1220" font-size="26" font-weight="800">A</text>
     </g>
-    <text x="140" y="118" text-anchor="middle" fill="#93c5fd" font-size="20" font-weight="700">Agent A — Builder</text>
+    <text x="140" y="118" text-anchor="middle" fill="#93c5fd" font-size="20" font-weight="700">Agent A - Builder</text>
     <text x="140" y="148" text-anchor="middle" fill="#cbd5e1" font-size="13">writes the app</text>
     <text x="140" y="170" text-anchor="middle" fill="#cbd5e1" font-size="13">writes the tests</text>
     <text x="140" y="192" text-anchor="middle" fill="#cbd5e1" font-size="13">publishes MCP</text>
@@ -81,7 +81,7 @@
       <circle cx="28" cy="28" r="26" fill="url(#agentB)" opacity="0.95"/>
       <text x="28" y="36" text-anchor="middle" fill="#0b1220" font-size="26" font-weight="800">B</text>
     </g>
-    <text x="140" y="118" text-anchor="middle" fill="#6ee7b7" font-size="20" font-weight="700">Agent B — Auditor</text>
+    <text x="140" y="118" text-anchor="middle" fill="#6ee7b7" font-size="20" font-weight="700">Agent B - Auditor</text>
     <text x="140" y="148" text-anchor="middle" fill="#cbd5e1" font-size="13">fresh context</text>
     <text x="140" y="170" text-anchor="middle" fill="#cbd5e1" font-size="13">independent recompute</text>
     <text x="140" y="192" text-anchor="middle" fill="#cbd5e1" font-size="13">flags every divergence</text>
