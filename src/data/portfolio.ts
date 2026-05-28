@@ -39,6 +39,14 @@ export const author = {
 
 export const skills = [
   {
+    name: 'Claude',
+    logo: '/images/sections/skills/claude.svg',
+    summary:
+      'My main model and agent for work and programming - incident triage, writing and reviewing code, drafting docs, and building agents, mostly through Claude Code.',
+    categories: ['ai', 'tools'],
+    url: 'https://www.anthropic.com/claude',
+  },
+  {
     name: 'Kubernetes',
     logo: '/images/sections/skills/kubernetes.svg',
     summary:
