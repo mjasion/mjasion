@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
 import { Play } from '@lucide/astro';
-import { author, skills, experiences, certifications, presentations, impactMetrics, categoryColors } from '../data/portfolio';
+import { author, skills, experiences, certifications, presentations, categoryColors } from '../data/portfolio';
 ---
 
 <BaseLayout title="About" description={`${author.name} - ${author.designation}. ${author.summary}`}>
@@ -63,23 +63,6 @@ import { author, skills, experiences, certifications, presentations, impactMetri
       </div>
     </section>
 
-    <!-- Impact -->
-    <section id="impact" class="bento-reveal">
-      <h2 class="mb-6 text-2xl font-bold">Impact</h2>
-      <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {impactMetrics.map((metric) => (
-          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
-            <div class="text-3xl font-bold tracking-tight text-accent-600 dark:text-accent-400">
-              {metric.value}
-            </div>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-snug">
-              {metric.label}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-
     <!-- Skills -->
     <section id="skills" class="bento-reveal">
       <h2 class="mb-6 text-2xl font-bold">Skills</h2>
@@ -135,14 +118,14 @@ import { author, skills, experiences, certifications, presentations, impactMetri
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="font-medium">{pos.designation}</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400">
-                      {pos.start} — {pos.end || 'Present'}
+                      {pos.start} - {pos.end || 'Present'}
                     </span>
                   </div>
                   <ul class="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
                     {pos.responsibilities.map((r) => (
                       <li class="flex gap-2">
                         <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400 dark:bg-gray-600" />
-                        <span>{r}</span>
+                        <span set:html={r}></span>
                       </li>
                     ))}
                   </ul>

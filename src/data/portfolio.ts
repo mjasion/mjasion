@@ -21,9 +21,9 @@ export const author = {
   email: 'hello@mjasion.pl',
   image: '/images/mjasion.jpg',
   summaryShort:
-    'Senior SRE. I work where code meets infrastructure — diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
+    'Senior SRE. I work where code meets infrastructure - diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
   summary:
-    'Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure — diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping engineering teams operate a system of 1000+ services at NatWest Boxed. 13 years in tech: started as a Java developer, found my home in the messy middle where applications meet production.',
+    'Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping engineering teams operate a system of 1000+ services at NatWest Boxed. 13 years in tech: started as a Java developer, found my home in the messy middle where applications meet production.',
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
     {
@@ -36,13 +36,6 @@ export const author = {
   ],
   cvUrl: '/cv/',
 };
-
-export const impactMetrics: { value: string; label: string }[] = [
-  { value: '13+', label: 'years in production systems' },
-  { value: '1000+', label: 'services in current scope' },
-  { value: '40%', label: 'cloud cost saved by redesign' },
-  { value: 'SOC2', label: 'certification delivered' },
-];
 
 export const skills = [
   {
@@ -86,18 +79,44 @@ export const skills = [
     url: 'https://cloud.google.com/',
   },
   {
-    name: 'Docker',
-    logo: '/images/sections/skills/docker.svg',
+    name: 'Cloudflare',
+    logo: '/images/sections/skills/cloudflare.svg',
     summary:
-      '8+ years using Docker for bug replicability, code isolation, and security.',
-    categories: ['container', 'tools'],
+      'Pages, Workers, R2, DNS, and Zero Trust - running this site on Cloudflare Pages and using Workers for edge content negotiation.',
+    categories: ['cloud', 'tools'],
+    url: 'https://www.cloudflare.com/',
   },
   {
-    name: 'Linux',
-    logo: '/images/sections/skills/linux.svg',
+    name: 'Datadog',
+    logo: '/images/sections/skills/datadog.svg',
     summary:
-      'Expertise in Linux administration, shell scripting, and automation.',
-    categories: ['tools'],
+      'Daily driver for observability across 1000+ services - dashboards, monitors, APM traces, and log pipelines for incident response.',
+    categories: ['observability', 'tools'],
+    url: 'https://www.datadoghq.com/',
+  },
+  {
+    name: 'Grafana',
+    logo: '/images/sections/skills/grafana.svg',
+    summary:
+      'Years of experience building dashboards and alerting on top of Prometheus, Loki, and Tempo for multi-cloud platforms.',
+    categories: ['observability', 'tools'],
+    url: 'https://grafana.com/',
+  },
+  {
+    name: 'Prometheus',
+    logo: '/images/sections/skills/prometheus.svg',
+    summary:
+      'Designed and operated Prometheus-based monitoring stacks for Kubernetes workloads - metrics, recording rules, and alerting.',
+    categories: ['observability', 'container'],
+    url: 'https://prometheus.io/',
+  },
+  {
+    name: 'Argo CD',
+    logo: '/images/sections/skills/argocd.svg',
+    summary:
+      'GitOps delivery for Kubernetes - app-of-apps, sync waves, and multi-cluster rollouts to keep environments declarative and auditable.',
+    categories: ['container', 'tools'],
+    url: 'https://argo-cd.readthedocs.io/',
   },
   {
     name: 'GitHub',
@@ -127,15 +146,18 @@ export const experiences: Experience[] = [
     company: 'NatWest Boxed',
     url: 'https://www.natwestboxed.com',
     location: 'Warsaw, Poland',
+    logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. I support engineering teams operating a system of 1000+ services — incident response, observability, and reliability improvements across the platform.',
+      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support almost 30 engineering teams operating a system of 1000+ services - incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
     positions: [
       {
-        designation: 'Senior Site Reliability Engineer',
+        designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Support development teams resolving production incidents across a system of 1000+ services',
-          'Improve observability — metrics, logs, traces — to shorten time-to-detect and time-to-diagnose',
+          'Support almost 30 engineering teams resolving production incidents across a system of 1000+ services',
+          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup — bridging stream-aligned squads with shared SRE practice',
+          'Improve observability - metrics, logs, traces - to shorten time-to-detect and time-to-diagnose',
+          'Build agents for incident handling and streamline the resolution process for on-call engineers',
           'Drive reliability improvements that prevent recurring outages and reduce on-call toil',
         ],
       },
@@ -248,9 +270,9 @@ export const experiences: Experience[] = [
         start: 'Aug 2015',
         end: 'Feb 2018',
         responsibilities: [
-          'ELK Stack aggregating 50 TB of data for Play Mobile — 16 nodes, 2 TB memory',
-          'Play Now — designed scalable Cloud Native delivery pipelines and third-party integrations for a new mobile operator',
-          'Virginmobile MVNO — 2 years of infrastructure maintenance and architectural improvements',
+          'ELK Stack aggregating 50 TB of data for Play Mobile - 16 nodes, 2 TB memory',
+          'Play Now - designed scalable Cloud Native delivery pipelines and third-party integrations for a new mobile operator',
+          'Virginmobile MVNO - 2 years of infrastructure maintenance and architectural improvements',
           'Migrated parts of internal infrastructure to AWS (e.g. autoscaling GitLab runners)',
         ],
       },
@@ -276,7 +298,7 @@ export const experiences: Experience[] = [
         start: 'Dec 2012',
         end: 'Dec 2013',
         responsibilities: [
-          'Express ELIXIR Adapter — immediate transfer system for CitiBank S.A.',
+          'Express ELIXIR Adapter - immediate transfer system for CitiBank S.A.',
           'Maintained back-office systems for FM Bank and BankBPS',
           'Developed components of the Paymax mobile payment system',
         ],
@@ -292,7 +314,7 @@ export const certifications = [
     organization: 'AI_Devs',
     organizationUrl: 'https://www.aidevs.pl',
     overview:
-      'Hands-on program on building production AI agents with LLMs — prompt engineering, tool use, RAG, and agentic workflows.',
+      'Hands-on program on building production AI agents with LLMs - prompt engineering, tool use, RAG, and agentic workflows.',
     certificateUrl: 'https://www.aidevs.pl',
   },
   {

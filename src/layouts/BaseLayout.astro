@@ -17,7 +17,7 @@ interface Props {
 
 const {
   title,
-  description = 'Marcin Jasion — Senior Site Reliability Engineer. Notes on incident response, observability, Kubernetes, and running large fleets of services.',
+  description = 'Marcin Jasion - Senior Site Reliability Engineer. Notes on incident response, observability, Kubernetes, and running large fleets of services.',
   image = '/images/mjasion.jpg',
   canonicalUrl,
   articleDate,
@@ -35,7 +35,7 @@ const ogImageType = /\.jpe?g($|\?)/i.test(ogImage) ? 'image/jpeg'
   : 'image/png';
 const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`;
 
-// Markdown-for-agents discovery hint — every page has a .md sibling.
+// Markdown-for-agents discovery hint - every page has a .md sibling.
 // Middleware in functions/_middleware.ts content-negotiates this based on Accept.
 const mdHref = Astro.url.pathname === '/'
   ? '/index.md'
@@ -86,15 +86,6 @@ const mdHref = Astro.url.pathname === '/'
     <!-- Per-page head content (JSON-LD, etc.) -->
     <slot name="head" />
 
-    <!-- Dark mode (before paint to prevent flash) -->
-    <script is:inline>
-      (function () {
-        const theme = localStorage.getItem('theme');
-        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
-        }
-      })();
-    </script>
   </head>
   <body class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:bg-white dark:focus:bg-gray-950 focus:px-4 focus:py-2 focus:text-sm focus:font-medium">

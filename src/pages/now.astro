@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { author } from '../data/portfolio';
+import { Clock, Briefcase, Sparkles, Hammer, Headphones, Dumbbell, MessageCircle } from '@lucide/astro';
 
 if (import.meta.env.PROD) {
   return new Response(null, { status: 404 });
@@ -14,26 +15,40 @@ const formatDate = (d: Date) =>
 const sections = [
   {
     heading: 'Work',
-    body: `Senior SRE at NatWest Boxed in Warsaw. Supporting engineering teams across a system of 1000+ services — mostly incident response, observability work, and the quiet improvements that keep on-call calm.`,
+    icon: Briefcase,
+    tone: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    body: `Senior SRE consultant at NatWest Boxed in Warsaw. Supporting almost 30 engineering teams operating a system of 1000+ services. Beyond observability, I'm building agents for incident handling and streamlining the resolution process. Teams are organised using <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Team Topologies</a> - mine is an enabling team, so it cuts across many different stream-aligned squads.`,
   },
   {
     heading: 'Learning',
-    body: `Going deeper on agentic systems after wrapping up AI_devs 3: Agents. Currently playing with LLM-driven incident triage — can a model usefully pre-summarise an alert before a human looks at it?`,
+    icon: Sparkles,
+    tone: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+    body: `Currently playing with LLM-driven incident triage - can a model usefully pre-summarise an alert before a human looks at it?`,
   },
   {
     heading: 'Building',
-    body: `Slowly refreshing this blog — new About, new CV, this page. Long-term goal is to publish more about the day-to-day of running large fleets of services.`,
+    icon: Hammer,
+    tone: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
+    body: `Slowly refreshing this blog - new About, new CV, this page. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family.`,
+  },
+  {
+    heading: 'Sport',
+    icon: Dumbbell,
+    tone: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
+    body: `After two Hyrox finishes - solo in '25 and doubles in '26 here in Warsaw - I'm dialling CrossFit intensity back up and chasing a first strict muscle-up. Also putting more miles on the bike through 2026.`,
   },
   {
     heading: 'Reading',
-    body: `Working through "Observability Engineering" (Majors, Fong-Jones, Miranda) again — it lands differently when the system you operate has four digits of services.`,
+    icon: Headphones,
+    tone: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+    body: `Working through "Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes' "I Am Pilgrim" and working through Jo Nesbø's catalogue.`,
   },
 ];
 ---
 
 <BaseLayout
   title="Now"
-  description={`What ${author.name} is focused on right now — work, learning, and side projects.`}
+  description={`What ${author.name} is focused on right now - work, learning, and side projects.`}
 >
   <Fragment slot="head">
     <link rel="canonical" href="https://mjasion.pl/now/" />
@@ -43,9 +58,14 @@ const sections = [
 
     <!-- Header -->
     <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
-      <h1 class="text-3xl font-bold tracking-tight">Now</h1>
+      <div class="flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-300">
+          <Clock class="h-5 w-5" />
+        </span>
+        <h1 class="text-3xl font-bold tracking-tight">Now</h1>
+      </div>
       <p class="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">
-        A snapshot of what I'm focused on right now — inspired by Derek Sivers' <a href="https://nownownow.com/about" class="text-accent-600 dark:text-accent-400 hover:underline">/now</a> page idea.
+        A snapshot of what I'm focused on right now - inspired by Derek Sivers' <a href="https://nownownow.com/about" class="text-accent-600 dark:text-accent-400 hover:underline">/now</a> page idea.
       </p>
       <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
         Last updated <time datetime={lastUpdated.toISOString()}>{formatDate(lastUpdated)}</time>
@@ -54,17 +74,23 @@ const sections = [
 
     <!-- Sections -->
     {sections.map((s) => (
-      <section class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-bento">
-        <h2 class="text-lg font-semibold">{s.heading}</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">
-          {s.body}
-        </p>
+      <section class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
+        <div class="flex items-center gap-3">
+          <span class:list={["flex h-10 w-10 items-center justify-center rounded-xl shrink-0", s.tone]}>
+            <s.icon class="h-5 w-5" />
+          </span>
+          <h2 class="text-lg font-semibold">{s.heading}</h2>
+        </div>
+        <p class="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed" set:html={s.body}></p>
       </section>
     ))}
 
     <!-- Footer note -->
     <section class="rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-6 text-sm text-gray-500 dark:text-gray-400">
-      Want to compare notes on incident response, observability, or running large fleets? <a href="/about/" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.
+      <div class="flex items-start gap-3">
+        <MessageCircle class="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5" />
+        <p>Want to compare notes on incident response, observability, or running large fleets? <a href="/about/" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
+      </div>
     </section>
   </div>
 </BaseLayout>
