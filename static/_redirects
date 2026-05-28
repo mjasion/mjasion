@@ -42,6 +42,7 @@
 /posts/kubernetes/page/* /posts/kubernetes/ 301
 
 # Old notes section (removed)
+/notes / 301
 /notes/* / 301
 
 # Non-existent tag pages (tags with < 5 posts have no dedicated page)

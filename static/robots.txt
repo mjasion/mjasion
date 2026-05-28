@@ -2,6 +2,8 @@ Sitemap: https://mjasion.pl/sitemap-index.xml
 
 User-agent: *
 Disallow: *.pdf
+Disallow: /cdn-cgi/
+Disallow: /*?utm_*
 
 # "This robot collects content from the Internet for the sole purpose of
 # helping educational institutions prevent plagiarism. [...] we compare
