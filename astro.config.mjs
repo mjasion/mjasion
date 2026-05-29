@@ -7,6 +7,7 @@ import {
   transformerNotationHighlight,
   transformerNotationFocus,
 } from '@shikijs/transformers';
+import { unified } from '@astrojs/markdown-remark';
 
 // Dev-only: make the dev server tell the browser to cache nothing, so edits to
 // any source asset always show up on a normal reload instead of needing a hard
@@ -96,7 +97,7 @@ export default defineConfig({
     sitemap(),
   ],
   markdown: {
-    rehypePlugins: [rehypeExternalLinksNewTab],
+    processor: unified({ rehypePlugins: [rehypeExternalLinksNewTab] }),
     shikiConfig: {
       themes: {
         light: 'github-light-high-contrast',
