@@ -9,5 +9,13 @@
   "rebaseWhen": "conflicted",
   "prConcurrentLimit": 0,
   "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "minimumReleaseAge": null,
+    "schedule": [],
+    "prCreation": "immediate"
+  },
   "configMigration": true
 }

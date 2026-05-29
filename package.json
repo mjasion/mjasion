@@ -9,18 +9,18 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "^5.0.4",
-    "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/mdx": "^6.0.1",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource/inter": "^5.2.8",
-    "@lucide/astro": "^1.14.0",
+    "@lucide/astro": "^1.17.0",
     "@resvg/resvg-js": "^2.6.2",
-    "astro": "^6.3.1",
+    "astro": "^6.4.2",
     "mermaid": "^11.15.0",
     "satori": "^0.26.0",
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@shikijs/transformers": "^4.0.2",
+    "@shikijs/transformers": "^4.1.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.3.0",
     "tailwindcss": "^4.3.0",
