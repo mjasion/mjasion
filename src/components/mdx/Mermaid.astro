@@ -20,16 +20,32 @@ const { chart } = Astro.props;
 </div>
 
 <script>
-  import mermaid from 'mermaid';
+  // Heavy `mermaid` library is loaded lazily (dynamic import) only once a
+  // diagram is about to scroll into view, so it stays out of the initial
+  // critical request chain.
+  type Mermaid = typeof import('mermaid').default;
 
-  function renderMermaid() {
+  let mermaidPromise: Promise<Mermaid> | null = null;
+
+  function loadMermaid(): Promise<Mermaid> {
+    // Guard: dynamic import happens a single time, then is reused.
+    if (!mermaidPromise) {
+      mermaidPromise = import('mermaid').then((mod) => mod.default);
+    }
+    return mermaidPromise;
+  }
+
+  async function renderMermaid() {
+    const mermaid = await loadMermaid();
     const isDark = document.documentElement.classList.contains('dark');
     // Restore original source before re-rendering
-    document.querySelectorAll<HTMLElement>('.mermaid').forEach((el) => {
+    const diagrams = document.querySelectorAll<HTMLElement>('.mermaid');
+    diagrams.forEach((el) => {
       const source = el.dataset.source;
       if (source) {
         el.removeAttribute('data-processed');
-        el.innerHTML = source;
+        el.replaceChildren();
+        el.insertAdjacentHTML('afterbegin', source);
       }
     });
     mermaid.initialize({
@@ -75,14 +91,25 @@ const { chart } = Astro.props;
     triggerEl = null;
   }
 
+  let rendered = false;
+
+  // Trigger the (lazy) initial render exactly once. Subsequent theme-toggle
+  // re-renders go straight through renderMermaid() since mermaid is cached.
+  function renderOnce() {
+    if (rendered) return;
+    rendered = true;
+    renderMermaid();
+  }
+
   function init() {
+    // --- Setup that does NOT need the mermaid library runs immediately ---
+
     // Store original chart source for re-rendering on theme change
     document.querySelectorAll<HTMLElement>('.mermaid').forEach((el) => {
       if (!el.dataset.source) {
         el.dataset.source = el.innerHTML;
       }
     });
-    renderMermaid();
 
     // Click to enlarge
     document.querySelectorAll<HTMLElement>('.mermaid-container').forEach((container) => {
@@ -101,15 +128,39 @@ const { chart } = Astro.props;
       if (e.key === 'Escape') closeModal();
     });
 
-    // Watch for dark class toggle on <html> (debounced to prevent double-renders)
+    // Watch for dark class toggle on <html> (debounced to prevent double-renders).
+    // If the theme flips before any diagram has rendered yet, renderMermaid()
+    // would pull in mermaid prematurely — so only re-render once initial render
+    // has been triggered.
     let themeTimer: number;
     new MutationObserver(() => {
+      if (!rendered) return;
       clearTimeout(themeTimer);
       themeTimer = window.setTimeout(renderMermaid, 100);
     }).observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });
+
+    // --- Defer loading + rendering mermaid until a diagram is near the viewport ---
+    const diagrams = document.querySelectorAll<HTMLElement>('.mermaid');
+    if (!diagrams.length) return;
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            obs.disconnect();
+            renderOnce(); // loads mermaid (once) and renders every diagram
+          }
+        },
+        { rootMargin: '200px' }
+      );
+      diagrams.forEach((el) => observer.observe(el));
+    } else {
+      // Fallback: no IntersectionObserver support — load + render immediately.
+      renderOnce();
+    }
   }
 
   if (document.readyState === 'loading') {
