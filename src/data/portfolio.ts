@@ -23,7 +23,7 @@ export const author = {
   summaryShort:
     'Senior SRE. I work where code meets infrastructure - diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
   summary:
-    'Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping engineering teams operate a system of 1000+ services at NatWest Boxed. 13 years in tech: started as a Java developer, found my home in the messy middle where applications meet production.',
+    'Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping engineering teams operate a system of 1000+ services at NatWest Boxed - mostly Java services in an asynchronous, Kafka-based architecture. 13 years in tech: started as a Java developer, found my home in the messy middle where applications meet production.',
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
     {
@@ -71,6 +71,22 @@ export const skills = [
     url: 'https://golang.org/',
   },
   {
+    name: 'TypeScript',
+    logo: '/images/sections/skills/typescript.svg',
+    summary:
+      'Typed JavaScript for building maintainable web apps and tooling - including this site, built with Astro and TypeScript.',
+    categories: ['programming'],
+    url: 'https://www.typescriptlang.org/',
+  },
+  {
+    name: 'Java',
+    logo: '/images/sections/skills/java.svg',
+    summary:
+      'Started my career on the JVM. Years building backend services and APIs in Java - still the foundation of most platforms I operate today.',
+    categories: ['programming'],
+    url: 'https://dev.java/',
+  },
+  {
     name: 'AWS',
     logo: '/images/sections/skills/aws.svg',
     summary:
@@ -98,7 +114,7 @@ export const skills = [
     name: 'Datadog',
     logo: '/images/sections/skills/datadog.svg',
     summary:
-      'Daily driver for observability across 1000+ services - dashboards, monitors, APM traces, and log pipelines for incident response.',
+      'Daily driver for observability across 1000+ services - dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident response.',
     categories: ['observability', 'tools'],
     url: 'https://www.datadoghq.com/',
   },
@@ -106,7 +122,7 @@ export const skills = [
     name: 'Grafana',
     logo: '/images/sections/skills/grafana.svg',
     summary:
-      'Years of experience building dashboards and alerting on top of Prometheus, Loki, and Tempo for multi-cloud platforms.',
+      'Years of experience building dashboards and alerting on top of Prometheus for multi-cloud platforms.',
     categories: ['observability', 'tools'],
     url: 'https://grafana.com/',
   },
@@ -156,7 +172,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support almost 30 engineering teams operating a system of 1000+ services - incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
+      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support almost 30 engineering teams operating a system of 1000+ services - mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer (Consultant)',
