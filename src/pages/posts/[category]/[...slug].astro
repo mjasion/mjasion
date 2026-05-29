@@ -1,12 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 import PostLayout from '../../../layouts/PostLayout.astro';
 import { getReadingTime } from '../../../data/portfolio';
 
 export async function getStaticPaths() {
   const MIN_POSTS_FOR_TAG_PAGE = 5;
-  const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  const posts = (await getCollection('posts', isVisible))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   // Count tags to determine which ones get pages
