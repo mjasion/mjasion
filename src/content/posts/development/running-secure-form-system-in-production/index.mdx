@@ -1,14 +1,18 @@
 ---
-title: "Running a Zero-Knowledge Form System in Production"
+title: "Running an Encrypted, Pseudonymized Form System in Production"
 date: "2026-07-10"
 description: |
-  Real usage numbers from a GDPR-compliant medical interview system on Cloudflare
-  Workers - and the one bug that broke it: too many open connections to D1.
+  Production lessons from an encrypted, pseudonymized medical-interview system on
+  Cloudflare Workers: the D1 connection limit that broke autosave, caching the form
+  schema in KV, and a SQLite anonymity side-channel I almost shipped.
 hero: ./hero.svg
 tags:
   - cloudflare
   - d1
+  - kv
   - drizzle
+  - sqlite
+  - privacy
   - performance
 category: development
 ---
@@ -17,7 +21,7 @@ import Alert from '../../../../components/mdx/Alert.astro';
 
 At the end of [the last post](/posts/development/building-secure-form-system-on-cloudflare/) - about the encrypted, pseudonymized interview system I built for my wife's pharmacy students - I promised two things: the real usage numbers from running it in production, and the mistakes I made so you can skip them. A full cohort has now used it to conduct and record patient interviews about herbal medicine. This is that follow-up.
 
-The short version: the architecture held up. Two Workers, D1, KV, and R2, all on the free tier, carried a real workload without drama. There was exactly one failure worth writing about - and it was my fault, not Cloudflare's.
+The short version: the architecture held up. Two Workers, D1, KV, and R2, all on the free tier, carried a real workload without drama. The interesting parts were what running it in front of real users surfaced - one outright failure, a query I taught myself to stop running, and a privacy hole I'm glad I caught while it still mattered. All of it my doing; none of it Cloudflare's.
 
 ## 📊 What production actually looked like
 
@@ -93,12 +97,72 @@ await db.batch(                                       // [!code ++]
 
 One caveat if you copy this pattern: D1 caps a single statement at 100 bound parameters, so a genuinely huge write needs chunking into several batched statements. For a 40-field form, you never come close.
 
+## 🔍 Reading the query logs
+
+The connection bug taught me to watch *how* each request talks to D1, so I started reviewing the query patterns regularly - which endpoints read the most, how many rows, how often. One path stood out by a mile: autosave.
+
+Saving answers didn't just write - it first *read the entire form structure* to validate them. That read was a four-level nested query walking form → stages → questions, pulling back around 113 rows, and it ran on every single autosave. Across one 30-minute session that was roughly 120 reads of a form that hadn't changed once - about a third of all the time D1 spent working that session.
+
+The form structure is the perfect thing to cache: an admin edits it occasionally, students read it for hours. So I moved it into KV. The assembled schema - only the validation-relevant bits (question id, type, config, required-or-not; no labels, no PII) - is cached under `form-cache:{formId}`, and autosave reads that instead of the database:
+
+```typescript
+// Autosave's hot read: KV first, D1 only on a miss
+const cached = await kv.get<CachedFormData>(`form-cache:${formId}`, 'json')
+if (cached) return cached                          // [!code highlight]
+
+const data = await loadFormStructure(db, formId)   // one lightweight query
+await kv.put(`form-cache:${formId}`, JSON.stringify(data), {
+  expirationTtl: 86_400, // 24h
+})
+return data
+```
+
+The entry is invalidated the instant an admin edits the form, so students never see a stale structure. I worked the TTL up in stages as I trusted it more - 60 seconds, then 10 minutes, then 24 hours once invalidation was wired in. Net effect: that heavy structure query went from running on every keystroke to running a handful of times a day at most - once per form when someone first opens it, plus whenever an admin makes an edit. On a day nobody touches a given form, it doesn't run at all.
+
+## 📝 The satisfaction survey
+
+After submitting their interview, every student was offered a short, fully anonymous satisfaction survey - a 1-to-5 rating and an optional comment.
+
+{/* TODO: Screenshot - the satisfaction survey modal as a student sees it
+    (1-5 rating + optional comment). File: ./satisfaction-survey.png */}
+
+{/* ![The anonymous satisfaction survey shown after submitting the interview](./satisfaction-survey.png) */}
+
+{/* TODO (author): general reception goes here - response rate, average rating,
+    the gist of the comments. */}
+
+The most human thing I learned came from watching the admins, not the students. With results live in the dashboard, the admins checked the running average *every single day* the survey was open - and a number that moves daily is a number people start steering toward. So I put the results under embargo: until the survey closed, the dashboard still shows the anonymous comments (handy for catching the odd bug report) but hides every rating, distribution chart, and aggregate. It's a single cutoff datetime checked on each render; once it passes, the full view comes back on its own.
+
+### The anonymity hole I almost shipped
+
+The survey is anonymous by design, split across two tables: `satisfaction_participation` records *who* took part - so nobody is asked twice - and holds no answers, while `satisfaction_responses` holds the rating and comment with no link to a user. Clean separation. Except it wasn't.
+
+Both rows are written in the same request handler, one right after the other, so a student's participation row and their anonymous response row were created in lockstep - and *insertion order* quietly tied them back together. An admin with raw SQL access could sort each table by `id`, zip row N to row N, and de-anonymize every comment. I only spotted it while the survey was already live.
+
+The obvious fixes weren't enough, and that's the part worth remembering:
+
+- Dropped the `created_at` columns from both tables. Order still leaked through the autoincrement `id`s.
+- Dropped the `id` from the participation table and keyed it on `(user_id, form_id)` instead. Order *still* leaked - because SQLite gives every table a hidden `rowid`, and rows physically live in `rowid` (insertion) order whether or not you expose an id.
+
+What finally closed it was recreating the table as [`WITHOUT ROWID`](https://www.sqlite.org/withoutrowid.html):
+
+```sql
+CREATE TABLE satisfaction_participation (
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  form_id INTEGER NOT NULL REFERENCES forms(id) ON DELETE CASCADE,
+  status  TEXT NOT NULL CHECK(status IN ('completed', 'declined')),
+  PRIMARY KEY (user_id, form_id)
+) WITHOUT ROWID;
+```
+
+A `WITHOUT ROWID` table has no hidden rowid - it stores rows clustered by its composite primary key, here `(user_id, form_id)`, so the physical order reflects *who and which form*, never *when*. The insertion-order side channel is simply gone. (For good measure, the migration also shuffled the existing rows with `ORDER BY RANDOM()` as it copied them across.)
+
 ## 💰 The bill
 
 All of this - two Workers, D1, KV sessions, R2 attachments, a whole cohort of students - ran inside Cloudflare's free tier. The 300-plus writes on the busiest day sit far below D1's free limits, and the geo-fencing WAF rule from the [previous post](/posts/development/building-secure-form-system-on-cloudflare/#-locking-the-front-door-waf-and-placement) keeps bot noise out, which keeps invocation counts honest. No AWS bill, no managed Postgres, no surprise at the end of the month.
 
 ## 💡 Closing thoughts
 
-Production taught me the thing you can only learn by shipping: the architecture was never the risk. Encryption, pseudonymization, two Workers, a service binding - all of it behaved exactly as designed. The one real incident came from a lazy data-access pattern that a single `db.batch()` erased.
+Production taught me the thing you can only learn by shipping: Cloudflare's primitives were never the risk. Workers, D1, KV, the service binding - all of it behaved exactly as designed. Every problem worth writing about came from my own data modeling: a write pattern that hit the connection limit, a read pattern that hammered the database on every keystroke, and a schema that leaked insertion order. The platform did its job; I had to learn to do mine.
 
-If there's a lesson beyond "batch your writes," it's that the limits which bite you on Workers aren't the ones in the pricing table - requests per day, storage, bandwidth. They're the per-invocation ones: six open connections, fifty subrequests on the free plan. Shape a single request to respect those, and a small Worker on the free tier will quietly carry a real workload.
+Two lessons outlast this particular project. The limits that bite you on Workers aren't the ones on the pricing page - requests, storage, bandwidth - but the per-invocation ones: six open connections, fifty subrequests on the free plan. Shape each request to respect those and a free-tier Worker quietly carries a real workload. And the privacy lesson is even more durable: anonymity isn't a column you delete - it's the absence of every ordering an attacker can sort by, including the ones the database keeps for itself.
