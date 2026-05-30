@@ -1,5 +1,5 @@
 ---
-title: "Building a Zero-Knowledge Form System on Cloudflare Workers"
+title: "Building an Encrypted, Pseudonymized Form System on Cloudflare"
 date: "2026-07-01"
 description: |
   How I built a GDPR-compliant medical interview system using Cloudflare Workers
@@ -99,7 +99,7 @@ R2 handles file attachments (photos, documents) with Cloudflare's built-in encry
 
 {/* TODO: Screenshot - D1 console or `wrangler d1 execute` output showing a users table row.
     The key visual: email column is unreadable base64 ciphertext, emailHash is a hex string,
-    while id and role are plaintext. This makes "zero-knowledge storage" tangible.
+    while id and role are plaintext. This makes "encryption at rest" tangible.
     Redact any real data if needed - even ciphertext of real users should be blurred.
     File: ./d1-encrypted-data.png */}
 
@@ -153,6 +153,10 @@ Both auth flows produce the same session structure:
 | Refresh | HTTPOnly cookie + KV | `userId` + `role` | 30 days |
 
 **Critical detail:** tokens contain only `userId` and `role`. Never a name, email, or any PII. If a token is intercepted, it reveals nothing about the person. The auth middleware auto-refreshes expired access tokens using the KV refresh token - transparent to the frontend.
+
+And I sign and verify those tokens by hand. There's no JWT library in the bundle - no `jose`, no `jsonwebtoken` - just the Web Crypto API the Workers runtime already ships: an HMAC-SHA256 key from `crypto.subtle`, base64url encoding written out by hand, and a payload of exactly the user id, the role, and two timestamps (`sub`, `role`, `iat`, `exp`). The whole thing is a few dozen lines.
+
+I rolled it myself partly to keep the Worker small, but mostly because it was the first time I actually understood what a JWT *is* - `header.payload.signature`, an HMAC over the first two parts, an `exp` you check against the clock - instead of a library call I trusted on faith. Building authentication and authorization up from the primitive also made the storage split fall out naturally: the stateless access token carries no PII and needs no lookup to verify, the refresh token lives in KV, and the user record lives encrypted in D1. Three lifetimes, three stores - and rolling the tokens by hand is what forced me to reason about which belongs where.
 
 Rate limiting runs on KV counters: 3 magic link requests per minute, 10 password attempts per minute per IP.
 
