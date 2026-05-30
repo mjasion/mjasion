@@ -1,0 +1,104 @@
+---
+title: "Running a Zero-Knowledge Form System in Production"
+date: "2026-07-10"
+description: |
+  Real usage numbers from a GDPR-compliant medical interview system on Cloudflare
+  Workers - and the one bug that broke it: too many open connections to D1.
+hero: ./hero.svg
+tags:
+  - cloudflare
+  - d1
+  - drizzle
+  - performance
+category: development
+---
+import Mermaid from '../../../../components/mdx/Mermaid.astro';
+import Alert from '../../../../components/mdx/Alert.astro';
+
+At the end of [the last post](/posts/development/building-secure-form-system-on-cloudflare/) - about the encrypted, pseudonymized interview system I built for my wife's pharmacy students - I promised two things: the real usage numbers from running it in production, and the mistakes I made so you can skip them. A full cohort has now used it to conduct and record patient interviews about herbal medicine. This is that follow-up.
+
+The short version: the architecture held up. Two Workers, D1, KV, and R2, all on the free tier, carried a real workload without drama. There was exactly one failure worth writing about - and it was my fault, not Cloudflare's.
+
+## 📊 What production actually looked like
+
+Here is the cohort, by the numbers:
+
+| Metric | Value |
+|---|---|
+| Students in the cohort | 130 |
+| Peak concurrent students | 7 |
+| Requests per active student | ~60 / minute |
+| Shortest session | ~10 minutes |
+| Median session | 55 minutes |
+| Response writes on the busiest day | 300+ |
+
+A few things stand out.
+
+**The peak was small - and that's the point.** Seven students at once, out of a cohort of 130, is nothing by "scale" standards. No autoscaling, no load test, no war room. And yet seven concurrent users were enough to surface the bug below - because the problem was never load. It was the shape of a *single* request.
+
+**Each active student was chatty.** Around 60 requests a minute per person. That's the autosave talking: the form persists as you type, so a focused student generates a steady stream of small writes. Multiply by seven and the busiest day crossed 300 response writes to D1 - still a rounding error against the free tier, but enough volume to make request shape matter.
+
+**The ten-minute interview.** The shortest session lasted about ten minutes against a median of 55. You don't complete a 40-question patient interview in ten minutes by hand. The timing in the audit trail made it obvious that someone pasted in generated answers. The same timestamped log I built for GDPR compliance turned out to double as a behavioral signal - not something I'll act on, but a good reminder that *when* data arrives is itself data.
+
+{/* TODO: Screenshot - a simple chart of requests (or response writes) over the busiest day,
+    showing the concurrency peak. A line/area chart with a visible spike communicates
+    "real production traffic, small scale" better than the table alone.
+    File: ./requests-over-time.png */}
+
+{/* ![Requests over time on the busiest day, peaking at seven concurrent students](./requests-over-time.png) */}
+
+## 💥 The one thing that broke: too many open connections
+
+The interview form has 40-plus questions. The first version of autosave did the obvious, naive thing: when the form saved, it persisted each answer as its own `INSERT` - one round trip to D1 per field - and it did this every couple of seconds as the student worked.
+
+With one person testing, this is invisible. In production, with a save firing all of its inserts together, the backend Worker started returning errors about too many open connections.
+
+Here are the numbers I should have known going in - including the one I got wrong. I'd half-remembered the simultaneous-connection limit as ten. It's six:
+
+- A single Worker invocation can have at most **six connections open simultaneously** waiting for response headers. The [docs](https://developers.cloudflare.com/workers/platform/limits/) put it plainly: *"Each Worker invocation can have up to six connections simultaneously waiting for response headers."*
+- On the **free plan**, one invocation can make at most **50 subrequests** in total - and every D1 query is a subrequest.
+
+Firing one `INSERT` per answer for a 40-plus-field form walks straight into both ceilings inside a single request: far more than six writes in flight at once, and past 50 subrequests once you add the surrounding reads. The fix is to stop treating each answer as its own trip to the database.
+
+<Mermaid chart={`graph LR
+    subgraph before["Before: one INSERT per answer"]
+        A1[Autosave] --> Q1[INSERT]
+        A1 --> Q2[INSERT]
+        A1 --> Q3["INSERT ×40+"]
+        Q1 --> DB1[(D1)]
+        Q2 --> DB1
+        Q3 --> DB1
+    end
+    subgraph after["After: db.batch - one round trip"]
+        A2[Autosave] --> BAT[db.batch] --> DB2[(D1)]
+    end`} />
+
+[Drizzle's](https://orm.drizzle.team/docs/batch-api) `db.batch()` collapses all of those statements into a single call to D1. The change was two lines:
+
+```typescript
+// src/routes/a/responses.ts - persist a student's answers
+await Promise.all(                                    // [!code --]
+  answers.map((a) => db.insert(responses).values(a)), // [!code --]
+)                                                     // [!code --]
+await db.batch(                                       // [!code ++]
+  answers.map((a) => db.insert(responses).values(a)), // [!code ++]
+)                                                     // [!code ++]
+```
+
+`db.batch()` sends every statement to D1 in one request and runs them inside an implicit transaction: *"If all statements succeed, the transaction commits. If any statement fails, the entire transaction rolls back and no changes are made."* That bought me two things at once. The obvious one: a 40-insert fan-out became a single round trip, comfortably under both the connection and subrequest ceilings. The one I didn't plan for: atomicity. D1 [doesn't support](https://developers.cloudflare.com/d1/worker-api/d1-database/#batch) a standard `BEGIN TRANSACTION`, so `db.batch()` is how you get all-or-nothing writes - a half-saved interview is now impossible.
+
+<Alert type="info">
+**The mental model that bit me:** on Workers, every `await db.something()` is a network hop, and there's a hard ceiling on how many can be in flight at once. Don't loop the database - batch it.
+</Alert>
+
+One caveat if you copy this pattern: D1 caps a single statement at 100 bound parameters, so a genuinely huge write needs chunking into several batched statements. For a 40-field form, you never come close.
+
+## 💰 The bill
+
+All of this - two Workers, D1, KV sessions, R2 attachments, a whole cohort of students - ran inside Cloudflare's free tier. The 300-plus writes on the busiest day sit far below D1's free limits, and the geo-fencing WAF rule from the [previous post](/posts/development/building-secure-form-system-on-cloudflare/#-locking-the-front-door-waf-and-placement) keeps bot noise out, which keeps invocation counts honest. No AWS bill, no managed Postgres, no surprise at the end of the month.
+
+## 💡 Closing thoughts
+
+Production taught me the thing you can only learn by shipping: the architecture was never the risk. Encryption, pseudonymization, two Workers, a service binding - all of it behaved exactly as designed. The one real incident came from a lazy data-access pattern that a single `db.batch()` erased.
+
+If there's a lesson beyond "batch your writes," it's that the limits which bite you on Workers aren't the ones in the pricing table - requests per day, storage, bandwidth. They're the per-invocation ones: six open connections, fifty subrequests on the free plan. Shape a single request to respect those, and a small Worker on the free tier will quietly carry a real workload.
