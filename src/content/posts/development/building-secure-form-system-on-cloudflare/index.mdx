@@ -210,10 +210,33 @@ This isn't just for security theater. When a student reports a lost response or 
 
 {/* ![Admin audit log showing login, form update, and response submission entries](./audit-log.png) */}
 
+## 🌐 Locking the front door: WAF and placement
+
+Two more decisions sit below the application code, at Cloudflare's network layer - and both came almost for free.
+
+**Geo-fencing with the WAF.** Every student in this cohort is in Poland. There is no legitimate reason for a request to arrive from anywhere else, so I don't accept one. A single WAF [custom rule](https://developers.cloudflare.com/waf/custom-rules/) blocks every request whose source country isn't Poland:
+
+```text
+(not ip.src.country in {"PL"})
+```
+
+Action: *Block*. That one rule erases the bulk of the internet's background noise - credential-stuffing bots, vulnerability scanners, and the endless `/.env`, `/wp-login.php`, `/api/*` probes that hammer every public hostname. (`ip.src.country` is the current field; the older `ip.geoip.country` still works but is deprecated.) Custom rules exist even on the free plan, capped at five, so this costs nothing. It isn't a perfect boundary - geolocation is IP-based, so a determined visitor on a Polish VPN slips through and a legitimate user travelling abroad gets locked out - but for an app whose entire audience is a known group sitting in one country, collapsing the attack surface to a single nation is an enormous, free win.
+
+**Placement near the data.** By default a Worker runs at whichever Cloudflare edge location a request lands on. For a globally distributed audience that's exactly what you want. For an audience that's entirely in Warsaw - talking to a D1 database that lives in the EU - I'd rather pin compute right next to both. Cloudflare lets you do that with a [placement region hint](https://developers.cloudflare.com/workers/configuration/placement/#specify-a-cloud-region):
+
+```jsonc
+// wrangler.jsonc
+{
+  "placement": { "region": "gcp:europe-central2" }
+}
+```
+
+`europe-central2` is GCP's Warsaw region; the hint just uses it as a geographic anchor, telling Cloudflare to run the Worker in the data center with the lowest latency to that region. It's worth being precise about what this does: placement optimizes the Worker's distance to its *backend*, not to the user (user requests always terminate at the nearest edge). But here the backend - D1, in the EU - and the users - in Poland - sit in the same place, so anchoring the Worker to Warsaw keeps the whole round trip (user, compute, encrypted data) inside one region. One catch: the region hint and Smart Placement (`"mode": "smart"`) are mutually exclusive. You either name a fixed region or let Cloudflare choose by analyzing traffic - not both.
+
 ## 💡 Closing thoughts
 
 The entire system - two Workers, D1 database, R2 storage, KV sessions - runs within Cloudflare's free tier for the current usage levels. No AWS account, no managed Postgres.
 
 If you're building something that handles sensitive data, you don't need a dedicated security team or enterprise infrastructure. You need good encryption primitives, sensible architecture, and a platform that gives you the building blocks. Cloudflare Workers - with Web Crypto, D1, and KV - turned out to be exactly that.
 
-In the next post I'll go further: I'll share real usage statistics from running this in production, and walk through the mistakes I made along the way - so you can skip them.
+In [the next post](/posts/development/running-secure-form-system-in-production/) I go further: I share real usage statistics from running this in production, and walk through the mistake I made along the way - so you can skip it.
