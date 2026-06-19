@@ -63,8 +63,8 @@ const publications = [
             {author.email}
           </ObfuscatedEmail>
           <a href="https://mjasion.pl" class="hover:text-accent-600 dark:hover:text-accent-400">mjasion.pl</a>
-          <a href="https://www.linkedin.com/in/marcinjasion" class="hover:text-accent-600 dark:hover:text-accent-400">linkedin.com/in/marcinjasion</a>
-          <a href="https://www.github.com/mjasion" class="hover:text-accent-600 dark:hover:text-accent-400">github.com/mjasion</a>
+          <a href="https://www.linkedin.com/in/marcinjasion" class="hover:text-accent-600 dark:hover:text-accent-400" target="_blank" rel="noopener noreferrer">linkedin.com/in/marcinjasion</a>
+          <a href="https://www.github.com/mjasion" class="hover:text-accent-600 dark:hover:text-accent-400" target="_blank" rel="noopener noreferrer">github.com/mjasion</a>
         </div>
       </header>
 
@@ -83,7 +83,7 @@ const publications = [
             <div class="break-inside-avoid">
               <div class="flex flex-wrap items-baseline justify-between gap-x-3">
                 <h3 class="text-base font-semibold print:text-sm">
-                  <a href={exp.url} class="hover:text-accent-600 dark:hover:text-accent-400">{exp.company}</a>
+                  <a href={exp.url} class="hover:text-accent-600 dark:hover:text-accent-400" target="_blank" rel="noopener noreferrer">{exp.company}</a>
                 </h3>
                 <span class="text-xs text-gray-500 dark:text-gray-400">{exp.location}</span>
               </div>
@@ -135,7 +135,7 @@ const publications = [
           {certifications.map((cert) => (
             <li class="flex flex-wrap items-baseline justify-between gap-x-3">
               <span>
-                <a href={cert.certificateUrl} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{cert.name}</a>
+                <a href={cert.certificateUrl} class="font-medium hover:text-accent-600 dark:hover:text-accent-400" target="_blank" rel="noopener noreferrer">{cert.name}</a>
                 <span class="text-gray-500 dark:text-gray-400"> - {cert.organization}</span>
               </span>
               <span class="text-gray-500 dark:text-gray-400">{cert.timeline}</span>
@@ -159,7 +159,7 @@ const publications = [
           ))}
           {publications.map((pub) => (
             <li>
-              <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{pub.title}</a>
+              <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400" target="_blank" rel="noopener noreferrer">{pub.title}</a>
               <span class="text-gray-500 dark:text-gray-400"> - open-source contribution</span>
             </li>
           ))}
