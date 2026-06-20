@@ -21,7 +21,7 @@ const OG_CACHE_DIR = resolve(process.cwd(), 'node_modules/.astro/og-cache');
 try {
   mkdirSync(OG_CACHE_DIR, { recursive: true });
 } catch {
-  // Read-only FS (some CI sandboxes) — caching is best-effort, generation still works.
+  // Read-only FS (some CI sandboxes) - caching is best-effort, generation still works.
 }
 
 const categoryColorMap: Record<string, string> = {
@@ -353,7 +353,7 @@ export const GET: APIRoute = async ({ props }) => {
   const heroSvg = hasHero ? readHeroSvg(postId) : null;
 
   // Cache key covers every per-post input that affects the rendered pixels.
-  // Profile photo and fonts are global — invalidate those via CACHE_VERSION.
+  // Profile photo and fonts are global - invalidate those via CACHE_VERSION.
   const cacheKey = createHash('sha256')
     .update(`${CACHE_VERSION}\0${sanitizedTitle}\0${category}\0${heroSvg ?? ''}`)
     .digest('hex');
@@ -363,7 +363,7 @@ export const GET: APIRoute = async ({ props }) => {
     try {
       return pngResponse(readFileSync(cachePath));
     } catch {
-      // Corrupt/unreadable cache entry — fall through and regenerate.
+      // Corrupt/unreadable cache entry - fall through and regenerate.
     }
   }
 
