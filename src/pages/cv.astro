@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Download, Printer } from '@lucide/astro';
+import { Download } from '@lucide/astro';
 import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
 import { education, languages, publications, additionalSkills } from '../data/cv';
 ---
@@ -15,26 +15,17 @@ import { education, languages, publications, additionalSkills } from '../data/cv
     <!-- Toolbar (hidden on print) -->
     <div class="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        Printable view. Download the PDF or use <kbd class="rounded border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 text-xs">Cmd/Ctrl + P</kbd>.
+        Printable view. Use <kbd class="rounded border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 text-xs">Cmd/Ctrl + P</kbd> to print.
       </p>
-      <div class="flex items-center gap-2">
-        <a
-          href="/cv.pdf"
-          download="Marcin-Jasion-CV.pdf"
-          class="group inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
-        >
-          <Download class="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-y-0.5" />
-          Download PDF
-        </a>
-        <button
-          id="print-cv"
-          type="button"
-          class="group inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-        >
-          <Printer class="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110 group-hover:-rotate-6" />
-          Print
-        </button>
-      </div>
+      <a
+        href="/cv.pdf"
+        target="_blank"
+        rel="noopener"
+        class="group inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+      >
+        <Download class="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-y-0.5" />
+        Download PDF
+      </a>
     </div>
 
     <article class="cv rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento print:rounded-none print:border-none print:bg-white print:p-0 print:shadow-none">
@@ -201,8 +192,3 @@ import { education, languages, publications, additionalSkills } from '../data/cv
     }
   }
 </style>
-
-<script>
-  const btn = document.getElementById('print-cv');
-  btn?.addEventListener('click', () => window.print());
-</script>
