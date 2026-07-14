@@ -41,13 +41,16 @@ src/
 ├── content/
 │   └── posts/<category>/<slug>/  # Blog posts (md/mdx + assets)
 ├── data/
-│   └── portfolio.ts            # Author, skills, experience, certifications, talks
+│   ├── portfolio.ts            # Author, skills, experience, certifications, talks
+│   └── cv.ts                   # CV-only data (education, languages, publications) + inline-HTML helpers
 ├── layouts/
 │   ├── BaseLayout.astro        # Base HTML with SEO meta, OG/Twitter cards, RSS link
 │   └── PostLayout.astro        # Blog post layout with TOC sidebar
 ├── pages/
 │   ├── index.astro             # Landing page (bento grid: bio + posts)
 │   ├── about.astro             # Full portfolio page
+│   ├── cv.astro                # Printable CV page (A4 print styles)
+│   ├── cv.pdf.ts               # Build-time PDF twin of /cv/ (pdfmake + Inter; mirrors the print view 1:1)
 │   ├── archives.astro          # Archives page (posts grouped by year)
 │   ├── index.xml.ts            # Atom RSS feed
 │   ├── og/[...path].png.ts     # Dynamic OG images (Satori + Resvg)

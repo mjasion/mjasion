@@ -1,33 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Printer } from '@lucide/astro';
+import { Download, Printer } from '@lucide/astro';
 import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
-
-const education = [
-  {
-    school: 'Warsaw University of Technology',
-    degree: 'M.Sc. in Engineering, Computer Science',
-    years: '2013 – 2016',
-  },
-  {
-    school: 'Warsaw University of Technology',
-    degree: "Engineer's degree, Computer Science",
-    years: '2009 – 2013',
-  },
-];
-
-const languages = [
-  { name: 'Polish', level: 'Native' },
-  { name: 'English', level: 'Professional working' },
-];
-
-const publications = [
-  {
-    title: 'DNS query metrics plugin for Telegraf',
-    url: 'https://github.com/influxdata/telegraf/tree/master/plugins/inputs/dns_query',
-  },
-];
+import { education, languages, publications, additionalSkills } from '../data/cv';
 ---
 
 <BaseLayout
@@ -37,18 +13,28 @@ const publications = [
   <div class="mx-auto max-w-4xl px-4 py-12 print:px-0 print:py-0">
 
     <!-- Toolbar (hidden on print) -->
-    <div class="mb-6 flex items-center justify-between print:hidden">
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        Printable view. Use <kbd class="rounded border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 text-xs">Cmd/Ctrl + P</kbd> to save as PDF.
+        Printable view. Download the PDF or use <kbd class="rounded border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 text-xs">Cmd/Ctrl + P</kbd>.
       </p>
-      <button
-        id="print-cv"
-        type="button"
-        class="group inline-flex items-center gap-2 rounded-full bg-gray-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
-      >
-        <Printer class="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110 group-hover:-rotate-6" />
-        Print / Save as PDF
-      </button>
+      <div class="flex items-center gap-2">
+        <a
+          href="/cv.pdf"
+          download="Marcin-Jasion-CV.pdf"
+          class="group inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+        >
+          <Download class="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-y-0.5" />
+          Download PDF
+        </a>
+        <button
+          id="print-cv"
+          type="button"
+          class="group inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+        >
+          <Printer class="h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110 group-hover:-rotate-6" />
+          Print
+        </button>
+      </div>
     </div>
 
     <article class="cv rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento print:rounded-none print:border-none print:bg-white print:p-0 print:shadow-none">
@@ -102,7 +88,7 @@ const publications = [
                     {pos.responsibilities.map((r) => (
                       <li class="flex gap-2">
                         <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500 print:bg-gray-600" />
-                        <span>{r}</span>
+                        <span set:html={r} />
                       </li>
                     ))}
                   </ul>
@@ -117,14 +103,11 @@ const publications = [
       <section class="mt-6 break-inside-avoid print:mt-5">
         <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Skills</h2>
         <ul class="mt-2 flex flex-wrap gap-1.5">
-          {skills.map((skill) => (
+          {[...skills.map((skill) => skill.name), ...additionalSkills].map((name) => (
             <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">
-              {skill.name}
+              {name}
             </li>
           ))}
-          <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">Terraform</li>
-          <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">Helm</li>
-          <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">Prometheus / Grafana</li>
         </ul>
       </section>
 
