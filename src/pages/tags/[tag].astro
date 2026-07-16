@@ -1,13 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import { ArrowLeft } from '@lucide/astro';
 
 export async function getStaticPaths() {
   const MIN_POSTS_FOR_TAG_PAGE = 5;
-  const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  const posts = (await getCollection('posts', isVisible))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const tagCounts = new Map<string, typeof posts>();
