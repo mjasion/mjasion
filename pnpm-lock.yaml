@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@astrojs/mdx':
         specifier: ^7.0.2
-        version: 7.0.3(@astrojs/markdown-satteri@0.3.4)(astro@7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))
+        version: 7.0.3(@astrojs/markdown-satteri@0.3.4)(astro@7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))
       '@astrojs/sitemap':
         specifier: ^3.7.3
         version: 3.7.3
@@ -19,13 +19,13 @@ importers:
         version: 5.2.8
       '@lucide/astro':
         specifier: ^1.24.0
-        version: 1.24.0(astro@7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))
+        version: 1.24.0(astro@7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
       astro:
         specifier: ^7.0.7
-        version: 7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0)
+        version: 7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0)
       mermaid:
         specifier: ^11.16.0
         version: 11.16.0
@@ -1283,8 +1283,8 @@ packages:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
 
-  astro@7.1.0:
-    resolution: {integrity: sha512-jXHNZXpO0HOuANLwv5uLg5WFXFmIMyDTMlokIb8sv10y8QItOFaikwrqvp6+Pe0MSqvp+aO7V1SfVriFcCEKgA==}
+  astro@7.1.3:
+    resolution: {integrity: sha512-4dhPyAAXthf3xLEYnG8SeL7yr/nTPPABfY7e9YF0yuO+vK9Xp+8Q5j4xzsmL3GueukQv4oNwGNTBepLOiDGeJA==}
     engines: {node: '>=22.12.0', npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
     peerDependencies:
@@ -1378,9 +1378,9 @@ packages:
   cookie-es@1.2.3:
     resolution: {integrity: sha512-lXVyvUvrNXblMqzIRrxHb57UUVmqsSWlxqt3XIjCkUP0wDAf6uicO6KMbEgYrMNtEvWgWHwe42CKxPu9MYAnWw==}
 
-  cookie@1.1.1:
-    resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
-    engines: {node: '>=18'}
+  cookie@2.0.1:
+    resolution: {integrity: sha512-yuToqVvRrj6pfDXREyQAAv8SkAEk/8GS3jQRTiUMm66TVtBYmqQeoEjL2Lmq8Rpo6271vH76InTChTitEAm65w==}
+    engines: {node: '>=22'}
 
   cose-base@1.0.3:
     resolution: {integrity: sha512-s9whTXInMSgAp/NVXVNuVxVKzGH2qck3aQlVHxDCdAEPgtMKwc4Wq6/QKhgdEdgbLSi9rBTAcPoRa6JpiG4ksg==}
@@ -1620,8 +1620,8 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  devalue@5.8.1:
-    resolution: {integrity: sha512-4CXDYRBGqN+57wVJkuXBYmpAVUSg3L6JAQa/DFqm238G73E1wuyc/JhGQJzN7vUf/CMphYau2zXbfWzDR5aTEw==}
+  devalue@5.8.2:
+    resolution: {integrity: sha512-DObPPAfdtFbXjxLqK8s2Xk9ZuWz5+ZoFEhC7J76es4GU/rEiXwHTmbImoCdyoCOcBH1UF3+Cz6Z2sYD4hyl5TA==}
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
@@ -2181,8 +2181,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  neotraverse@0.6.18:
-    resolution: {integrity: sha512-Z4SmBUweYa09+o6pG+eASabEpP6QkQ70yHj351pQoEXIs8uHbaU2DWVmzBANKgflPa47A50PtB2+NgRpQvr7vA==}
+  neotraverse@1.0.1:
+    resolution: {integrity: sha512-WmmLty1YWwJl9yZi77v2dVIV6X2kuYV8YYBI/G3LWGKdGHmHUvL1z7FW0iDvEvGAwNEoc5x1tOOOyDnf5jJw/w==}
     engines: {node: '>= 10'}
 
   nlcst-to-string@4.0.0:
@@ -2217,12 +2217,12 @@ packages:
   oniguruma-to-es@4.3.6:
     resolution: {integrity: sha512-csuQ9x3Yr0cEIs/Zgx/OEt9iBw9vqIunAPQkx19R/fiMq2oGVTgcMqO/V3Ybqefr1TBvosI6jU539ksaBULJyA==}
 
-  p-limit@7.3.0:
-    resolution: {integrity: sha512-7cIXg/Z0M5WZRblrsOla88S4wAK+zOQQWeBYfV3qJuJXMr+LnbYjaadrFaS0JILfEDPVqHyKnZ1Z/1d6J9VVUw==}
+  p-limit@7.3.1:
+    resolution: {integrity: sha512-0trZaiG7Y7kN/Egy9a8j47t9osC0Tch4PaIWd9yGF6bvmlk7muExRvGNYb8sXBwEKMoNKsbNN9P8EefuQekE4Q==}
     engines: {node: '>=20'}
 
-  p-queue@9.3.1:
-    resolution: {integrity: sha512-POWdiIPmsUPGwb4FeQ4OBg46aqmcInSWe45CKDsGHiOBiVQM9chqfQTuqhuTzcg2Vz9faTI65at0KkVyVEiCHw==}
+  p-queue@9.3.3:
+    resolution: {integrity: sha512-NXAOdnEe5FsZJfT4oK84lE1Y5cFFdWlRuOo5tww8DyNMxyRXwn39fIkUtNLKppcPC+UYU/bXujNCUGDv01y7CA==}
     engines: {node: '>=20'}
 
   p-timeout@7.0.1:
@@ -2231,6 +2231,9 @@ packages:
 
   package-manager-detector@1.7.0:
     resolution: {integrity: sha512-xg1eHpwYL/D/HEdWw2goFZP6vV0FH7W+PZ5rFkGjdIDLtxq7EkzBUeT3m+lndYCt8wKbmofUu1MUdMCXkCk9ZQ==}
+
+  package-manager-detector@1.8.0:
+    resolution: {integrity: sha512-yQA4H19AmPEoMUeavPMDIe1higySl/gH/yaQrkT/s07Qp+7pp2hYz30N3z2l5BkjVkF9Ow6o0wjJamm2y7Sn0A==}
 
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
@@ -2830,13 +2833,13 @@ snapshots:
       hast-util-from-html: 2.0.3
       satteri: 0.9.5
 
-  '@astrojs/mdx@7.0.3(@astrojs/markdown-satteri@0.3.4)(astro@7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))':
+  '@astrojs/mdx@7.0.3(@astrojs/markdown-satteri@0.3.4)(astro@7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))':
     dependencies:
       '@astrojs/internal-helpers': 0.10.1
       '@astrojs/markdown-remark': 7.2.1
       '@mdx-js/mdx': 3.1.1
       acorn: 8.17.0
-      astro: 7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0)
+      astro: 7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0)
       es-module-lexer: 2.3.1
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -2867,7 +2870,7 @@ snapshots:
       ci-info: 4.4.0
       dset: 3.1.4
       is-docker: 4.0.0
-      package-manager-detector: 1.7.0
+      package-manager-detector: 1.8.0
 
   '@babel/helper-string-parser@7.29.7': {}
 
@@ -3167,9 +3170,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lucide/astro@1.24.0(astro@7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))':
+  '@lucide/astro@1.24.0(astro@7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0))':
     dependencies:
-      astro: 7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0)
+      astro: 7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0)
 
   '@mdx-js/mdx@3.1.1':
     dependencies:
@@ -3745,7 +3748,7 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro@7.1.0(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0):
+  astro@7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(jiti@2.7.0)(rollup@4.62.0):
     dependencies:
       '@astrojs/compiler-rs': 0.3.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)
       '@astrojs/internal-helpers': 0.10.1
@@ -3761,8 +3764,8 @@ snapshots:
       ci-info: 4.4.0
       clsx: 2.1.1
       common-ancestor-path: 2.0.0
-      cookie: 1.1.1
-      devalue: 5.8.1
+      cookie: 2.0.1
+      devalue: 5.8.2
       diff: 8.0.4
       dset: 3.1.4
       es-module-lexer: 2.3.1
@@ -3778,11 +3781,11 @@ snapshots:
       magic-string: 0.30.21
       magicast: 0.5.3
       mrmime: 2.0.1
-      neotraverse: 0.6.18
+      neotraverse: 1.0.1
       obug: 2.1.4
-      p-limit: 7.3.0
-      p-queue: 9.3.1
-      package-manager-detector: 1.7.0
+      p-limit: 7.3.1
+      p-queue: 9.3.3
+      package-manager-detector: 1.8.0
       piccolore: 0.1.3
       picomatch: 4.0.5
       semver: 7.8.5
@@ -3894,7 +3897,7 @@ snapshots:
 
   cookie-es@1.2.3: {}
 
-  cookie@1.1.1: {}
+  cookie@2.0.1: {}
 
   cose-base@1.0.3:
     dependencies:
@@ -4154,7 +4157,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  devalue@5.8.1: {}
+  devalue@5.8.2: {}
 
   devlop@1.1.0:
     dependencies:
@@ -5082,7 +5085,7 @@ snapshots:
 
   nanoid@3.3.16: {}
 
-  neotraverse@0.6.18: {}
+  neotraverse@1.0.1: {}
 
   nlcst-to-string@4.0.0:
     dependencies:
@@ -5116,11 +5119,11 @@ snapshots:
       regex: 6.1.0
       regex-recursion: 6.0.2
 
-  p-limit@7.3.0:
+  p-limit@7.3.1:
     dependencies:
       yocto-queue: 1.2.2
 
-  p-queue@9.3.1:
+  p-queue@9.3.3:
     dependencies:
       eventemitter3: 5.0.4
       p-timeout: 7.0.1
@@ -5128,6 +5131,8 @@ snapshots:
   p-timeout@7.0.1: {}
 
   package-manager-detector@1.7.0: {}
+
+  package-manager-detector@1.8.0: {}
 
   pako@0.2.9: {}
 
