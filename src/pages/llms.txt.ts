@@ -5,7 +5,7 @@ import { author } from '@/data/portfolio';
 export const GET: APIRoute = async ({ site }) => {
   const siteUrl = site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
   const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || process.env.CF_PAGES_BRANCH && process.env.CF_PAGES_BRANCH !== 'main' || data.date <= now)))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   // Collect unique tags across all posts
