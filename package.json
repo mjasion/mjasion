@@ -27,7 +27,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/pdfmake": "^0.3.3",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "packageManager": "pnpm@11.22.0"
 }
