@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 10 1120 630" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2d6b45"/>
+      <stop offset="100%" stop-color="#3d8a5a"/>
+    </linearGradient>
+    <linearGradient id="sproutGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Soft organic shapes in background -->
+  <circle cx="200" cy="500" r="300" fill="#ffffff" opacity="0.03"/>
+  <circle cx="1000" cy="150" r="250" fill="#ffffff" opacity="0.03"/>
+  <circle cx="600" cy="700" r="400" fill="#ffffff" opacity="0.02"/>
+
+  <!-- Subtle leaf pattern -->
+  <g opacity="0.04" fill="#ffffff">
+    <circle cx="150" cy="120" r="40"/>
+    <circle cx="1050" cy="550" r="35"/>
+    <circle cx="950" cy="100" r="25"/>
+    <circle cx="250" cy="580" r="30"/>
+    <circle cx="500" cy="80" r="20"/>
+    <circle cx="700" cy="600" r="22"/>
+    <circle cx="100" cy="350" r="18"/>
+    <circle cx="1100" cy="320" r="28"/>
+  </g>
+
+  <!-- Center circle behind sprout -->
+  <circle cx="600" cy="280" r="120" fill="url(#circleGrad)"/>
+  <circle cx="600" cy="280" r="120" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.15"/>
+
+  <!-- Sprout icon (Lucide) - scaled up and centered -->
+  <g transform="translate(600, 280) scale(5.5)" stroke="url(#sproutGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <g transform="translate(-12, -12)">
+      <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/>
+      <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/>
+      <path d="M5 21h14"/>
+    </g>
+  </g>
+
+  <!-- Security badge - white disc with a green shield + keyhole, anchored on the
+       sprout circle's edge (bottom-right) like a verified badge on an avatar. -->
+  <g>
+    <!-- green halo: matches the background so the badge reads as punched-through -->
+    <circle cx="685" cy="365" r="41" fill="#367c51"/>
+    <!-- badge face -->
+    <circle cx="685" cy="365" r="35" fill="#ffffff"/>
+    <!-- shield + keyhole -->
+    <g transform="translate(685, 364)" fill="#2d6b45">
+      <path d="M -14,-18 L 14,-18 L 14,2 C 14,11 7,17 0,21 C -7,17 -14,11 -14,2 Z"/>
+      <circle cx="0" cy="-4" r="3.2" fill="#ffffff"/>
+      <path d="M -1.6,-2 L 1.6,-2 L 2.6,7 L -2.6,7 Z" fill="#ffffff"/>
+    </g>
+  </g>
+</svg>

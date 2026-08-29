@@ -138,11 +138,11 @@ import Mermaid from '../../../components/mdx/Mermaid.astro';
 
 ### Key Files
 - **Tokens**: `src/styles/global.css` - `@theme` block with fonts and category colors
-- **Tailwind dark variant**: `@custom-variant dark (&:where(.dark, .dark *))` is defined but the `.dark` class is **never added at runtime** — the site is light-only.
+- **Tailwind dark variant**: `@custom-variant dark (&:where(.dark, .dark *))` is defined but the `.dark` class is **never added at runtime** - the site is light-only.
 
 ### Light-only Policy
 - No theme toggle, no FOUC script, no `localStorage('theme')`, no `prefers-color-scheme` handling.
-- Existing `dark:` Tailwind variants throughout the codebase are kept (never break light) and may be left in place when editing — they simply don't fire. Don't strip them as a cleanup task.
+- Existing `dark:` Tailwind variants throughout the codebase are kept (never break light) and may be left in place when editing - they simply don't fire. Don't strip them as a cleanup task.
 - When writing NEW styles you may pair `dark:` variants, but it isn't required. Don't add a dark variant when the design isn't being tested in dark mode.
 - If the user ever asks to re-enable dark mode, add back: (1) FOUC `is:inline` script in `BaseLayout.astro` head, (2) toggle button in `Sidebar.astro` desktop + mobile bars, (3) click handler that toggles `.dark` and writes `localStorage`.
 
@@ -150,7 +150,7 @@ import Mermaid from '../../../components/mdx/Mermaid.astro';
 
 Color tokens come from `global.css` `@theme` block. `dark:` variants exist but never activate (see Light-only Policy above).
 
-### Light/Dark Pattern (legacy — dark side never renders)
+### Light/Dark Pattern (legacy - dark side never renders)
 
 ```html
 <!-- Background -->
@@ -327,7 +327,7 @@ class="group-hover:scale-105 transition-transform duration-300"
 
 Keep effects subtle. Never scale entire cards.
 
-### Icon Micro-animations — Required
+### Icon Micro-animations - Required
 
 Every Lucide icon inside an interactive element (`<a>`, `<button>`, or a card with hover) MUST animate on hover of its parent. This is the project's signature feel; do not ship a new icon without it. The pattern is CSS-only (no JS, no extra deps):
 
@@ -341,7 +341,7 @@ Every Lucide icon inside an interactive element (`<a>`, `<button>`, or a card wi
 </a>
 ```
 
-Match the animation to the icon's semantics — the icon should look like it's *doing the verb it represents*:
+Match the animation to the icon's semantics - the icon should look like it's *doing the verb it represents*:
 
 | Icon | Semantic motion | Tailwind |
 |---|---|---|
@@ -360,7 +360,7 @@ Rules:
 - Always pair the transform with `transition-transform duration-200 ease-out` (or `duration-300` for larger transforms like Clock's full rotation).
 - Skip icons that are **purely informational** and not inside a hover target (e.g. icons in `Alert.astro`, status badges, decorative bullet points).
 - Reusable icon components (e.g. `SocialLinks.astro`) bake the animation into their default `iconClass` and put `group` in their `linkClass`, so consumers get it for free.
-- The animation must remain on the icon SVG itself — wrapping in an extra `<span>` is fine for icon tiles but the transform always sits on the icon.
+- The animation must remain on the icon SVG itself - wrapping in an extra `<span>` is fine for icon tiles but the transform always sits on the icon.
 
 ## Anti-Patterns - Do NOT
 
@@ -448,7 +448,7 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 - **Astro components** (`.astro`) for all UI - no React/Vue/Svelte
 - **TypeScript** in frontmatter for type safety
 - **Vanilla JS** in `<script>` tags only when truly needed (email decode, mermaid, copy-button, share buttons, reading progress)
-- **Icons**: `@lucide/astro` only. Inline animated icon libraries (e.g. lucide-animated) are **not allowed** — they require React + Framer Motion runtime which violates the zero-JS policy. CSS `group-hover` micro-animations on plain Lucide SVGs are the project standard (see "Icon Micro-animations").
+- **Icons**: `@lucide/astro` only. Inline animated icon libraries (e.g. lucide-animated) are **not allowed** - they require React + Framer Motion runtime which violates the zero-JS policy. CSS `group-hover` micro-animations on plain Lucide SVGs are the project standard (see "Icon Micro-animations").
 
 ## Naming Conventions
 
@@ -483,8 +483,8 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 4. **Bento grid consistency** - New pages/sections must follow the bento card system. No one-off layouts.
 5. **Mobile-first** - Responsive styles start from mobile, scale up. Test at 375px, 768px, 1280px.
 6. **Accessibility** - Every interactive element needs keyboard support. Every image needs alt text. Semantic HTML (`<nav>`, `<article>`, `<section>`, `<aside>`).
-7. **Zero client JS by default** - Only add `<script>` tags when truly needed (email decode, mermaid, post-page interactions, the Skills-section adaptive card layout in `about.astro`). No JS frameworks. No React/Vue/Svelte islands. This rules out React-based icon/animation libraries (lucide-animated, motion components, etc.) — use CSS `group-hover` on Lucide SVGs instead.
-   - **Sanctioned JS exception — Skills layout:** the `about.astro` Skills cards have *variable widths* (proportional to each category's skill count) that the user wants preserved. Pure CSS cannot pack variable-width items into flush, adaptive, gap-free rows (it's a justified/bin-packing problem), so a small **vanilla-JS justified-rows layout** (driven by `ResizeObserver`, re-packing on viewport changes) is explicitly allowed there. It MUST degrade gracefully: with JS disabled the cards render fine via a `flex flex-wrap` content-width fallback. No new dependencies, no framework — plain bundled Astro `<script>`.
+7. **Zero client JS by default** - Only add `<script>` tags when truly needed (email decode, mermaid, post-page interactions, the Skills-section adaptive card layout in `about.astro`). No JS frameworks. No React/Vue/Svelte islands. This rules out React-based icon/animation libraries (lucide-animated, motion components, etc.) - use CSS `group-hover` on Lucide SVGs instead.
+   - **Sanctioned JS exception - Skills layout:** the `about.astro` Skills cards have *variable widths* (proportional to each category's skill count) that the user wants preserved. Pure CSS cannot pack variable-width items into flush, adaptive, gap-free rows (it's a justified/bin-packing problem), so a small **vanilla-JS justified-rows layout** (driven by `ResizeObserver`, re-packing on viewport changes) is explicitly allowed there. It MUST degrade gracefully: with JS disabled the cards render fine via a `flex flex-wrap` content-width fallback. No new dependencies, no framework - plain bundled Astro `<script>`.
 8. **Content-first URLs** - Blog posts at `/posts/{category}/{slug}/`. No URL changes without redirect.
 9. **Package manager** - Always use `pnpm`, never `npm` or `yarn`.
 10. **Static output only** - `output: 'static'` in Astro config. No SSR. Cloudflare Pages Functions allowed only as thin content-negotiation middleware in `functions/_middleware.ts` (no business logic, no DB access, no auth).
