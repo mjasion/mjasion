@@ -9,16 +9,16 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/mdx": "^7.0.7",
+    "@astrojs/mdx": "^7.0.8",
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource/inter": "^5.3.0",
-    "@lucide/astro": "^1.33.0",
+    "@lucide/astro": "^1.35.0",
     "@resvg/resvg-js": "^2.6.2",
-    "astro": "^7.2.4",
-    "mermaid": "^11.17.0",
+    "astro": "^7.2.9",
+    "mermaid": "^11.17.2",
     "pdfmake": "^0.3.11",
-    "satori": "^0.33.3",
-    "sharp": "^0.35.3"
+    "satori": "^0.33.4",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@astrojs/markdown-remark": "7.2.4",
