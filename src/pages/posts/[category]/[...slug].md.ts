@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 
 export async function getStaticPaths() {
-  const now = new Date();
-  const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+  const posts = await getCollection('posts', isVisible);
 
   return posts.map((post) => {
     const parts = post.id.split('/');

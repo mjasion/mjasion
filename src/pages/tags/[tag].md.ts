@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 
 const MIN_POSTS_FOR_TAG_PAGE = 5;
 
 export async function getStaticPaths() {
-  const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  const posts = (await getCollection('posts', isVisible))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const tagPosts = new Map<string, typeof posts>();
