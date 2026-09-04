@@ -21,7 +21,7 @@
     "sharp": "^0.35.4"
   },
   "devDependencies": {
-    "@astrojs/markdown-remark": "7.2.4",
+    "@astrojs/markdown-remark": "7.3.0",
     "@shikijs/transformers": "^4.4.3",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
