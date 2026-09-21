@@ -130,7 +130,7 @@ const { chart } = Astro.props;
 
     // Watch for dark class toggle on <html> (debounced to prevent double-renders).
     // If the theme flips before any diagram has rendered yet, renderMermaid()
-    // would pull in mermaid prematurely — so only re-render once initial render
+    // would pull in mermaid prematurely - so only re-render once initial render
     // has been triggered.
     let themeTimer: number;
     new MutationObserver(() => {
@@ -158,7 +158,7 @@ const { chart } = Astro.props;
       );
       diagrams.forEach((el) => observer.observe(el));
     } else {
-      // Fallback: no IntersectionObserver support — load + render immediately.
+      // Fallback: no IntersectionObserver support - load + render immediately.
       renderOnce();
     }
   }

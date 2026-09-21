@@ -12,7 +12,7 @@ import { unified } from '@astrojs/markdown-remark';
 // Dev-only: make the dev server tell the browser to cache nothing, so edits to
 // any source asset always show up on a normal reload instead of needing a hard
 // refresh. This matters most for Astro's `/_image` endpoint, whose URLs carry no
-// content hash AND that hard-sets a 1-year `Cache-Control` — so we force
+// content hash AND that hard-sets a 1-year `Cache-Control` - so we force
 // `no-store` on every response and override any cache header a handler tries to
 // set (via both `setHeader` and `writeHead`). Production is unaffected: built
 // assets are content-hashed, so their cache busts automatically. Trade-off:
@@ -49,7 +49,7 @@ function noCacheInDev() {
 
 // Open external links in markdown/MDX post content in a new tab (with a safe
 // `rel`). Internal links (relative, or to mjasion.pl) stay in the same tab.
-// Applies to .md and .mdx — MDX inherits the markdown config by default.
+// Applies to .md and .mdx - MDX inherits the markdown config by default.
 function rehypeExternalLinksNewTab() {
   const isExternal = (href) =>
     /^https?:\/\//i.test(href) && !/^https?:\/\/(www\.)?mjasion\.pl(\/|$)/i.test(href);

@@ -84,7 +84,7 @@ const skillGroups = skillGroupDefs
     <section id="skills" class="bento-reveal">
       <h2 class="mb-6 text-2xl font-bold">Skills</h2>
       <!-- Categories are variable-width bento cards (width ∝ skill count). A small vanilla-JS
-           justified-rows packer (sanctioned zero-JS exception — see CLAUDE.md Critical Rule 7)
+           justified-rows packer (sanctioned zero-JS exception - see CLAUDE.md Critical Rule 7)
            reflows them into flush rows with no lonely card. No-JS fallback: a plain flex-wrap of
            content-width cards (variable widths, just a possibly-ragged last row). -->
       <div id="skills-pack" data-skills-pack class="flex flex-wrap items-stretch gap-4">
@@ -112,7 +112,7 @@ const skillGroups = skillGroupDefs
                     )}
                     <span class="whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{skill.name}</span>
 
-                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead */}
+                    {/* Desktop hover tooltip - display:none on touch (<sm), where the chip links out instead */}
                     <span
                       role="tooltip"
                       class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 opacity-0 shadow-lg transition-opacity duration-200 group-hover/skill:opacity-100 sm:block dark:bg-gray-800"
@@ -133,7 +133,7 @@ const skillGroups = skillGroupDefs
         // Skills "balanced-reorder" justified-row packer
         // ---------------------------------------------------------------------
         // #skills-pack ships as a plain `flex flex-wrap gap-4` of CONTENT-WIDTH
-        // cards — that is the no-JS fallback (variable widths, possibly one
+        // cards - that is the no-JS fallback (variable widths, possibly one
         // ragged last row). This script upgrades it to justified rows: it picks
         // the arrangement of cards into rows that fills the container flush,
         // never strands a single card alone in a row, and keeps each card's
@@ -220,7 +220,7 @@ const skillGroups = skillGroupDefs
                   const count = e - s;
                   const isLast = ri === comp.length - 1;
                   // Every row EXCEPT the last must hold >=2 cards, so a lonely
-                  // single card can only ever be the trailing row — it never
+                  // single card can only ever be the trailing row - it never
                   // merges with a following row and we leave it un-stretched.
                   if (count < 2 && !isLast && n > 1) { feasible = false; break; }
                   let used = 0;
@@ -254,13 +254,13 @@ const skillGroups = skillGroupDefs
               }
             }
             // best is null when no arrangement fits with every non-last row >=2
-            // (e.g. a narrow / mobile viewport where not even pairs fit) — the
+            // (e.g. a narrow / mobile viewport where not even pairs fit) - the
             // caller then falls back to the natural content-width flex-wrap.
             return best;
           }
 
           // WRITE phase: reorder the actual DOM nodes (so keyboard tab / reading
-          // order matches the visual order — no CSS `order` divergence), then
+          // order matches the visual order - no CSS `order` divergence), then
           // justify each row. Within a row only the LAST card grows to swallow
           // sub-pixel remainder; the others keep their exact proportional basis
           // so the width hierarchy stays crisp.
@@ -337,7 +337,7 @@ const skillGroups = skillGroupDefs
           scheduleRelayout();
 
           // Re-pack only when the container WIDTH changes (ignore height-only
-          // shifts caused by our own measurement reset — avoids a feedback loop).
+          // shifts caused by our own measurement reset - avoids a feedback loop).
           if ('ResizeObserver' in window) {
             new ResizeObserver((entries) => {
               const w = Math.floor(entries[0].contentRect.width);
@@ -348,7 +348,7 @@ const skillGroups = skillGroupDefs
             window.addEventListener('resize', debouncedRelayout, { passive: true });
           }
 
-          // Logos and webfont swaps shift card widths — re-pack once they settle.
+          // Logos and webfont swaps shift card widths - re-pack once they settle.
           const imgs = container.querySelectorAll('img');
           let pending = imgs.length;
           if (pending > 0) {
