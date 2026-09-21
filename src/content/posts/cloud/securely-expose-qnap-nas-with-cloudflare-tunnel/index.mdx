@@ -1,0 +1,153 @@
+---
+title: How to Securely Expose a QNAP NAS App with Cloudflare Tunnel in 2026 🔒
+date: "2026-06-10"
+description: |
+  Forwarding a port from your router to a QNAP NAS is how ransomware gets in.
+  Here's the architecture I use instead - exposing a self-hosted app with zero
+  open ports, using Cloudflare Tunnel.
+hero: ./hero.svg
+tags:
+- cloudflare
+- qnap
+- self-hosting
+- security
+- zero-trust
+
+category: cloud
+draft: true
+---
+import Alert from '../../../../components/mdx/Alert.astro';
+import Mermaid from '../../../../components/mdx/Mermaid.astro';
+
+A QNAP NAS makes a great little home server. Container Station gives you Docker, you've got disks for days, and sooner or later you want to reach one of your self-hosted apps - a dashboard, notes, a media library - from outside the house. The obvious move is to forward a port on your router to the NAS. **Don't do that.** Here's the setup I use instead.
+
+## Why not just forward a port? 🚪
+
+Port forwarding punches an *inbound* hole in your firewall and points it straight at your NAS. Anyone scanning the internet - and bots scan the whole IPv4 range constantly - finds that hole and starts knocking.
+
+QNAP devices have been a favourite ransomware target for years (Qlocker, DeadBolt, eCh0raix), and almost every campaign had the same root cause: a NAS reachable directly from the public internet. The moment you forward a port, you've put a consumer appliance with a long list of CVEs on the open internet.
+
+| | **Port forwarding** | **Cloudflare Tunnel** |
+|---|---|---|
+| Inbound ports open | Yes - exposed to scanners | **None** |
+| Your home IP | Published in DNS | Hidden behind Cloudflare |
+| Sits in front | Nothing | WAF, DDoS protection, TLS |
+| Login before reaching the app | DIY | Built in (Zero Trust Access) |
+| Cost | "Free" + the risk | Free |
+
+## The architecture 🏗️
+
+Cloudflare Tunnel flips the direction of the connection. A small daemon called `cloudflared` runs on your NAS and opens an **outbound-only** connection to Cloudflare's edge. Visitors hit Cloudflare; Cloudflare sends their request back *down the tunnel your NAS already opened*. Your router never needs an inbound rule, and your home IP never appears in DNS.
+
+<Mermaid chart={`flowchart TD
+    Visitor -->|HTTPS| CF[Cloudflare Edge - WAF, Access, TLS]
+    CF -.->|outbound tunnel| CFD[cloudflared on QNAP - no open ports]
+    CFD -->|HTTP localhost:8080| APP[Your App on the NAS]`} />
+
+Read it left to right: the only line that crosses into your home is the dashed one, and that connection was opened *from the inside out* by `cloudflared`. There is nothing for an attacker to scan, because there is no open port.
+
+<Alert type="info">
+Cloudflare Tunnel and Zero Trust Access are both free for personal use (Access covers up to 50 users on the free plan). The only thing you pay for is a domain.
+</Alert>
+
+## What you'll need
+
+- A **domain managed by Cloudflare** (free plan is fine).
+- A **QNAP NAS with Container Station** (QNAP's Docker UI).
+- An **app already running** on the NAS that serves HTTP on some port - I'll use `localhost:8080` as the example.
+
+## Step 1 — Create the tunnel
+
+In 2026 the recommended way is a **remotely-managed tunnel**: you create it in the dashboard and the routing config lives there, not in a local file.
+
+1. Go to [dash.cloudflare.com](https://dash.cloudflare.com/) → **Zero Trust → Networks → Tunnels**.
+2. Click **Create a tunnel**, choose the **Cloudflared** connector, name it `qnap-home`.
+3. On the install screen, pick **Docker**. Cloudflare shows a command containing a long `--token` value. **Copy that token.**
+
+> 📸 **Screenshot — `01-create-tunnel.png`:** the Zero Trust dashboard at *Networks → Tunnels*, showing the "Create a tunnel" step with the **Cloudflared** connector selected.
+
+> 📸 **Screenshot — `02-tunnel-token.png`:** the "Install connector" screen with **Docker** selected and the `docker run ... --token` command visible (blur the actual token).
+
+<Alert type="warning">
+That token **is** the credential for your tunnel. Don't commit it to git, paste it in screenshots, or share it. If it leaks, delete the tunnel and create a new one.
+</Alert>
+
+## Step 2 — Run `cloudflared` on the QNAP
+
+I run `cloudflared` as a container - there's no official QNAP package, and a container is easy to update. In Container Station, create an application from this compose file:
+
+```yaml
+# docker-compose.yml
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:2026.2.1   # pin a version, don't float on :latest // [!code highlight]
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    network_mode: host          # lets it reach your apps via localhost // [!code highlight]
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+```
+
+Put the token in an `.env` file beside it (and keep that file out of git):
+
+```bash
+# .env
+TUNNEL_TOKEN=eyJhIjoiM...your-long-token...
+```
+
+Start it and check the logs - you want four `Registered tunnel connection` lines:
+
+```bash
+docker logs cloudflared
+# INF Registered tunnel connection connIndex=0 ...
+```
+
+Back in the dashboard the tunnel status should turn **Healthy**.
+
+> 📸 **Screenshot — `03-tunnel-healthy.png`:** the tunnel list (or Container Station) showing the connector **Healthy** / the container running.
+
+## Step 3 — Map a public hostname to your app
+
+In the tunnel's config, open the **Published application routes** (formerly "Public Hostname") tab and add a route:
+
+| Field | Value |
+|---|---|
+| **Subdomain** | `app` |
+| **Domain** | `yourdomain.com` |
+| **Service type** | `HTTP` |
+| **URL** | `localhost:8080` |
+
+Save it. Cloudflare creates the `app.yourdomain.com` DNS record (a proxied `CNAME`) for you - you never touch DNS by hand. Open `https://app.yourdomain.com` and your app loads, with a valid certificate, through Cloudflare. No port was forwarded.
+
+> 📸 **Screenshot — `04-public-hostname.png`:** the Published application route form filled in (`app.yourdomain.com` → `HTTP` → `localhost:8080`).
+
+<Alert type="success">
+Your app is now reachable over HTTPS with a hidden origin. But it's still **public** - anyone with the URL can open it. Step 4 fixes that.
+</Alert>
+
+## Step 4 — Put it behind a login with Access 🛡️
+
+A tunnel hides your origin; it doesn't authenticate anyone. For anything that isn't meant to be fully public, gate it with **Cloudflare Access** so visitors log in at Cloudflare's edge *before* a request reaches your NAS.
+
+1. In Zero Trust, go to **Access → Applications → Add an application → Self-hosted**.
+2. Set the domain to `app.yourdomain.com`.
+3. Add a policy: *Allow*, where **Emails** equals your address (or **Emails ending in** your domain for a household).
+4. Pick a login method - Google, GitHub, or an email one-time PIN all work on the free plan.
+
+Now the hostname redirects to a Cloudflare login first, and unauthenticated requests are rejected at the edge - they never touch the tunnel.
+
+> 📸 **Screenshot — `05-access-policy.png`:** the Access self-hosted application policy, showing the *Allow* rule with your email selector.
+
+> 📸 **Screenshot — `06-access-login.png`:** the Cloudflare Access login screen a visitor sees before reaching the app.
+
+## A few hardening habits ✅
+
+- **Never expose the QTS admin UI** over the tunnel - manage the NAS over your LAN or a private VPN (WireGuard/Tailscale).
+- **One hostname per service** - map only the port you mean to share, not the whole NAS.
+- **Close old port forwards** and disable UPnP so nothing re-opens them.
+- **Keep `cloudflared` and QTS patched, and back the NAS up.** The tunnel removes the network attack surface; backups are still your last line of defence.
+
+## Wrapping up
+
+Forwarding a port to a QNAP NAS is the homelab version of leaving the front door open because the key is annoying. Cloudflare Tunnel removes the door entirely: `cloudflared` dials *out*, your origin stays hidden, and Access checks identity at the edge - all on the free tier. Nothing inbound, everything authenticated. That's how I run self-hosted apps from my NAS in 2026.

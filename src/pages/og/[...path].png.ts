@@ -1,5 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -327,8 +328,7 @@ function buildBottomBar(categoryColor: string) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const now = new Date();
-  const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+  const posts = await getCollection('posts', isVisible);
   return posts.map((post) => ({
     params: { path: post.id },
     props: {

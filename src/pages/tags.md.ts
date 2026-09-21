@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 
 const MIN_POSTS_FOR_TAG_PAGE = 5;
 
 export const GET: APIRoute = async () => {
-  const now = new Date();
-  const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+  const posts = await getCollection('posts', isVisible);
 
   const tagCounts = new Map<string, number>();
   for (const post of posts) {
