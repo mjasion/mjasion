@@ -10,7 +10,7 @@ import sharp from 'sharp';
 const service: LocalImageService = {
   ...sharpService,
 
-  async transform(inputBuffer, transform, config) {
+  async transform(inputBuffer, transform, config, logger) {
     const header = new TextDecoder().decode(inputBuffer.slice(0, 200));
     const isSvg = header.includes('<svg') || header.includes('<?xml');
     const wantsRaster = transform.format && transform.format !== 'svg';
@@ -44,7 +44,7 @@ const service: LocalImageService = {
       return { data: new Uint8Array(data), format: transform.format };
     }
 
-    return sharpService.transform(inputBuffer, transform, config);
+    return sharpService.transform(inputBuffer, transform, config, logger);
   },
 };
 
