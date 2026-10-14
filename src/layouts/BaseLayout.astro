@@ -36,7 +36,7 @@ const ogImageType = /\.jpe?g($|\?)/i.test(ogImage) ? 'image/jpeg'
 const fullTitle = title === 'Marcin Jasion' ? title : `${title} | Marcin Jasion`;
 
 // Markdown-for-agents discovery hint - every page has a .md sibling.
-// Middleware in functions/_middleware.ts content-negotiates this based on Accept.
+// Accept: text/markdown is content-negotiated at the Cloudflare edge (URL Rewrite Rules), not in code.
 const mdHref = Astro.url.pathname === '/'
   ? '/index.md'
   : Astro.url.pathname.replace(/\/$/, '') + '.md';
