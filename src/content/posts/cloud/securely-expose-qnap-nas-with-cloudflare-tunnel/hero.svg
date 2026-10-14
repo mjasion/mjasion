@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#0c2a44"/>
+    </linearGradient>
+    <linearGradient id="cf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6821f"/>
+      <stop offset="100%" stop-color="#f9a825"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g stroke="#3b82f6" stroke-opacity="0.07" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="92" text-anchor="middle" fill="#e2e8f0" font-size="40" font-weight="700">Expose Your NAS — Zero Open Ports</text>
+  <text x="600" y="132" text-anchor="middle" fill="#7dd3fc" font-size="20" font-weight="500">QNAP + Cloudflare Tunnel</text>
+
+  <!-- ===================== Left: QNAP NAS ===================== -->
+  <g transform="translate(120, 260)">
+    <rect x="0" y="0" width="240" height="210" rx="16" fill="#0e2236" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="120" y="40" text-anchor="middle" fill="#60a5fa" font-size="20" font-weight="700">QNAP NAS</text>
+
+    <!-- drive bays -->
+    <g transform="translate(40, 60)">
+      <rect x="0" y="0" width="160" height="22" rx="5" fill="#3b82f6" opacity="0.18"/>
+      <circle cx="14" cy="11" r="4" fill="#60a5fa"/>
+      <rect x="0" y="30" width="160" height="22" rx="5" fill="#3b82f6" opacity="0.18"/>
+      <circle cx="14" cy="41" r="4" fill="#60a5fa"/>
+      <rect x="0" y="60" width="160" height="22" rx="5" fill="#3b82f6" opacity="0.18"/>
+      <circle cx="14" cy="71" r="4" fill="#60a5fa"/>
+    </g>
+
+    <!-- cloudflared badge -->
+    <g transform="translate(40, 162)">
+      <rect x="0" y="0" width="160" height="32" rx="8" fill="#f6821f" opacity="0.16"/>
+      <text x="80" y="21" text-anchor="middle" fill="#f9a825" font-size="13" font-weight="600">cloudflared</text>
+    </g>
+  </g>
+
+  <!-- ===================== Center: outbound tunnel (NAS -> Cloudflare) ===================== -->
+  <g transform="translate(360, 365)">
+    <!-- dashed tunnel line (solid colour so the dashes actually render) -->
+    <line x1="0" y1="0" x2="300" y2="0" stroke="#f6821f" stroke-width="4" stroke-dasharray="10,7" stroke-linecap="round" opacity="0.9"/>
+    <polygon points="314,0 300,-9 300,9" fill="#f6821f"/>
+
+    <!-- labels -->
+    <text x="160" y="-50" text-anchor="middle" fill="#cbd5e1" font-size="16" font-weight="600">outbound tunnel</text>
+    <text x="160" y="56" text-anchor="middle" fill="#94a3b8" font-size="14" font-weight="500">no inbound ports</text>
+
+    <!-- padlock badge sitting on the wire -->
+    <g transform="translate(160, 0)">
+      <circle r="27" fill="#0e2236" stroke="#f9a825" stroke-width="1.5"/>
+      <g transform="translate(-13, -13)" stroke="#f9a825">
+        <rect x="0" y="11" width="26" height="18" rx="4" fill="#0e2236" stroke-width="2.2"/>
+        <path d="M5 11 V6 a8 8 0 0 1 16 0 V11" fill="none" stroke-width="2.2"/>
+        <circle cx="13" cy="19" r="2.6" fill="#f9a825" stroke="none"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===================== Right: Cloudflare edge ===================== -->
+  <g transform="translate(680, 260)">
+    <rect x="0" y="0" width="240" height="210" rx="16" fill="#231307" stroke="#f6821f" stroke-width="1.5"/>
+
+    <!-- cloud icon -->
+    <g transform="translate(86, 34)">
+      <path d="M65 25 C65 12, 52 2, 36 6 C28 -3, 12 0, 10 10 C2 11, -3 20, 5 28 L75 28 C82 23, 76 12, 65 25Z" fill="url(#cf)" opacity="0.95"/>
+    </g>
+    <text x="120" y="106" text-anchor="middle" fill="#f6821f" font-size="20" font-weight="700">Cloudflare Edge</text>
+
+    <!-- WAF + DDoS badge -->
+    <g transform="translate(40, 140)">
+      <rect x="0" y="0" width="160" height="32" rx="8" fill="#f6821f" opacity="0.14"/>
+      <text x="80" y="21" text-anchor="middle" fill="#f9a825" font-size="13" font-weight="500">WAF + DDoS</text>
+    </g>
+  </g>
+
+  <!-- ===================== HTTPS request: Visitor -> Cloudflare (sits in the gap, no overlap) ===================== -->
+  <line x1="974" y1="365" x2="940" y2="365" stroke="#3b82f6" stroke-width="3.5" stroke-dasharray="8,5" stroke-linecap="round" opacity="0.9"/>
+  <polygon points="926,365 940,357 940,373" fill="#3b82f6"/>
+  <text x="950" y="345" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="600">HTTPS</text>
+
+  <!-- ===================== Visitor ===================== -->
+  <g transform="translate(980, 260)">
+    <rect x="0" y="0" width="180" height="210" rx="16" fill="#0e2236" stroke="#334155" stroke-width="1.5"/>
+    <g transform="translate(90, 80)" stroke="#60a5fa" fill="none">
+      <circle cx="0" cy="0" r="22" fill="#0e2236" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="9" ry="22" stroke-width="1.5"/>
+      <line x1="-22" y1="0" x2="22" y2="0" stroke-width="1.5"/>
+      <line x1="-19" y1="-11" x2="19" y2="-11" stroke-width="1.2" stroke-opacity="0.7"/>
+      <line x1="-19" y1="11" x2="19" y2="11" stroke-width="1.2" stroke-opacity="0.7"/>
+    </g>
+    <text x="90" y="126" text-anchor="middle" fill="#cbd5e1" font-size="18" font-weight="700">Visitor</text>
+    <text x="90" y="152" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="500">logs in first</text>
+  </g>
+
+</svg>

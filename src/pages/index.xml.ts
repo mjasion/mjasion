@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isVisible } from '@/utils/posts';
 
 export const GET: APIRoute = async ({ site }) => {
   const siteUrl = site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
-  const now = new Date();
-  const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+  const posts = (await getCollection('posts', isVisible))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     .slice(0, 10);
 
