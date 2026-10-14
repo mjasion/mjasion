@@ -179,7 +179,7 @@ export const experiences: Experience[] = [
         start: 'Feb 2025',
         responsibilities: [
           'Support almost 30 engineering teams resolving production incidents across a system of 1000+ services',
-          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup — bridging stream-aligned squads with shared SRE practice',
+          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup - bridging stream-aligned squads with shared SRE practice',
           'Improve observability - metrics, logs, traces - to shorten time-to-detect and time-to-diagnose',
           'Build agents for incident handling and streamline the resolution process for on-call engineers',
           'Drive reliability improvements that prevent recurring outages and reduce on-call toil',
