@@ -1,0 +1,203 @@
+name: pnpm upgrade
+
+# One PR with every in-range dependency bump at once (instead of a Renovate PR per
+# package). The branch is rebuilt from main on every run — reset, `pnpm update`,
+# commit, force-push — so it never has rebase conflicts: the lockfile is simply
+# regenerated on top of the current main.
+#
+# Two jobs: `update` runs the freshly updated dependency code (install scripts,
+# typecheck, build) with a read-only token and hands over only a patch; `pr` holds
+# the write token and never executes dependency code.
+#
+# Cloudflare Pages builds a preview of the branch on its own; the quality checks run
+# here and their result lands in the PR body.
+
+on:
+  schedule:
+    # Off the full hour: GitHub delays (or drops) schedule events most at :00.
+    - cron: '23 9 * * *' # 09:23 UTC = 11:23 Warsaw (CEST), 10:23 in winter (CET)
+  workflow_dispatch:
+
+concurrency:
+  group: pnpm-upgrade
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  BRANCH: chore/pnpm-upgrade
+
+jobs:
+  update:
+    name: pnpm update + checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      changed: ${{ steps.diff.outputs.changed }}
+      typecheck: ${{ steps.typecheck.outcome }}
+      build: ${{ steps.build.outcome }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: .node-version
+          cache: 'pnpm'
+
+      - name: pnpm update
+        # Within the ranges of package.json (no majors), respecting pnpm's
+        # minimumReleaseAge gate (24h by default).
+        run: pnpm update
+
+      - name: Detect changes
+        id: diff
+        run: |
+          git diff --binary -- package.json pnpm-lock.yaml > "$RUNNER_TEMP/upgrade.patch"
+          if [ -s "$RUNNER_TEMP/upgrade.patch" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing to upgrade."
+          fi
+
+      - name: Upload patch
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: upgrade-patch
+          path: ${{ runner.temp }}/upgrade.patch
+          retention-days: 3
+
+      - name: Typecheck
+        id: typecheck
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        run: pnpm exec tsc --noEmit
+
+      - name: Build
+        id: build
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        run: pnpm build
+
+  pr:
+    name: Open or update PR
+    # Only git + gh, no build: the 1-vCPU slim runner is enough.
+    runs-on: ubuntu-slim
+    needs: update
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download patch
+        if: needs.update.outputs.changed == 'true'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: upgrade-patch
+          path: ${{ runner.temp }}/patch
+
+      - name: Apply patch
+        if: needs.update.outputs.changed == 'true'
+        run: |
+          patch="$RUNNER_TEMP/patch/upgrade.patch"
+          # Only the manifest and the lockfile may change.
+          bad=$(git apply --numstat "$patch" | cut -f3 \
+            | grep -vxE 'package\.json|pnpm-lock\.yaml' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Patch touches unexpected paths: $bad"
+            exit 1
+          fi
+          git checkout -B "$BRANCH" origin/main
+          git apply "$patch"
+
+      - name: Commit and push
+        if: needs.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO_URL: https://github.com/${{ github.repository }}
+        run: |
+          git -c core.hooksPath=/dev/null \
+            -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -am 'chore: pnpm upgrade'
+
+          # Skip the force-push when the open branch already holds the same upgrade
+          # on top of the same main (no new bumps, main did not move).
+          if git rev-parse --verify -q "origin/$BRANCH" >/dev/null \
+            && [ "$(git rev-parse "origin/$BRANCH^")" = "$(git rev-parse origin/main)" ] \
+            && git diff --quiet "origin/$BRANCH" HEAD; then
+            echo "Branch already up to date, not pushing."
+          else
+            git -c core.hooksPath=/dev/null \
+              -c "http.extraheader=AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" \
+              push --force "$REPO_URL" "HEAD:refs/heads/$BRANCH"
+          fi
+
+      - name: Open or update PR
+        if: needs.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TYPECHECK: ${{ needs.update.outputs.typecheck }}
+          BUILD: ${{ needs.update.outputs.build }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          icon() { [ "$1" = success ] && echo '✅' || echo '❌'; }
+
+          # Direct deps whose specifier changed: "name: ^old → ^new"
+          bumps=$(git diff HEAD^ HEAD -U0 -- package.json \
+            | awk '
+              /^-[[:space:]]+"[^"]+": "/ { split($0, a, "\""); old[a[2]] = a[4] }
+              /^\+[[:space:]]+"[^"]+": "/ { split($0, a, "\""); if (a[2] in old) print "- `" a[2] "` " old[a[2]] " → " a[4] }
+            ' | sort -u)
+          [ -n "$bumps" ] || bumps='_Only transitive dependencies (lockfile)._'
+
+          body=$(cat <<EOF
+          In-range \`pnpm update\` on top of \`$(git rev-parse --short origin/main)\`. Rebuilt from main daily; [run]($RUN_URL).
+
+          $(icon "$TYPECHECK") typecheck · $(icon "$BUILD") build
+
+          $bumps
+          EOF
+          )
+
+          pr=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$pr" ]; then
+            gh pr edit "$pr" --body "$body"
+          else
+            gh pr create --base main --head "$BRANCH" --title 'chore: pnpm upgrade' --body "$body"
+          fi
+
+      - name: Close stale PR
+        if: needs.update.outputs.changed == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$pr" ]; then
+            gh pr close "$pr" --delete-branch --comment 'main is already up to date.'
+          fi
+
+      - name: Fail on broken checks
+        if: needs.update.outputs.changed == 'true' && (needs.update.outputs.typecheck != 'success' || needs.update.outputs.build != 'success')
+        run: |
+          echo "::error::Upgrade breaks typecheck / build — see the PR body."
+          exit 1
