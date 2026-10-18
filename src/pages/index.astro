@@ -8,7 +8,7 @@ const now = new Date();
 const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Resolve LCP hero image URL for preloading (WebP via custom image service).
+// Resolve LCP hero image URL for preloading (WebP, rasterized from SVG by Sharp).
 // Must mirror BlogCard's widths/sizes/quality so the preload matches the rendered srcset variant.
 const lcpHero = posts[0]?.data.hero;
 const lcpSizes = '(min-width: 1392px) 360px, (min-width: 1024px) calc((100vw - 304px) / 3), (min-width: 768px) calc((100vw - 48px) / 2), calc(100vw - 32px)';

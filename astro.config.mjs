@@ -7,7 +7,7 @@ import {
   transformerNotationHighlight,
   transformerNotationFocus,
 } from '@shikijs/transformers';
-import { unified } from '@astrojs/markdown-remark';
+import { satteri } from '@astrojs/markdown-satteri';
 
 // Dev-only: make the dev server tell the browser to cache nothing, so edits to
 // any source asset always show up on a normal reload instead of needing a hard
@@ -50,34 +50,38 @@ function noCacheInDev() {
 // Open external links in markdown/MDX post content in a new tab (with a safe
 // `rel`). Internal links (relative, or to mjasion.pl) stay in the same tab.
 // Applies to .md and .mdx — MDX inherits the markdown config by default.
-function rehypeExternalLinksNewTab() {
-  const isExternal = (href) =>
-    /^https?:\/\//i.test(href) && !/^https?:\/\/(www\.)?mjasion\.pl(\/|$)/i.test(href);
-  const visit = (node) => {
-    if (
-      node.type === 'element' &&
-      node.tagName === 'a' &&
-      typeof node.properties?.href === 'string' &&
-      isExternal(node.properties.href)
-    ) {
-      node.properties.target = '_blank';
-      const rel = new Set(String(node.properties.rel ?? '').split(/\s+/).filter(Boolean));
+const externalLinksNewTab = {
+  name: 'external-links-new-tab',
+  element: {
+    filter: ['a'],
+    visit(node, ctx) {
+      const href = node.properties?.href;
+      if (
+        typeof href !== 'string' ||
+        !/^https?:\/\//i.test(href) ||
+        /^https?:\/\/(www\.)?mjasion\.pl(\/|$)/i.test(href)
+      ) {
+        return;
+      }
+      const rel = new Set(
+        [node.properties.rel ?? []].flat().join(' ').split(/\s+/).filter(Boolean),
+      );
       rel.add('noopener');
       rel.add('noreferrer');
-      node.properties.rel = [...rel].join(' ');
-    }
-    node.children?.forEach(visit);
-  };
-  return (tree) => visit(tree);
-}
+      ctx.setProperty(node, 'target', '_blank');
+      ctx.setProperty(node, 'rel', [...rel].join(' '));
+    },
+  },
+};
 
 export default defineConfig({
   site: process.env.SITE_URL || 'https://mjasion.pl',
   output: 'static',
   image: {
-    service: {
-      entrypoint: './src/image-service.ts',
-    },
+    // Hero images are hand-authored SVGs that <Image format="webp"> rasterizes.
+    // Astro 6.3+ gates SVG rasterization in the built-in Sharp service behind
+    // this flag; all SVG sources here are our own files, never user input.
+    dangerouslyProcessSVG: true,
   },
   publicDir: 'static',
   build: {
@@ -97,7 +101,7 @@ export default defineConfig({
     sitemap(),
   ],
   markdown: {
-    processor: unified({ rehypePlugins: [rehypeExternalLinksNewTab] }),
+    processor: satteri({ hastPlugins: [externalLinksNewTab] }),
     shikiConfig: {
       themes: {
         light: 'github-light-high-contrast',
