@@ -83,7 +83,11 @@ jobs:
         id: typecheck
         if: steps.diff.outputs.changed == 'true'
         continue-on-error: true
-        run: pnpm exec tsc --noEmit
+        # `astro sync` generates .astro/types.d.ts (gitignored): the `astro:content`
+        # module and `import.meta.env` types that tsc needs on a fresh checkout.
+        run: |
+          pnpm exec astro sync
+          pnpm exec tsc --noEmit
 
       - name: Build
         id: build
