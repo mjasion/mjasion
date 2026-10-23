@@ -191,7 +191,7 @@ importers:
         specifier: ^0.3.12
         version: 0.3.12
       satori:
-        specifier: ^0.63.0
+        specifier: ^0.63.2
         version: 0.63.2
       sharp:
         specifier: ^0.35.5
@@ -1095,8 +1095,8 @@ packages:
   '@types/node@26.6.5':
     resolution: {integrity: sha512-uMzsv9stDdofIZBx4UGh4Z9ZgXnGC9seRDscilBcTHAeOFk67MZg/k9bWVfO+bk4qZmG+l52hRnLwUiH2LnJTg==}
 
-  '@types/pdfkit@0.17.6':
-    resolution: {integrity: sha512-tIwzxk2uWKp0Cq9JIluQXJid77lYhF52EsIOwhsMF4iWLA6YneoBR1xVKYYdAysHuepUB0OX4tdwMiUDdGKmig==}
+  '@types/pdfkit@0.17.7':
+    resolution: {integrity: sha512-VMOZDWw7HtNtLbjIuHIhVArm9PlV0gxpz32jAl1IuXWlIgbr1lKFoTsrtvEzY8a9BIpQJEE5DwNPKD50otTs6g==}
 
   '@types/pdfmake@0.3.3':
     resolution: {integrity: sha512-ufbceB4Q3dKpmFUMKEbZvJcfLi8+C5b1+rTFVG6urtkS3FHwaTQH6NCh/iEEDINlApCxH/W3/rsq99pP5E9/JA==}
@@ -3183,14 +3183,14 @@ snapshots:
     dependencies:
       undici-types: 8.9.0
 
-  '@types/pdfkit@0.17.6':
+  '@types/pdfkit@0.17.7':
     dependencies:
       '@types/node': 26.6.5
 
   '@types/pdfmake@0.3.3':
     dependencies:
       '@types/node': 26.6.5
-      '@types/pdfkit': 0.17.6
+      '@types/pdfkit': 0.17.7
 
   '@types/sax@1.2.7':
     dependencies:
