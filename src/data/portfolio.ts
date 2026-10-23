@@ -2,6 +2,15 @@ export function getReadingTime(body: string | undefined): number {
   return Math.max(1, Math.ceil((body?.split(/\s+/).length ?? 0) / 200));
 }
 
+// Years from a 'YYYY-MM' start to build time, rounded to the nearest year,
+// so experience figures stay current without manual edits.
+export function yearsSince(start: string): number {
+  const [year, month] = start.split('-').map(Number);
+  const now = new Date();
+  const months = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
+  return Math.round(months / 12);
+}
+
 export const categoryColors: Record<string, string> = {
   cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
   development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
@@ -22,8 +31,7 @@ export const author = {
   image: '/images/mjasion.jpg',
   summaryShort:
     'Senior SRE. I work where code meets infrastructure - diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
-  summary:
-    'Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping engineering teams operate a system of 1000+ services at NatWest Boxed - mostly Java services in an asynchronous, Kafka-based architecture. 13 years in tech: started as a Java developer, found my home in the messy middle where applications meet production.',
+  summary: `Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping 30+ engineering teams operate a system of 1000+ services at NatWest Boxed - mostly Java services in an asynchronous, Kafka-based architecture - and building AI agents that speed up incident diagnosis. ${yearsSince('2012-12')} years in tech: started as a Java developer, found my home in the messy middle where applications meet production.`,
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
     {
@@ -49,8 +57,7 @@ export const skills = [
   {
     name: 'Kubernetes',
     logo: '/images/sections/skills/kubernetes.svg',
-    summary:
-      '5 years of extensive experience designing, deploying, and managing containerized applications at scale.',
+    summary: `${yearsSince('2018-11')} years of extensive experience designing, deploying, and managing containerized applications at scale.`,
     categories: ['container'],
     url: 'https://kubernetes.io/',
   },
@@ -65,8 +72,7 @@ export const skills = [
   {
     name: 'Go Development',
     logo: '/images/sections/skills/golang.svg',
-    summary:
-      '6 years of experience writing scalable, testable, and maintainable programs.',
+    summary: `${yearsSince('2018-02')} years of experience writing scalable, testable, and maintainable programs.`,
     categories: ['programming'],
     url: 'https://golang.org/',
   },
@@ -89,8 +95,7 @@ export const skills = [
   {
     name: 'AWS',
     logo: '/images/sections/skills/aws.svg',
-    summary:
-      '8 years of experience designing, deploying, and managing secure, scalable cloud solutions.',
+    summary: `${yearsSince('2017-01')} years of experience designing, deploying, and managing secure, scalable cloud solutions.`,
     categories: ['cloud'],
     url: 'https://aws.amazon.com/',
   },
@@ -145,8 +150,7 @@ export const skills = [
   {
     name: 'GitHub',
     logo: '/images/sections/skills/github.svg',
-    summary:
-      '8+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.',
+    summary: `${yearsSince('2017-01')}+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.`,
     categories: ['tools'],
   },
 ];
@@ -172,16 +176,16 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support almost 30 engineering teams operating a system of 1000+ services - mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
+      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support 30+ engineering teams operating a system of 1000+ services - mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Support almost 30 engineering teams resolving production incidents across a system of 1000+ services',
+          'Build AI agents that speed up incident diagnosis for on-call engineers - correlating Datadog logs, traces, and metrics, and pulling in relevant Confluence documentation and GitHub code',
+          'Support 30+ engineering teams resolving production incidents across a system of 1000+ services',
           'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup — bridging stream-aligned squads with shared SRE practice',
           'Improve observability - metrics, logs, traces - to shorten time-to-detect and time-to-diagnose',
-          'Build agents for incident handling and streamline the resolution process for on-call engineers',
           'Drive reliability improvements that prevent recurring outages and reduce on-call toil',
         ],
       },

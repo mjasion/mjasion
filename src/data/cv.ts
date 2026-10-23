@@ -17,7 +17,7 @@ export const education = [
 
 export const languages = [
   { name: 'Polish', level: 'Native' },
-  { name: 'English', level: 'Professional working' },
+  { name: 'English', level: 'Full professional' },
 ];
 
 export const publications = [
@@ -28,7 +28,7 @@ export const publications = [
 ];
 
 // Skills listed on the CV in addition to the portfolio skill cards.
-export const additionalSkills = ['Terraform', 'Helm', 'Prometheus / Grafana'];
+export const additionalSkills = ['Helm', 'Prometheus / Grafana'];
 
 export interface InlineRun {
   text: string;
