@@ -148,6 +148,22 @@ export const skills = [
     url: 'https://argo-cd.readthedocs.io/',
   },
   {
+    name: 'Argo Rollouts',
+    logo: '/images/sections/skills/argocd.svg',
+    summary:
+      'Progressive delivery for Kubernetes - canary and blue-green deployments with automated promotion and rollback.',
+    categories: ['container', 'tools'],
+    url: 'https://argoproj.github.io/rollouts/',
+  },
+  {
+    name: 'Kyverno',
+    logo: '/images/sections/skills/kyverno.svg',
+    summary:
+      'Policy-as-code for Kubernetes - validating and mutating resources to enforce security and platform guardrails across clusters.',
+    categories: ['container'],
+    url: 'https://kyverno.io/',
+  },
+  {
     name: 'GitHub',
     logo: '/images/sections/skills/github.svg',
     summary: `${yearsSince('2017-01')}+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.`,
