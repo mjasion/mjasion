@@ -46,7 +46,7 @@ export const publications = [
 ];
 
 // Skills listed on the CV in addition to the portfolio skill cards.
-export const additionalSkills = ['Helm', 'Prometheus / Grafana'];
+export const additionalSkills = ['Helm'];
 
 export interface InlineRun {
   text: string;

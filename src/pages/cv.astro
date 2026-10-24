@@ -8,7 +8,7 @@ import { education, languages, publications, additionalSkills, credentials } fro
 
 <BaseLayout
   title="CV"
-  description={`Curriculum vitae of ${author.name} - ${author.designation}.`}
+  description={`Curriculum vitae of ${author.name} – ${author.designation}.`}
 >
   <div class="mx-auto max-w-4xl px-4 py-12 print:px-0 print:py-0">
 
@@ -107,7 +107,7 @@ import { education, languages, publications, additionalSkills, credentials } fro
             <li class="flex flex-wrap items-baseline justify-between gap-x-3">
               <span>
                 <a href={cert.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{cert.name}</a>
-                <span class="text-gray-500 dark:text-gray-400"> - {cert.organization}</span>
+                <span class="text-gray-500 dark:text-gray-400"> – {cert.organization}</span>
               </span>
               <span class="text-gray-500 dark:text-gray-400">{cert.timeline}</span>
             </li>
@@ -123,7 +123,7 @@ import { education, languages, publications, additionalSkills, credentials } fro
             <li class="flex flex-wrap items-baseline justify-between gap-x-3">
               <span>
                 <span class="font-medium">{talk.name}</span>
-                <span class="text-gray-500 dark:text-gray-400"> - {talk.meetup}</span>
+                <span class="text-gray-500 dark:text-gray-400"> – {talk.meetup}</span>
               </span>
               <span class="text-gray-500 dark:text-gray-400">{talk.date}</span>
             </li>
@@ -131,7 +131,7 @@ import { education, languages, publications, additionalSkills, credentials } fro
           {publications.map((pub) => (
             <li>
               <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{pub.title}</a>
-              <span class="text-gray-500 dark:text-gray-400"> - open-source contribution</span>
+              <span class="text-gray-500 dark:text-gray-400"> – open-source contribution</span>
             </li>
           ))}
         </ul>
@@ -156,7 +156,7 @@ import { education, languages, publications, additionalSkills, credentials } fro
             {languages.map((lang) => (
               <li>
                 <span class="font-medium">{lang.name}</span>
-                <span class="text-gray-500 dark:text-gray-400"> - {lang.level}</span>
+                <span class="text-gray-500 dark:text-gray-400"> – {lang.level}</span>
               </li>
             ))}
           </ul>

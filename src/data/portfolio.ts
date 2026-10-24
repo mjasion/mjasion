@@ -30,8 +30,8 @@ export const author = {
   email: 'hello@mjasion.pl',
   image: '/images/mjasion.jpg',
   summaryShort:
-    'Senior SRE. I work where code meets infrastructure - diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
-  summary: `Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping 30+ engineering teams operate a system of 1000+ services at NatWest Boxed - mostly Java services in an asynchronous, Kafka-based architecture - and building AI agents that speed up incident diagnosis. ${yearsSince('2012-12')} years in tech: started as a Java developer, found my home in the messy middle where applications meet production.`,
+    'Senior SRE. I work where code meets infrastructure – diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
+  summary: `Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure – diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping 30+ engineering teams operate a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – and building AI agents that speed up incident diagnosis. ${yearsSince('2012-12')} years in tech: started as a Java developer, found my home in the messy middle where applications meet production.`,
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
     {
@@ -216,7 +216,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support 30+ engineering teams operating a system of 1000+ services - mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
+      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support 30+ engineering teams operating a system of 1000+ services – mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer (Consultant)',
@@ -261,7 +261,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/equinix_logo.jpeg',
     overview:
-      'Equinix is the leader in the colocation data center market. Joined to implement CloudNative practices on Kubernetes and automate Istio Service Mesh for GDPR-compliant connectivity.',
+      'Equinix is the leader in the colocation data center market. Joined to implement cloud-native practices on Kubernetes and automate Istio Service Mesh for GDPR-compliant connectivity.',
     positions: [
       {
         designation: 'Senior DevOps Engineer',
@@ -283,7 +283,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/codility_logo.jpeg',
     overview:
-      'Technical interview platform for testing coding skills. Joined ahead of the migration from instance-based (EC2) infrastructure to CloudNative Kubernetes.',
+      'Technical interview platform for testing coding skills. Joined ahead of the migration from instance-based (EC2) infrastructure to cloud-native Kubernetes.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer',
@@ -311,7 +311,7 @@ export const experiences: Experience[] = [
     url: 'https://www.f5.com',
     location: 'Warsaw, Poland',
     overview:
-      'F5 specializes in application security, multi-cloud management, and network security. Joined to develop a secure gateway for CloudNative services; project concluded with the NGINX acquisition.',
+      'F5 specializes in application security, multi-cloud management, and network security. Joined to develop a secure gateway for cloud-native services; project concluded with the NGINX acquisition.',
     positions: [
       {
         designation: 'Senior Software Engineer',
@@ -425,7 +425,7 @@ export const trainings = [
     organization: 'AI_Devs',
     organizationUrl: 'https://www.aidevs.pl',
     overview:
-      'Hands-on program on building production AI agents with LLMs - prompt engineering, tool use, RAG, and agentic workflows.',
+      'Hands-on program on building production AI agents with LLMs – prompt engineering, tool use, RAG, and agentic workflows.',
     url: 'https://www.aidevs.pl',
   },
 ];
@@ -439,7 +439,7 @@ export const giscus = {
 
 export const presentations = [
   {
-    name: 'GitOps - Czyli konfigurowanie Kubernetesa Gitem',
+    name: 'GitOps – Czyli konfigurowanie Kubernetesa Gitem',
     icon: 'github',
     date: '27.02.2020',
     meetup: 'SysOps/DevOps Warszawa MeetUp #48',
@@ -453,7 +453,7 @@ export const presentations = [
     ],
   },
   {
-    name: 'GitOps - Czyli konfigurowanie Kubernetesa Gitem',
+    name: 'GitOps – Czyli konfigurowanie Kubernetesa Gitem',
     icon: 'github',
     date: '29.06.2019',
     meetup: 'Confitura 2019',

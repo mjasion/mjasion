@@ -245,7 +245,7 @@ function buildDocDefinition(): Record<string, unknown> {
           {
             text: [
               { text: cert.name, font: 'InterMedium', link: cert.url },
-              { text: ` - ${cert.organization}`, color: GRAY_500 },
+              { text: ` – ${cert.organization}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -267,7 +267,7 @@ function buildDocDefinition(): Record<string, unknown> {
           {
             text: [
               { text: talk.name, font: 'InterMedium' },
-              { text: ` - ${talk.meetup}`, color: GRAY_500 },
+              { text: ` – ${talk.meetup}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -279,7 +279,7 @@ function buildDocDefinition(): Record<string, unknown> {
       ...publications.map((pub) => ({
         text: [
           { text: pub.title, font: 'InterMedium', link: pub.url },
-          { text: ' - open-source contribution', color: GRAY_500 },
+          { text: ' – open-source contribution', color: GRAY_500 },
         ],
         fontSize: 7.9,
         color: GRAY_700,
@@ -311,7 +311,7 @@ function buildDocDefinition(): Record<string, unknown> {
           ...languages.map((lang) => ({
             text: [
               { text: lang.name, font: 'InterMedium' },
-              { text: ` - ${lang.level}`, color: GRAY_500 },
+              { text: ` – ${lang.level}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -329,7 +329,7 @@ function buildDocDefinition(): Record<string, unknown> {
     pageSize: 'A4',
     pageMargins: [40, 40, 40, 40],
     info: {
-      title: `CV - ${author.name}`,
+      title: `CV – ${author.name}`,
       author: author.name,
       subject: author.designation,
       creator: 'mjasion.pl',

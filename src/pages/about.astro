@@ -42,7 +42,7 @@ const skillGroups = skillGroupDefs
   .filter((group) => group.items.length > 0);
 ---
 
-<BaseLayout title="About" description={`${author.name} - ${author.designation}. ${author.summary}`}>
+<BaseLayout title="About" description={`${author.name} – ${author.designation}. ${author.summary}`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',

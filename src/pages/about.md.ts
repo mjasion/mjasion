@@ -4,8 +4,8 @@ import { author, skills, srePractices, experiences, certifications, trainings, p
 export const GET: APIRoute = () => {
   const lines: string[] = [
     '---',
-    `title: "About - ${author.name}"`,
-    `description: ${JSON.stringify(`${author.name} - ${author.designation}. ${author.summary}`)}`,
+    `title: "About – ${author.name}"`,
+    `description: ${JSON.stringify(`${author.name} – ${author.designation}. ${author.summary}`)}`,
     'canonical: https://mjasion.pl/about/',
     '---',
     '',
@@ -29,17 +29,17 @@ export const GET: APIRoute = () => {
 
   for (const skill of skills) {
     const link = skill.url ? `[${skill.name}](${skill.url})` : skill.name;
-    lines.push(`- **${link}** - ${skill.summary}`);
+    lines.push(`- **${link}** – ${skill.summary}`);
   }
 
   lines.push('', '### SRE Practices', '');
   for (const practice of srePractices) {
-    lines.push(`- **${practice.name}** - ${practice.summary}`);
+    lines.push(`- **${practice.name}** – ${practice.summary}`);
   }
 
   lines.push('', '## Experience', '');
   for (const exp of experiences) {
-    lines.push(`### [${exp.company}](${exp.url}) - ${exp.location}`, '', exp.overview, '');
+    lines.push(`### [${exp.company}](${exp.url}) – ${exp.location}`, '', exp.overview, '');
     for (const pos of exp.positions) {
       lines.push(`**${pos.designation}** (${pos.start} – ${pos.end ?? 'present'})`, '');
       for (const r of pos.responsibilities) {
@@ -54,7 +54,7 @@ export const GET: APIRoute = () => {
     lines.push(
       `### [${cert.name}](${cert.certificateUrl})`,
       '',
-      `${cert.organization} - ${cert.timeline}${cert.expired ? ' (expired)' : ''}`,
+      `${cert.organization} – ${cert.timeline}${cert.expired ? ' (expired)' : ''}`,
       '',
       cert.overview,
       '',
@@ -66,7 +66,7 @@ export const GET: APIRoute = () => {
     lines.push(
       `### [${course.name}](${course.url})`,
       '',
-      `${course.organization} - ${course.timeline}`,
+      `${course.organization} – ${course.timeline}`,
       '',
       course.overview,
       '',
@@ -75,7 +75,7 @@ export const GET: APIRoute = () => {
 
   lines.push('## Presentations & Talks', '');
   for (const talk of presentations) {
-    lines.push(`### ${talk.name}`, '', `${talk.date} - [${talk.meetup}](${talk.meetupUrl})`, '');
+    lines.push(`### ${talk.name}`, '', `${talk.date} – [${talk.meetup}](${talk.meetupUrl})`, '');
     for (const asset of talk.assets) {
       lines.push(`- [${asset.title}](${asset.url})`);
     }
