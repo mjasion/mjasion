@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { author, skills, experiences, certifications, trainings, presentations } from '../data/portfolio';
+import { author, skills, srePractices, experiences, certifications, trainings, presentations } from '../data/portfolio';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [
@@ -30,6 +30,11 @@ export const GET: APIRoute = () => {
   for (const skill of skills) {
     const link = skill.url ? `[${skill.name}](${skill.url})` : skill.name;
     lines.push(`- **${link}** - ${skill.summary}`);
+  }
+
+  lines.push('', '### SRE Practices', '');
+  for (const practice of srePractices) {
+    lines.push(`- **${practice.name}** - ${practice.summary}`);
   }
 
   lines.push('', '## Experience', '');

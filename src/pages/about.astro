@@ -1,23 +1,43 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Play } from '@lucide/astro';
-import { author, skills, experiences, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
+import { Play, Stethoscope, ClipboardCheck, Users } from '@lucide/astro';
+import { author, skills, srePractices, experiences, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
 
 // Skills are grouped by their primary (first) category, so a multi-category skill
 // (e.g. Prometheus = observability + container) lands in the group of its first one.
-const skillGroupDefs = [
+// SRE practices have no brand logo, so their chips use Lucide icons instead.
+interface SkillChip {
+  name: string;
+  summary: string;
+  logo?: string;
+  url?: string;
+  icon?: string;
+}
+
+const practiceIcons: Record<string, typeof Users> = {
+  stethoscope: Stethoscope,
+  'clipboard-check': ClipboardCheck,
+  users: Users,
+};
+
+// `last` groups are kept together in the final row (the packer below prefers it
+// whenever the width allows); listing them last also keeps them there in the
+// no-JS flex-wrap fallback.
+const skillGroupDefs: { label: string; match?: string[]; items?: SkillChip[]; last?: boolean }[] = [
   { label: 'Cloud', match: ['cloud'] },
   { label: 'Containers & GitOps', match: ['container'] },
   { label: 'Observability', match: ['observability'] },
-  { label: 'AI & Tools', match: ['ai', 'tools'] },
   { label: 'Programming', match: ['programming'] },
+  { label: 'AI & Tools', match: ['ai', 'tools'], last: true },
+  { label: 'SRE Practices', items: srePractices, last: true },
 ];
 
 const skillGroups = skillGroupDefs
   .map((def) => ({
     label: def.label,
-    items: skills.filter((skill) => def.match.includes(skill.categories[0])),
+    last: def.last ?? false,
+    items: (def.items ?? skills.filter((skill) => def.match?.includes(skill.categories[0]))) as SkillChip[],
   }))
   .filter((group) => group.items.length > 0);
 ---
@@ -89,13 +109,14 @@ const skillGroups = skillGroupDefs
            content-width cards (variable widths, just a possibly-ragged last row). -->
       <div id="skills-pack" data-skills-pack class="flex flex-wrap items-stretch gap-4">
         {skillGroups.map((group) => (
-          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento">
+          <div data-pack-last={group.last ? '' : undefined} class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento">
             <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
               {group.label}
             </h3>
             <div class="flex flex-wrap gap-1.5">
               {group.items.map((skill) => {
                 const Chip = skill.url ? 'a' : 'div';
+                const Icon = skill.icon ? practiceIcons[skill.icon] : undefined;
                 return (
                   <Chip
                     {...(skill.url ? { href: skill.url, target: '_blank', rel: 'noopener noreferrer' } : {})}
@@ -110,12 +131,20 @@ const skillGroups = skillGroupDefs
                         loading="lazy"
                       />
                     )}
+                    {Icon && (
+                      <Icon
+                        aria-hidden="true"
+                        class="h-6 w-6 shrink-0 text-gray-700 transition-transform duration-200 ease-out group-hover/skill:scale-110"
+                      />
+                    )}
                     <span class="whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{skill.name}</span>
 
-                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead */}
+                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead.
+                        Kept display:none until hover (fading in via @starting-style) so a hidden tooltip
+                        of a chip at the right edge can't widen the page. */}
                     <span
                       role="tooltip"
-                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 opacity-0 shadow-lg transition-opacity duration-200 group-hover/skill:opacity-100 sm:block dark:bg-gray-800"
+                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 shadow-lg transition-opacity duration-200 starting:opacity-0 sm:group-hover/skill:block dark:bg-gray-800"
                     >
                       {skill.summary}
                       <span class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-gray-900 dark:bg-gray-800"></span>
@@ -151,6 +180,8 @@ const skillGroups = skillGroupDefs
           // Direct children are the group cards (snapshot once; nodes reused).
           const cards = Array.from(container.children);
           if (cards.length === 0) return;
+          // Cards marked data-pack-last should share the final row together.
+          const pinnedLast = cards.flatMap((c, i) => (c.hasAttribute('data-pack-last') ? [i] : []));
 
           let measuring = false; // re-entrancy guard during the measure reset
           let lastWidth = -1;    // container width of the last layout pass
@@ -237,9 +268,18 @@ const skillGroups = skillGroupDefs
                   }
                 }
                 if (!feasible) continue;
+                // Soft constraint: the last row should be exactly the pinned
+                // cards; a lighter penalty than a lonely row, so a narrow width
+                // that can't honour it still packs cleanly.
+                let pinMiss = false;
+                if (pinnedLast.length > 0) {
+                  const [ls, le] = comp[comp.length - 1];
+                  const lastRow = perm.slice(ls, le);
+                  pinMiss = lastRow.length !== pinnedLast.length || !pinnedLast.every((i) => lastRow.includes(i));
+                }
                 // Prefer arrangements with NO lonely row; allow one (as the last
                 // row) only when no fully-paired arrangement fits the width.
-                const cost = totalSlack + (maxStretch - 1) * avail * 0.15 + (lonelyLast ? avail * 2 : 0);
+                const cost = totalSlack + (maxStretch - 1) * avail * 0.15 + (lonelyLast ? avail * 2 : 0) + (pinMiss ? avail : 0);
                 if (cost < bestCost) {
                   bestCost = cost;
                   best = {

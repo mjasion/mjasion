@@ -171,6 +171,30 @@ export const skills = [
   },
 ];
 
+// SRE practices shown as their own Skills card on /about. Kept out of `skills`
+// so the CV's technology chips stay tool names only. `icon` is a Lucide icon
+// name mapped to a component in about.astro.
+export const srePractices = [
+  {
+    name: 'Incident diagnosis',
+    icon: 'stethoscope',
+    summary:
+      'Helping 30+ teams find root causes faster: correlating logs, traces, and metrics, and turning findings into fixes that prevent repeats.',
+  },
+  {
+    name: 'Observability audits',
+    icon: 'clipboard-check',
+    summary:
+      'Reviewing services for logging, tracing, and metrics gaps, and rolling out practices that make production issues faster to debug.',
+  },
+  {
+    name: 'Team Topologies',
+    icon: 'users',
+    summary:
+      'Working as an enabling team: spreading SRE practices to stream-aligned squads instead of owning their operations.',
+  },
+];
+
 export interface Experience {
   company: string;
   url: string;
@@ -198,11 +222,11 @@ export const experiences: Experience[] = [
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Build AI agents that speed up incident diagnosis for on-call engineers – correlating Datadog logs, traces, and metrics, and pulling in relevant Confluence documentation and GitHub code',
+          'Built an investigation agent that supports the first phase of incident analysis – combining Datadog logs, traces, and metrics with relevant Confluence documentation and GitHub code',
+          'Developed a journey monitoring service that tracks end-to-end duration and success rate of business journeys across an asynchronous, Kafka-based architecture',
+          'Run observability audits of services and roll out best practices that shorten time-to-detect and time-to-diagnose',
           'Support 30+ engineering teams resolving production incidents across a system of 1000+ services',
           'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup – bridging stream-aligned squads with shared SRE practice',
-          'Improve observability – metrics, logs, traces – to shorten time-to-detect and time-to-diagnose',
-          'Drive reliability improvements that prevent recurring outages and reduce on-call toil',
         ],
       },
     ],
