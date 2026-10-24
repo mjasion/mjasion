@@ -13,7 +13,7 @@ export const GET: APIRoute = () => {
     '',
     "A snapshot of what I'm focused on right now - inspired by Derek Sivers' /now page idea.",
     '',
-    'Last updated 2026-10-23.',
+    'Last updated 2026-10-24.',
     '',
     '## Work',
     '',
@@ -33,7 +33,7 @@ export const GET: APIRoute = () => {
     '',
     '## Reading',
     '',
-    '"Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes\' "I Am Pilgrim" and working through Jo Nesbø\'s catalogue.',
+    'Reading and listening to John Eldredge\'s "Wild at Heart" ("Dzikie serce. Tęsknoty męskiej duszy" in Polish), switching between the book and the audiobook. Also working through "Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes\' "I Am Pilgrim" and working through Jo Nesbø\'s catalogue.',
     '',
   ];
 
