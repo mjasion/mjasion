@@ -351,7 +351,50 @@ export const experiences: Experience[] = [
   },
 ];
 
-export const certifications = [
+export interface Certification {
+  name: string;
+  timeline: string;
+  organization: string;
+  organizationUrl: string;
+  overview: string;
+  certificateUrl: string;
+  expired?: boolean;
+}
+
+export const certifications: Certification[] = [
+  {
+    name: 'CKA: Certified Kubernetes Administrator',
+    timeline: 'Nov 2019 – Nov 2022',
+    organization: 'Linux Foundation',
+    organizationUrl: 'https://www.linuxfoundation.org',
+    overview:
+      'Cluster administration: installation and upgrades, networking, storage, scheduling, and troubleshooting production clusters.',
+    certificateUrl:
+      'https://www.youracclaim.com/badges/d07b5711-5692-4501-a311-18b6358bdf83/linked_in_profile',
+    expired: true,
+  },
+  {
+    name: 'CKAD: Certified Kubernetes Application Developer',
+    timeline: 'May 2020 – May 2023',
+    organization: 'Linux Foundation',
+    organizationUrl: 'https://www.linuxfoundation.org',
+    overview:
+      'Designing, building, and deploying cloud-native applications on Kubernetes: workloads, configuration, probes, and services.',
+    certificateUrl:
+      'https://www.youracclaim.com/badges/448c4beb-c7bb-427b-95cd-9b0669e77f81/linked_in_profile',
+    expired: true,
+  },
+  // {
+  //   name: 'CKS: Certified Kubernetes Security Specialist',
+  //   timeline: 'Mon YYYY – Mon YYYY',
+  //   organization: 'Linux Foundation',
+  //   organizationUrl: 'https://www.linuxfoundation.org',
+  //   overview: '',
+  //   certificateUrl: '',
+  // },
+];
+
+export const trainings = [
   {
     name: 'AI_Devs 3: Agents',
     timeline: '2024',
@@ -359,27 +402,7 @@ export const certifications = [
     organizationUrl: 'https://www.aidevs.pl',
     overview:
       'Hands-on program on building production AI agents with LLMs - prompt engineering, tool use, RAG, and agentic workflows.',
-    certificateUrl: 'https://www.aidevs.pl',
-  },
-  {
-    name: 'CKAD: Certified Kubernetes Application Developer',
-    timeline: 'May 2020 - May 2023',
-    organization: 'Linux Foundation',
-    organizationUrl: 'https://www.linuxfoundation.org',
-    overview:
-      'Thorough understanding of Kubernetes key concepts and skills to design, deploy, and manage scalable and resilient applications.',
-    certificateUrl:
-      'https://www.youracclaim.com/badges/448c4beb-c7bb-427b-95cd-9b0669e77f81/linked_in_profile',
-  },
-  {
-    name: 'CKA: Certified Kubernetes Administrator',
-    timeline: 'Nov 2019 - Nov 2022',
-    organization: 'Linux Foundation',
-    organizationUrl: 'https://www.linuxfoundation.org',
-    overview:
-      'Skills and knowledge to design, build, and deploy cloud-native applications using Kubernetes.',
-    certificateUrl:
-      'https://www.youracclaim.com/badges/d07b5711-5692-4501-a311-18b6358bdf83/linked_in_profile',
+    url: 'https://www.aidevs.pl',
   },
 ];
 

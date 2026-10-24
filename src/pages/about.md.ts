@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
+import { author, skills, experiences, certifications, trainings, presentations } from '../data/portfolio';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [
@@ -49,9 +49,21 @@ export const GET: APIRoute = () => {
     lines.push(
       `### [${cert.name}](${cert.certificateUrl})`,
       '',
-      `${cert.organization} - ${cert.timeline}`,
+      `${cert.organization} - ${cert.timeline}${cert.expired ? ' (expired)' : ''}`,
       '',
       cert.overview,
+      '',
+    );
+  }
+
+  lines.push('## Training & Courses', '');
+  for (const course of trainings) {
+    lines.push(
+      `### [${course.name}](${course.url})`,
+      '',
+      `${course.organization} - ${course.timeline}`,
+      '',
+      course.overview,
       '',
     );
   }
