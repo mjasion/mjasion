@@ -1,6 +1,24 @@
 // CV-only data and helpers shared by the three CV representations:
 // /cv/ (page), /cv.md (markdown endpoint), /cv.pdf (PDF endpoint).
 // Portfolio-wide data (author, skills, experiences, ...) stays in portfolio.ts.
+import { certifications, trainings } from './portfolio';
+
+// The CV lists certifications and training courses together in one section;
+// /about keeps them as separate sections.
+export const credentials = [
+  ...certifications.map((cert) => ({
+    name: cert.name,
+    url: cert.certificateUrl,
+    organization: cert.organization,
+    timeline: cert.timeline,
+  })),
+  ...trainings.map((course) => ({
+    name: course.name,
+    url: course.url,
+    organization: course.organization,
+    timeline: course.timeline,
+  })),
+];
 
 export const education = [
   {
@@ -17,7 +35,7 @@ export const education = [
 
 export const languages = [
   { name: 'Polish', level: 'Native' },
-  { name: 'English', level: 'Professional working' },
+  { name: 'English', level: 'Full professional' },
 ];
 
 export const publications = [
@@ -28,7 +46,7 @@ export const publications = [
 ];
 
 // Skills listed on the CV in addition to the portfolio skill cards.
-export const additionalSkills = ['Terraform', 'Helm', 'Prometheus / Grafana'];
+export const additionalSkills = ['Helm'];
 
 export interface InlineRun {
   text: string;

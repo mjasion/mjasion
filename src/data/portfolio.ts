@@ -2,6 +2,15 @@ export function getReadingTime(body: string | undefined): number {
   return Math.max(1, Math.ceil((body?.split(/\s+/).length ?? 0) / 200));
 }
 
+// Years from a 'YYYY-MM' start to build time, rounded to the nearest year,
+// so experience figures stay current without manual edits.
+export function yearsSince(start: string): number {
+  const [year, month] = start.split('-').map(Number);
+  const now = new Date();
+  const months = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
+  return Math.round(months / 12);
+}
+
 export const categoryColors: Record<string, string> = {
   cloud: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
   development: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
@@ -21,9 +30,8 @@ export const author = {
   email: 'hello@mjasion.pl',
   image: '/images/mjasion.jpg',
   summaryShort:
-    'Senior SRE. I work where code meets infrastructure - diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
-  summary:
-    'Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure - diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping engineering teams operate a system of 1000+ services at NatWest Boxed - mostly Java services in an asynchronous, Kafka-based architecture. 13 years in tech: started as a Java developer, found my home in the messy middle where applications meet production.',
+    'Senior SRE. I work where code meets infrastructure – diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
+  summary: `Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure – diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping 30+ engineering teams operate a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – and building AI agents that speed up incident diagnosis. ${yearsSince('2012-12')} years in tech: started as a Java developer, found my home in the messy middle where applications meet production.`,
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
     {
@@ -42,15 +50,14 @@ export const skills = [
     name: 'Claude',
     logo: '/images/sections/skills/claude.svg',
     summary:
-      'My main model and agent for work and programming - incident triage, writing and reviewing code, drafting docs, and building agents, mostly through Claude Code.',
+      'My main model and agent for work and programming – incident triage, writing and reviewing code, drafting docs, and building agents, mostly through Claude Code.',
     categories: ['ai', 'tools'],
     url: 'https://www.anthropic.com/claude',
   },
   {
     name: 'Kubernetes',
     logo: '/images/sections/skills/kubernetes.svg',
-    summary:
-      '5 years of extensive experience designing, deploying, and managing containerized applications at scale.',
+    summary: `${yearsSince('2018-11')} years of extensive experience designing, deploying, and managing containerized applications at scale.`,
     categories: ['container'],
     url: 'https://kubernetes.io/',
   },
@@ -65,8 +72,7 @@ export const skills = [
   {
     name: 'Go Development',
     logo: '/images/sections/skills/golang.svg',
-    summary:
-      '6 years of experience writing scalable, testable, and maintainable programs.',
+    summary: `${yearsSince('2018-02')} years of experience writing scalable, testable, and maintainable programs.`,
     categories: ['programming'],
     url: 'https://golang.org/',
   },
@@ -74,7 +80,7 @@ export const skills = [
     name: 'TypeScript',
     logo: '/images/sections/skills/typescript.svg',
     summary:
-      'Typed JavaScript for building maintainable web apps and tooling - including this site, built with Astro and TypeScript.',
+      'Typed JavaScript for building maintainable web apps and tooling – including this site, built with Astro and TypeScript.',
     categories: ['programming'],
     url: 'https://www.typescriptlang.org/',
   },
@@ -82,15 +88,14 @@ export const skills = [
     name: 'Java',
     logo: '/images/sections/skills/java.svg',
     summary:
-      'Started my career on the JVM. Years building backend services and APIs in Java - still the foundation of most platforms I operate today.',
+      'Started my career on the JVM. Years building backend services and APIs in Java – still the foundation of most platforms I operate today.',
     categories: ['programming'],
     url: 'https://dev.java/',
   },
   {
     name: 'AWS',
     logo: '/images/sections/skills/aws.svg',
-    summary:
-      '8 years of experience designing, deploying, and managing secure, scalable cloud solutions.',
+    summary: `${yearsSince('2017-01')} years of experience designing, deploying, and managing secure, scalable cloud solutions.`,
     categories: ['cloud'],
     url: 'https://aws.amazon.com/',
   },
@@ -106,7 +111,7 @@ export const skills = [
     name: 'Cloudflare',
     logo: '/images/sections/skills/cloudflare.svg',
     summary:
-      'Pages, Workers, R2, DNS, and Zero Trust - running this site on Cloudflare Pages and using Workers for edge content negotiation.',
+      'Pages, Workers, R2, DNS, and Zero Trust – running this site on Cloudflare Pages and using Workers for edge content negotiation.',
     categories: ['cloud', 'tools'],
     url: 'https://www.cloudflare.com/',
   },
@@ -114,7 +119,7 @@ export const skills = [
     name: 'Datadog',
     logo: '/images/sections/skills/datadog.svg',
     summary:
-      'Daily driver for observability across 1000+ services - dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident response.',
+      'Daily driver for observability across 1000+ services – dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident response.',
     categories: ['observability', 'tools'],
     url: 'https://www.datadoghq.com/',
   },
@@ -130,7 +135,7 @@ export const skills = [
     name: 'Prometheus',
     logo: '/images/sections/skills/prometheus.svg',
     summary:
-      'Designed and operated Prometheus-based monitoring stacks for Kubernetes workloads - metrics, recording rules, and alerting.',
+      'Designed and operated Prometheus-based monitoring stacks for Kubernetes workloads – metrics, recording rules, and alerting.',
     categories: ['observability', 'container'],
     url: 'https://prometheus.io/',
   },
@@ -138,16 +143,55 @@ export const skills = [
     name: 'Argo CD',
     logo: '/images/sections/skills/argocd.svg',
     summary:
-      'GitOps delivery for Kubernetes - app-of-apps, sync waves, and multi-cluster rollouts to keep environments declarative and auditable.',
+      'GitOps delivery for Kubernetes – app-of-apps, sync waves, and multi-cluster rollouts to keep environments declarative and auditable.',
     categories: ['container', 'tools'],
     url: 'https://argo-cd.readthedocs.io/',
   },
   {
+    name: 'Argo Rollouts',
+    logo: '/images/sections/skills/argocd.svg',
+    summary:
+      'Progressive delivery for Kubernetes – canary and blue-green deployments with automated promotion and rollback.',
+    categories: ['container', 'tools'],
+    url: 'https://argoproj.github.io/rollouts/',
+  },
+  {
+    name: 'Kyverno',
+    logo: '/images/sections/skills/kyverno.svg',
+    summary:
+      'Policy-as-code for Kubernetes – validating and mutating resources to enforce security and platform guardrails across clusters.',
+    categories: ['container'],
+    url: 'https://kyverno.io/',
+  },
+  {
     name: 'GitHub',
     logo: '/images/sections/skills/github.svg',
-    summary:
-      '8+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.',
+    summary: `${yearsSince('2017-01')}+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.`,
     categories: ['tools'],
+  },
+];
+
+// SRE practices shown as their own Skills card on /about. Kept out of `skills`
+// so the CV's technology chips stay tool names only. `icon` is a Lucide icon
+// name mapped to a component in about.astro.
+export const srePractices = [
+  {
+    name: 'Incident diagnosis',
+    icon: 'stethoscope',
+    summary:
+      'Helping 30+ teams find root causes faster: correlating logs, traces, and metrics, and turning findings into fixes that prevent repeats.',
+  },
+  {
+    name: 'Observability audits',
+    icon: 'clipboard-check',
+    summary:
+      'Reviewing services for logging, tracing, and metrics gaps, and rolling out practices that make production issues faster to debug.',
+  },
+  {
+    name: 'Team Topologies',
+    icon: 'users',
+    summary:
+      'Working as an enabling team: spreading SRE practices to stream-aligned squads instead of owning their operations.',
   },
 ];
 
@@ -172,28 +216,28 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support almost 30 engineering teams operating a system of 1000+ services - mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
+      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support 30+ engineering teams operating a system of 1000+ services – mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Support almost 30 engineering teams resolving production incidents across a system of 1000+ services',
-          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup — bridging stream-aligned squads with shared SRE practice',
-          'Improve observability - metrics, logs, traces - to shorten time-to-detect and time-to-diagnose',
-          'Build agents for incident handling and streamline the resolution process for on-call engineers',
-          'Drive reliability improvements that prevent recurring outages and reduce on-call toil',
+          'Built an investigation agent that supports the first phase of incident analysis – combining Datadog logs, traces, and metrics with relevant Confluence documentation and GitHub code',
+          'Developed a journey monitoring service that tracks end-to-end duration and success rate of business journeys across an asynchronous, Kafka-based architecture',
+          'Run observability audits of services and roll out best practices that shorten time-to-detect and time-to-diagnose',
+          'Support 30+ engineering teams resolving production incidents across a system of 1000+ services',
+          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup – bridging stream-aligned squads with shared SRE practice',
         ],
       },
     ],
   },
   {
-    company: 'Datachain (former Iterative.ai)',
+    company: 'DataChain (formerly Iterative.ai)',
     url: 'https://datachain.ai',
     location: 'Global (Remote)',
     logo: '/images/sections/experiences/dvc_ai_logo.jpeg',
     overview:
-      'Datachain builds open-source tools for machine learning, offering team collaboration products as SaaS and self-hosted solutions.',
+      'DataChain builds open-source tools for machine learning, offering team collaboration products as SaaS and self-hosted solutions.',
     positions: [
       {
         designation: 'Senior Platform Engineer',
@@ -217,7 +261,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/equinix_logo.jpeg',
     overview:
-      'Equinix is the leader in the colocation data center market. Joined to implement CloudNative practices on Kubernetes and automate Istio Service Mesh for GDPR-compliant connectivity.',
+      'Equinix is the leader in the colocation data center market. Joined to implement cloud-native practices on Kubernetes and automate Istio Service Mesh for GDPR-compliant connectivity.',
     positions: [
       {
         designation: 'Senior DevOps Engineer',
@@ -239,7 +283,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/codility_logo.jpeg',
     overview:
-      'Technical interview platform for testing coding skills. Joined ahead of the migration from instance-based (EC2) infrastructure to CloudNative Kubernetes.',
+      'Technical interview platform for testing coding skills. Joined ahead of the migration from instance-based (EC2) infrastructure to cloud-native Kubernetes.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer',
@@ -267,14 +311,14 @@ export const experiences: Experience[] = [
     url: 'https://www.f5.com',
     location: 'Warsaw, Poland',
     overview:
-      'F5 specializes in application security, multi-cloud management, and network security. Joined to develop a secure gateway for CloudNative services; project concluded with the NGINX acquisition.',
+      'F5 specializes in application security, multi-cloud management, and network security. Joined to develop a secure gateway for cloud-native services; project concluded with the NGINX acquisition.',
     positions: [
       {
         designation: 'Senior Software Engineer',
         start: 'Feb 2018',
         end: 'Oct 2018',
         responsibilities: [
-          'Implemented CloudNative services in Go',
+          'Implemented cloud-native services in Go',
           'Designed pipelines for unit, integration, and end-to-end tests with multi-project execution',
           'Automated packaging into Amazon Machine Images (AMI)',
         ],
@@ -294,9 +338,9 @@ export const experiences: Experience[] = [
         start: 'Aug 2015',
         end: 'Feb 2018',
         responsibilities: [
-          'ELK Stack aggregating 50 TB of data for Play Mobile - 16 nodes, 2 TB memory',
-          'Play Now - designed scalable Cloud Native delivery pipelines and third-party integrations for a new mobile operator',
-          'Virginmobile MVNO - 2 years of infrastructure maintenance and architectural improvements',
+          'ELK Stack aggregating 50 TB of data for Play Mobile – 16 nodes, 2 TB memory',
+          'Play Now – designed scalable cloud-native delivery pipelines and third-party integrations for a new mobile operator',
+          'Virgin Mobile MVNO – 2 years of infrastructure maintenance and architectural improvements',
           'Migrated parts of internal infrastructure to AWS (e.g. autoscaling GitLab runners)',
         ],
       },
@@ -322,7 +366,7 @@ export const experiences: Experience[] = [
         start: 'Dec 2012',
         end: 'Dec 2013',
         responsibilities: [
-          'Express ELIXIR Adapter - immediate transfer system for CitiBank S.A.',
+          'Express ELIXIR Adapter – immediate transfer system for CitiBank S.A.',
           'Maintained back-office systems for FM Bank and BankBPS',
           'Developed components of the Paymax mobile payment system',
         ],
@@ -331,35 +375,58 @@ export const experiences: Experience[] = [
   },
 ];
 
-export const certifications = [
+export interface Certification {
+  name: string;
+  timeline: string;
+  organization: string;
+  organizationUrl: string;
+  overview: string;
+  certificateUrl: string;
+  expired?: boolean;
+}
+
+export const certifications: Certification[] = [
+  {
+    name: 'CKA: Certified Kubernetes Administrator',
+    timeline: 'Nov 2019 – Nov 2022',
+    organization: 'Linux Foundation',
+    organizationUrl: 'https://www.linuxfoundation.org',
+    overview:
+      'Cluster administration: installation and upgrades, networking, storage, scheduling, and troubleshooting production clusters.',
+    certificateUrl:
+      'https://www.youracclaim.com/badges/d07b5711-5692-4501-a311-18b6358bdf83/linked_in_profile',
+    expired: true,
+  },
+  {
+    name: 'CKAD: Certified Kubernetes Application Developer',
+    timeline: 'May 2020 – May 2023',
+    organization: 'Linux Foundation',
+    organizationUrl: 'https://www.linuxfoundation.org',
+    overview:
+      'Designing, building, and deploying cloud-native applications on Kubernetes: workloads, configuration, probes, and services.',
+    certificateUrl:
+      'https://www.youracclaim.com/badges/448c4beb-c7bb-427b-95cd-9b0669e77f81/linked_in_profile',
+    expired: true,
+  },
+  // {
+  //   name: 'CKS: Certified Kubernetes Security Specialist',
+  //   timeline: 'Mon YYYY – Mon YYYY',
+  //   organization: 'Linux Foundation',
+  //   organizationUrl: 'https://www.linuxfoundation.org',
+  //   overview: '',
+  //   certificateUrl: '',
+  // },
+];
+
+export const trainings = [
   {
     name: 'AI_Devs 3: Agents',
     timeline: '2024',
     organization: 'AI_Devs',
     organizationUrl: 'https://www.aidevs.pl',
     overview:
-      'Hands-on program on building production AI agents with LLMs - prompt engineering, tool use, RAG, and agentic workflows.',
-    certificateUrl: 'https://www.aidevs.pl',
-  },
-  {
-    name: 'CKAD: Certified Kubernetes Application Developer',
-    timeline: 'May 2020 - May 2023',
-    organization: 'Linux Foundation',
-    organizationUrl: 'https://www.linuxfoundation.org',
-    overview:
-      'Thorough understanding of Kubernetes key concepts and skills to design, deploy, and manage scalable and resilient applications.',
-    certificateUrl:
-      'https://www.youracclaim.com/badges/448c4beb-c7bb-427b-95cd-9b0669e77f81/linked_in_profile',
-  },
-  {
-    name: 'CKA: Certified Kubernetes Administrator',
-    timeline: 'Nov 2019 - Nov 2022',
-    organization: 'Linux Foundation',
-    organizationUrl: 'https://www.linuxfoundation.org',
-    overview:
-      'Skills and knowledge to design, build, and deploy cloud-native applications using Kubernetes.',
-    certificateUrl:
-      'https://www.youracclaim.com/badges/d07b5711-5692-4501-a311-18b6358bdf83/linked_in_profile',
+      'Hands-on program on building production AI agents with LLMs – prompt engineering, tool use, RAG, and agentic workflows.',
+    url: 'https://www.aidevs.pl',
   },
 ];
 
@@ -372,7 +439,7 @@ export const giscus = {
 
 export const presentations = [
   {
-    name: 'GitOps - Czyli konfigurowanie Kubernetesa Gitem',
+    name: 'GitOps – Czyli konfigurowanie Kubernetesa Gitem',
     icon: 'github',
     date: '27.02.2020',
     meetup: 'SysOps/DevOps Warszawa MeetUp #48',
@@ -386,7 +453,7 @@ export const presentations = [
     ],
   },
   {
-    name: 'GitOps - Czyli konfigurowanie Kubernetesa Gitem',
+    name: 'GitOps – Czyli konfigurowanie Kubernetesa Gitem',
     icon: 'github',
     date: '29.06.2019',
     meetup: 'Confitura 2019',

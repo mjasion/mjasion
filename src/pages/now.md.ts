@@ -13,11 +13,11 @@ export const GET: APIRoute = () => {
     '',
     "A snapshot of what I'm focused on right now - inspired by Derek Sivers' /now page idea.",
     '',
-    'Last updated 2026-05-28.',
+    'Last updated 2026-10-24.',
     '',
     '## Work',
     '',
-    "Senior SRE consultant at NatWest Boxed in Warsaw. Supporting almost 30 engineering teams operating a system of 1000+ services. Beyond observability, I'm building agents for incident handling and streamlining the resolution process. Teams are organised using [Team Topologies](https://martinfowler.com/bliki/TeamTopologies.html) - mine is an enabling team, so it cuts across many different stream-aligned squads.",
+    "Senior SRE consultant at NatWest Boxed in Warsaw. Supporting 30+ engineering teams operating a system of 1000+ services. Beyond observability, I'm building agents for incident handling and streamlining the resolution process. Teams are organised using [Team Topologies](https://martinfowler.com/bliki/TeamTopologies.html) - mine is an enabling team, so it cuts across many different stream-aligned squads.",
     '',
     '## Learning',
     '',
@@ -33,7 +33,7 @@ export const GET: APIRoute = () => {
     '',
     '## Reading',
     '',
-    '"Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes\' "I Am Pilgrim" and working through Jo Nesbø\'s catalogue.',
+    'Reading and listening to John Eldredge\'s "Wild at Heart" ("Dzikie serce. Tęsknoty męskiej duszy" in Polish), switching between the book and the audiobook. Also working through "Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes\' "I Am Pilgrim" and working through Jo Nesbø\'s catalogue.',
     '',
   ];
 

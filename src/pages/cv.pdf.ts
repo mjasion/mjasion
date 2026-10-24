@@ -1,12 +1,13 @@
 import type { APIRoute } from 'astro';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
+import { author, skills, experiences, presentations } from '../data/portfolio';
 import {
   education,
   languages,
   publications,
   additionalSkills,
+  credentials,
   parseInlineLinks,
 } from '../data/cv';
 
@@ -234,17 +235,17 @@ function buildDocDefinition(): Record<string, unknown> {
     ],
   });
 
-  // Certifications - name (medium, link) - org, timeline right; space-y-1.
+  // Certifications & Training - name (medium, link) - org, timeline right; space-y-1.
   content.push({
     unbreakable: true,
     stack: [
-      sectionHeading('Certifications'),
-      ...certifications.map((cert) =>
+      sectionHeading('Certifications & Training'),
+      ...credentials.map((cert) =>
         splitRow(
           {
             text: [
-              { text: cert.name, font: 'InterMedium', link: cert.certificateUrl },
-              { text: ` - ${cert.organization}`, color: GRAY_500 },
+              { text: cert.name, font: 'InterMedium', link: cert.url },
+              { text: ` – ${cert.organization}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -266,7 +267,7 @@ function buildDocDefinition(): Record<string, unknown> {
           {
             text: [
               { text: talk.name, font: 'InterMedium' },
-              { text: ` - ${talk.meetup}`, color: GRAY_500 },
+              { text: ` – ${talk.meetup}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -278,7 +279,7 @@ function buildDocDefinition(): Record<string, unknown> {
       ...publications.map((pub) => ({
         text: [
           { text: pub.title, font: 'InterMedium', link: pub.url },
-          { text: ' - open-source contribution', color: GRAY_500 },
+          { text: ' – open-source contribution', color: GRAY_500 },
         ],
         fontSize: 7.9,
         color: GRAY_700,
@@ -310,7 +311,7 @@ function buildDocDefinition(): Record<string, unknown> {
           ...languages.map((lang) => ({
             text: [
               { text: lang.name, font: 'InterMedium' },
-              { text: ` - ${lang.level}`, color: GRAY_500 },
+              { text: ` – ${lang.level}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -328,7 +329,7 @@ function buildDocDefinition(): Record<string, unknown> {
     pageSize: 'A4',
     pageMargins: [40, 40, 40, 40],
     info: {
-      title: `CV - ${author.name}`,
+      title: `CV – ${author.name}`,
       author: author.name,
       subject: author.designation,
       creator: 'mjasion.pl',

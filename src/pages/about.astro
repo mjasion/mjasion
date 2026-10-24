@@ -1,28 +1,48 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Play } from '@lucide/astro';
-import { author, skills, experiences, certifications, presentations, categoryColors } from '../data/portfolio';
+import { Play, Stethoscope, ClipboardCheck, Users } from '@lucide/astro';
+import { author, skills, srePractices, experiences, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
 
 // Skills are grouped by their primary (first) category, so a multi-category skill
 // (e.g. Prometheus = observability + container) lands in the group of its first one.
-const skillGroupDefs = [
+// SRE practices have no brand logo, so their chips use Lucide icons instead.
+interface SkillChip {
+  name: string;
+  summary: string;
+  logo?: string;
+  url?: string;
+  icon?: string;
+}
+
+const practiceIcons: Record<string, typeof Users> = {
+  stethoscope: Stethoscope,
+  'clipboard-check': ClipboardCheck,
+  users: Users,
+};
+
+// `last` groups are kept together in the final row (the packer below prefers it
+// whenever the width allows); listing them last also keeps them there in the
+// no-JS flex-wrap fallback.
+const skillGroupDefs: { label: string; match?: string[]; items?: SkillChip[]; last?: boolean }[] = [
   { label: 'Cloud', match: ['cloud'] },
   { label: 'Containers & GitOps', match: ['container'] },
   { label: 'Observability', match: ['observability'] },
-  { label: 'AI & Tools', match: ['ai', 'tools'] },
   { label: 'Programming', match: ['programming'] },
+  { label: 'AI & Tools', match: ['ai', 'tools'], last: true },
+  { label: 'SRE Practices', items: srePractices, last: true },
 ];
 
 const skillGroups = skillGroupDefs
   .map((def) => ({
     label: def.label,
-    items: skills.filter((skill) => def.match.includes(skill.categories[0])),
+    last: def.last ?? false,
+    items: (def.items ?? skills.filter((skill) => def.match?.includes(skill.categories[0]))) as SkillChip[],
   }))
   .filter((group) => group.items.length > 0);
 ---
 
-<BaseLayout title="About" description={`${author.name} - ${author.designation}. ${author.summary}`}>
+<BaseLayout title="About" description={`${author.name} – ${author.designation}. ${author.summary}`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
@@ -46,7 +66,7 @@ const skillGroups = skillGroupDefs
   <div class="mx-auto max-w-5xl px-4 py-12 space-y-12">
 
     <!-- Hero / Intro -->
-    <section class="bento-reveal rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
+    <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
       <h1 class="text-3xl font-bold">About Me</h1>
       <p class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
         {author.summary}
@@ -81,7 +101,7 @@ const skillGroups = skillGroupDefs
     </section>
 
     <!-- Skills -->
-    <section id="skills" class="bento-reveal">
+    <section id="skills">
       <h2 class="mb-6 text-2xl font-bold">Skills</h2>
       <!-- Categories are variable-width bento cards (width ∝ skill count). A small vanilla-JS
            justified-rows packer (sanctioned zero-JS exception — see CLAUDE.md Critical Rule 7)
@@ -89,13 +109,14 @@ const skillGroups = skillGroupDefs
            content-width cards (variable widths, just a possibly-ragged last row). -->
       <div id="skills-pack" data-skills-pack class="flex flex-wrap items-stretch gap-4">
         {skillGroups.map((group) => (
-          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento">
+          <div data-pack-last={group.last ? '' : undefined} class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento">
             <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
               {group.label}
             </h3>
             <div class="flex flex-wrap gap-1.5">
               {group.items.map((skill) => {
                 const Chip = skill.url ? 'a' : 'div';
+                const Icon = skill.icon ? practiceIcons[skill.icon] : undefined;
                 return (
                   <Chip
                     {...(skill.url ? { href: skill.url, target: '_blank', rel: 'noopener noreferrer' } : {})}
@@ -110,12 +131,20 @@ const skillGroups = skillGroupDefs
                         loading="lazy"
                       />
                     )}
+                    {Icon && (
+                      <Icon
+                        aria-hidden="true"
+                        class="h-6 w-6 shrink-0 text-gray-700 transition-transform duration-200 ease-out group-hover/skill:scale-110"
+                      />
+                    )}
                     <span class="whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{skill.name}</span>
 
-                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead */}
+                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead.
+                        Kept display:none until hover (fading in via @starting-style) so a hidden tooltip
+                        of a chip at the right edge can't widen the page. */}
                     <span
                       role="tooltip"
-                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 opacity-0 shadow-lg transition-opacity duration-200 group-hover/skill:opacity-100 sm:block dark:bg-gray-800"
+                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 shadow-lg transition-opacity duration-200 starting:opacity-0 sm:group-hover/skill:block dark:bg-gray-800"
                     >
                       {skill.summary}
                       <span class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-gray-900 dark:bg-gray-800"></span>
@@ -151,6 +180,8 @@ const skillGroups = skillGroupDefs
           // Direct children are the group cards (snapshot once; nodes reused).
           const cards = Array.from(container.children);
           if (cards.length === 0) return;
+          // Cards marked data-pack-last should share the final row together.
+          const pinnedLast = cards.flatMap((c, i) => (c.hasAttribute('data-pack-last') ? [i] : []));
 
           let measuring = false; // re-entrancy guard during the measure reset
           let lastWidth = -1;    // container width of the last layout pass
@@ -237,9 +268,18 @@ const skillGroups = skillGroupDefs
                   }
                 }
                 if (!feasible) continue;
+                // Soft constraint: the last row should be exactly the pinned
+                // cards; a lighter penalty than a lonely row, so a narrow width
+                // that can't honour it still packs cleanly.
+                let pinMiss = false;
+                if (pinnedLast.length > 0) {
+                  const [ls, le] = comp[comp.length - 1];
+                  const lastRow = perm.slice(ls, le);
+                  pinMiss = lastRow.length !== pinnedLast.length || !pinnedLast.every((i) => lastRow.includes(i));
+                }
                 // Prefer arrangements with NO lonely row; allow one (as the last
                 // row) only when no fully-paired arrangement fits the width.
-                const cost = totalSlack + (maxStretch - 1) * avail * 0.15 + (lonelyLast ? avail * 2 : 0);
+                const cost = totalSlack + (maxStretch - 1) * avail * 0.15 + (lonelyLast ? avail * 2 : 0) + (pinMiss ? avail : 0);
                 if (cost < bestCost) {
                   bestCost = cost;
                   best = {
@@ -369,7 +409,7 @@ const skillGroups = skillGroupDefs
     </section>
 
     <!-- Experience -->
-    <section id="experience" class="bento-reveal">
+    <section id="experience">
       <h2 class="mb-6 text-2xl font-bold">Experience</h2>
       <div class="space-y-6">
         {experiences.map((exp) => (
@@ -414,7 +454,7 @@ const skillGroups = skillGroupDefs
     </section>
 
     <!-- Certifications -->
-    <section id="certifications" class="bento-reveal">
+    <section id="certifications">
       <h2 class="mb-6 text-2xl font-bold">Certifications</h2>
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {certifications.map((cert) => (
@@ -424,8 +464,11 @@ const skillGroups = skillGroupDefs
                 {cert.name}
               </a>
             </h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {cert.organization} &middot; {cert.timeline}
+            <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+              <span>{cert.organization} &middot; {cert.timeline}</span>
+              {cert.expired && (
+                <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">Expired</span>
+              )}
             </p>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
               {cert.overview}
@@ -435,8 +478,30 @@ const skillGroups = skillGroupDefs
       </div>
     </section>
 
+    <!-- Training & Courses -->
+    <section id="training">
+      <h2 class="mb-6 text-2xl font-bold">Training &amp; Courses</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {trainings.map((course) => (
+          <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
+            <h3 class="font-semibold">
+              <a href={course.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">
+                {course.name}
+              </a>
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+              {course.organization} &middot; {course.timeline}
+            </p>
+            <p class="mt-2 text-sm text-gray-600">
+              {course.overview}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- Presentations -->
-    <section id="presentations" class="bento-reveal">
+    <section id="presentations">
       <h2 class="mb-6 text-2xl font-bold">Presentations</h2>
       <div class="space-y-4">
         {presentations.map((talk) => (
@@ -448,7 +513,7 @@ const skillGroups = skillGroupDefs
                   <a href={talk.meetupUrl} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
                     {talk.meetup}
                   </a>
-                  &middot; {talk.date}
+                  {' '}&middot; {talk.date}
                 </p>
               </div>
               <div class="flex flex-wrap gap-2 shrink-0">
@@ -472,39 +537,3 @@ const skillGroups = skillGroupDefs
 
   </div>
 </BaseLayout>
-
-<style>
-  .bento-reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .bento-reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .bento-reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
-</style>
-
-<script>
-  const sections = document.querySelectorAll('.bento-reveal');
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-  sections.forEach((s) => observer.observe(s));
-</script>
