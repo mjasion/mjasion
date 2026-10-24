@@ -50,7 +50,7 @@ export const skills = [
     name: 'Claude',
     logo: '/images/sections/skills/claude.svg',
     summary:
-      'My main model and agent for work and programming - incident triage, writing and reviewing code, drafting docs, and building agents, mostly through Claude Code.',
+      'My main model and agent for work and programming – incident triage, writing and reviewing code, drafting docs, and building agents, mostly through Claude Code.',
     categories: ['ai', 'tools'],
     url: 'https://www.anthropic.com/claude',
   },
@@ -80,7 +80,7 @@ export const skills = [
     name: 'TypeScript',
     logo: '/images/sections/skills/typescript.svg',
     summary:
-      'Typed JavaScript for building maintainable web apps and tooling - including this site, built with Astro and TypeScript.',
+      'Typed JavaScript for building maintainable web apps and tooling – including this site, built with Astro and TypeScript.',
     categories: ['programming'],
     url: 'https://www.typescriptlang.org/',
   },
@@ -88,7 +88,7 @@ export const skills = [
     name: 'Java',
     logo: '/images/sections/skills/java.svg',
     summary:
-      'Started my career on the JVM. Years building backend services and APIs in Java - still the foundation of most platforms I operate today.',
+      'Started my career on the JVM. Years building backend services and APIs in Java – still the foundation of most platforms I operate today.',
     categories: ['programming'],
     url: 'https://dev.java/',
   },
@@ -111,7 +111,7 @@ export const skills = [
     name: 'Cloudflare',
     logo: '/images/sections/skills/cloudflare.svg',
     summary:
-      'Pages, Workers, R2, DNS, and Zero Trust - running this site on Cloudflare Pages and using Workers for edge content negotiation.',
+      'Pages, Workers, R2, DNS, and Zero Trust – running this site on Cloudflare Pages and using Workers for edge content negotiation.',
     categories: ['cloud', 'tools'],
     url: 'https://www.cloudflare.com/',
   },
@@ -119,7 +119,7 @@ export const skills = [
     name: 'Datadog',
     logo: '/images/sections/skills/datadog.svg',
     summary:
-      'Daily driver for observability across 1000+ services - dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident response.',
+      'Daily driver for observability across 1000+ services – dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident response.',
     categories: ['observability', 'tools'],
     url: 'https://www.datadoghq.com/',
   },
@@ -135,7 +135,7 @@ export const skills = [
     name: 'Prometheus',
     logo: '/images/sections/skills/prometheus.svg',
     summary:
-      'Designed and operated Prometheus-based monitoring stacks for Kubernetes workloads - metrics, recording rules, and alerting.',
+      'Designed and operated Prometheus-based monitoring stacks for Kubernetes workloads – metrics, recording rules, and alerting.',
     categories: ['observability', 'container'],
     url: 'https://prometheus.io/',
   },
@@ -143,7 +143,7 @@ export const skills = [
     name: 'Argo CD',
     logo: '/images/sections/skills/argocd.svg',
     summary:
-      'GitOps delivery for Kubernetes - app-of-apps, sync waves, and multi-cluster rollouts to keep environments declarative and auditable.',
+      'GitOps delivery for Kubernetes – app-of-apps, sync waves, and multi-cluster rollouts to keep environments declarative and auditable.',
     categories: ['container', 'tools'],
     url: 'https://argo-cd.readthedocs.io/',
   },
@@ -151,7 +151,7 @@ export const skills = [
     name: 'Argo Rollouts',
     logo: '/images/sections/skills/argocd.svg',
     summary:
-      'Progressive delivery for Kubernetes - canary and blue-green deployments with automated promotion and rollback.',
+      'Progressive delivery for Kubernetes – canary and blue-green deployments with automated promotion and rollback.',
     categories: ['container', 'tools'],
     url: 'https://argoproj.github.io/rollouts/',
   },
@@ -159,7 +159,7 @@ export const skills = [
     name: 'Kyverno',
     logo: '/images/sections/skills/kyverno.svg',
     summary:
-      'Policy-as-code for Kubernetes - validating and mutating resources to enforce security and platform guardrails across clusters.',
+      'Policy-as-code for Kubernetes – validating and mutating resources to enforce security and platform guardrails across clusters.',
     categories: ['container'],
     url: 'https://kyverno.io/',
   },
@@ -198,22 +198,22 @@ export const experiences: Experience[] = [
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Build AI agents that speed up incident diagnosis for on-call engineers - correlating Datadog logs, traces, and metrics, and pulling in relevant Confluence documentation and GitHub code',
+          'Build AI agents that speed up incident diagnosis for on-call engineers – correlating Datadog logs, traces, and metrics, and pulling in relevant Confluence documentation and GitHub code',
           'Support 30+ engineering teams resolving production incidents across a system of 1000+ services',
-          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup — bridging stream-aligned squads with shared SRE practice',
-          'Improve observability - metrics, logs, traces - to shorten time-to-detect and time-to-diagnose',
+          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup – bridging stream-aligned squads with shared SRE practice',
+          'Improve observability – metrics, logs, traces – to shorten time-to-detect and time-to-diagnose',
           'Drive reliability improvements that prevent recurring outages and reduce on-call toil',
         ],
       },
     ],
   },
   {
-    company: 'Datachain (former Iterative.ai)',
+    company: 'DataChain (formerly Iterative.ai)',
     url: 'https://datachain.ai',
     location: 'Global (Remote)',
     logo: '/images/sections/experiences/dvc_ai_logo.jpeg',
     overview:
-      'Datachain builds open-source tools for machine learning, offering team collaboration products as SaaS and self-hosted solutions.',
+      'DataChain builds open-source tools for machine learning, offering team collaboration products as SaaS and self-hosted solutions.',
     positions: [
       {
         designation: 'Senior Platform Engineer',
@@ -294,7 +294,7 @@ export const experiences: Experience[] = [
         start: 'Feb 2018',
         end: 'Oct 2018',
         responsibilities: [
-          'Implemented CloudNative services in Go',
+          'Implemented cloud-native services in Go',
           'Designed pipelines for unit, integration, and end-to-end tests with multi-project execution',
           'Automated packaging into Amazon Machine Images (AMI)',
         ],
@@ -314,9 +314,9 @@ export const experiences: Experience[] = [
         start: 'Aug 2015',
         end: 'Feb 2018',
         responsibilities: [
-          'ELK Stack aggregating 50 TB of data for Play Mobile - 16 nodes, 2 TB memory',
-          'Play Now - designed scalable Cloud Native delivery pipelines and third-party integrations for a new mobile operator',
-          'Virginmobile MVNO - 2 years of infrastructure maintenance and architectural improvements',
+          'ELK Stack aggregating 50 TB of data for Play Mobile – 16 nodes, 2 TB memory',
+          'Play Now – designed scalable cloud-native delivery pipelines and third-party integrations for a new mobile operator',
+          'Virgin Mobile MVNO – 2 years of infrastructure maintenance and architectural improvements',
           'Migrated parts of internal infrastructure to AWS (e.g. autoscaling GitLab runners)',
         ],
       },
@@ -342,7 +342,7 @@ export const experiences: Experience[] = [
         start: 'Dec 2012',
         end: 'Dec 2013',
         responsibilities: [
-          'Express ELIXIR Adapter - immediate transfer system for CitiBank S.A.',
+          'Express ELIXIR Adapter – immediate transfer system for CitiBank S.A.',
           'Maintained back-office systems for FM Bank and BankBPS',
           'Developed components of the Paymax mobile payment system',
         ],
