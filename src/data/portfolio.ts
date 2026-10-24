@@ -70,7 +70,7 @@ export const skills = [
     url: 'https://istio.io',
   },
   {
-    name: 'Go Development',
+    name: 'Go',
     logo: '/images/sections/skills/golang.svg',
     summary: `${yearsSince('2018-02')} years of experience writing scalable, testable, and maintainable programs.`,
     categories: ['programming'],
@@ -216,7 +216,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. As an SRE consultant I support 30+ engineering teams operating a system of 1000+ services – mostly Java services in an asynchronous, event-driven architecture built on Kafka. My work spans incident response, observability, and reliability improvements across the platform. Teams are organised using Team Topologies and mine is an enabling team, so it cuts across many different stream-aligned squads.',
+      'Banking-as-a-Service platform from NatWest Group. I work in an SRE enabling team supporting stream-aligned squads that run 1000+ mostly Java services in an asynchronous, Kafka-based architecture.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer (Consultant)',

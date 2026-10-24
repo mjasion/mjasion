@@ -1,7 +1,7 @@
 // CV-only data and helpers shared by the three CV representations:
 // /cv/ (page), /cv.md (markdown endpoint), /cv.pdf (PDF endpoint).
 // Portfolio-wide data (author, skills, experiences, ...) stays in portfolio.ts.
-import { certifications, trainings } from './portfolio';
+import { certifications, trainings, srePractices } from './portfolio';
 
 // The CV lists certifications and training courses together in one section;
 // /about keeps them as separate sections.
@@ -10,7 +10,7 @@ export const credentials = [
     name: cert.name,
     url: cert.certificateUrl,
     organization: cert.organization,
-    timeline: cert.timeline,
+    timeline: cert.expired ? `${cert.timeline} (expired)` : cert.timeline,
   })),
   ...trainings.map((course) => ({
     name: course.name,
@@ -41,12 +41,24 @@ export const languages = [
 export const publications = [
   {
     title: 'DNS query metrics plugin for Telegraf',
-    url: 'https://github.com/influxdata/telegraf/tree/master/plugins/inputs/dns_query',
+    year: '2016',
+    url: 'https://github.com/influxdata/telegraf/pull/694',
   },
 ];
 
-// Skills listed on the CV in addition to the portfolio skill cards.
-export const additionalSkills = ['Helm'];
+// The CV lists skills as labelled lines rather than the /about cards, so it can
+// name tools without a card there (Helm, GitHub Actions) and add context.
+export const skillGroups = [
+  {
+    label: 'Containers & GitOps',
+    items: ['Kubernetes', 'Helm', 'Argo CD', 'Argo Rollouts', 'Kyverno', 'Istio'],
+  },
+  { label: 'Cloud', items: ['AWS', 'GCP', 'Cloudflare'] },
+  { label: 'Observability', items: ['Datadog', 'Prometheus', 'Grafana'] },
+  { label: 'SRE practices', items: srePractices.map((practice) => practice.name) },
+  { label: 'Programming', items: ['Go', 'TypeScript', 'Java'] },
+  { label: 'AI & tools', items: ['Claude (Claude Code, AI agents)', 'GitHub Actions'] },
+];
 
 export interface InlineRun {
   text: string;

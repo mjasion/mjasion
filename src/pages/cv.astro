@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
 import { Download } from '@lucide/astro';
-import { author, skills, experiences, presentations } from '../data/portfolio';
-import { education, languages, publications, additionalSkills, credentials } from '../data/cv';
+import { author, experiences, presentations } from '../data/portfolio';
+import { education, languages, publications, skillGroups, credentials } from '../data/cv';
 ---
 
 <BaseLayout
@@ -69,7 +69,7 @@ import { education, languages, publications, additionalSkills, credentials } fro
                   <div class="flex flex-wrap items-baseline justify-between gap-x-3">
                     <span class="text-sm font-medium print:text-[12px]">{pos.designation}</span>
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                      {pos.start} - {pos.end ?? 'Present'}
+                      {pos.start} – {pos.end ?? 'Present'}
                     </span>
                   </div>
                   <ul class="mt-1 space-y-0.5 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
@@ -90,10 +90,10 @@ import { education, languages, publications, additionalSkills, credentials } fro
       <!-- Skills -->
       <section class="mt-6 break-inside-avoid print:mt-5">
         <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Skills</h2>
-        <ul class="mt-2 flex flex-wrap gap-1.5">
-          {[...skills.map((skill) => skill.name), ...additionalSkills].map((name) => (
-            <li class="rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 print:bg-gray-100 print:text-gray-800 print:text-[10.5px]">
-              {name}
+        <ul class="mt-2 space-y-1 text-xs text-gray-700 print:text-[10.5px]">
+          {skillGroups.map((group) => (
+            <li>
+              <span class="font-medium text-gray-900">{group.label}:</span> {group.items.join(', ')}
             </li>
           ))}
         </ul>
@@ -129,9 +129,12 @@ import { education, languages, publications, additionalSkills, credentials } fro
             </li>
           ))}
           {publications.map((pub) => (
-            <li>
-              <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{pub.title}</a>
-              <span class="text-gray-500 dark:text-gray-400"> – open-source contribution</span>
+            <li class="flex flex-wrap items-baseline justify-between gap-x-3">
+              <span>
+                <a href={pub.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{pub.title}</a>
+                <span class="text-gray-500 dark:text-gray-400"> – open-source contribution</span>
+              </span>
+              <span class="text-gray-500 dark:text-gray-400">{pub.year}</span>
             </li>
           ))}
         </ul>

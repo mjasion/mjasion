@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
-import { author, skills, experiences, presentations } from '../data/portfolio';
+import { author, experiences, presentations } from '../data/portfolio';
 import {
   education,
   languages,
   publications,
-  additionalSkills,
+  skillGroups,
   credentials,
   inlineRunsToMarkdown,
 } from '../data/cv';
@@ -47,10 +47,10 @@ export const GET: APIRoute = () => {
   }
 
   lines.push('## Skills', '');
-  for (const skill of skills) {
-    lines.push(`- **${skill.name}** – ${skill.summary}`);
+  for (const group of skillGroups) {
+    lines.push(`- **${group.label}:** ${group.items.join(', ')}`);
   }
-  lines.push(`- ${additionalSkills.map((s) => `**${s}**`).join(', ')}`, '');
+  lines.push('');
 
   lines.push('## Certifications & Training', '');
   for (const cert of credentials) {
@@ -63,7 +63,7 @@ export const GET: APIRoute = () => {
     lines.push(`- ${talk.name} – ${talk.meetup} · ${talk.date}`);
   }
   for (const pub of publications) {
-    lines.push(`- [${pub.title}](${pub.url}) – open-source contribution`);
+    lines.push(`- [${pub.title}](${pub.url}) – open-source contribution · ${pub.year}`);
   }
   lines.push('');
 

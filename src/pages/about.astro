@@ -117,10 +117,13 @@ const skillGroups = skillGroupDefs
               {group.items.map((skill) => {
                 const Chip = skill.url ? 'a' : 'div';
                 const Icon = skill.icon ? practiceIcons[skill.icon] : undefined;
+                const descId = `skill-desc-${skill.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
                 return (
                   <Chip
                     {...(skill.url ? { href: skill.url, target: '_blank', rel: 'noopener noreferrer' } : {})}
                     aria-label={skill.name}
+                    aria-describedby={descId}
+                    data-skill-chip
                     class="group/skill relative inline-flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
                     {skill.logo && (
@@ -139,15 +142,20 @@ const skillGroups = skillGroupDefs
                     )}
                     <span class="whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{skill.name}</span>
 
-                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead.
-                        Kept display:none until hover (fading in via @starting-style) so a hidden tooltip
-                        of a chip at the right edge can't widen the page. */}
+                    {/* The description always ships in the HTML for screen readers and crawlers;
+                        the visual tooltip below is a duplicate, hidden from assistive tech. */}
+                    <span id={descId} class="sr-only">{skill.summary}</span>
+
+                    {/* Visual tooltip: on hover for mouse users (sm+), on tap for touch devices via
+                        data-open (script below). Kept display:none until shown (fading in via
+                        @starting-style) so a hidden tooltip of a chip at the right edge can't widen the page. */}
                     <span
-                      role="tooltip"
-                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 shadow-lg transition-opacity duration-200 starting:opacity-0 sm:group-hover/skill:block dark:bg-gray-800"
+                      aria-hidden="true"
+                      data-skill-tip
+                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 shadow-lg transition-opacity duration-200 starting:opacity-0 sm:group-hover/skill:block group-data-open/skill:block dark:bg-gray-800"
                     >
                       {skill.summary}
-                      <span class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-gray-900 dark:bg-gray-800"></span>
+                      <span data-skill-tip-arrow class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-gray-900 dark:bg-gray-800"></span>
                     </span>
                   </Chip>
                 );
@@ -405,6 +413,52 @@ const skillGroups = skillGroupDefs
           }
           window.addEventListener('load', scheduleRelayout, { once: true });
         })();
+
+        // Touch devices have no hover: the first tap on a skill chip opens its
+        // tooltip, a second tap follows the chip's link (or closes a link-less
+        // one), and a tap anywhere else closes it. Without JS the chip just
+        // links out and the description stays in its sr-only span.
+        (() => {
+          const noHover = window.matchMedia('(hover: none)');
+          let openChip = null;
+
+          function close() {
+            if (!openChip) return;
+            openChip.removeAttribute('data-open');
+            openChip = null;
+          }
+
+          // Nudge the tooltip back inside the viewport on narrow screens, keeping
+          // its arrow pointed at the chip.
+          function place(chip) {
+            const tip = chip.querySelector('[data-skill-tip]');
+            const arrow = chip.querySelector('[data-skill-tip-arrow]');
+            if (!tip) return;
+            tip.style.marginLeft = '';
+            const margin = 8;
+            const rect = tip.getBoundingClientRect();
+            let shift = 0;
+            if (rect.left < margin) shift = margin - rect.left;
+            else if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
+            tip.style.marginLeft = `${shift}px`;
+            if (arrow) arrow.style.marginLeft = `${-shift}px`;
+          }
+
+          document.addEventListener('click', (event) => {
+            if (!noHover.matches) return;
+            const chip = event.target instanceof Element ? event.target.closest('[data-skill-chip]') : null;
+            if (chip && chip === openChip) {
+              if (chip.tagName !== 'A') close();
+              return;
+            }
+            close();
+            if (!chip) return;
+            event.preventDefault();
+            chip.setAttribute('data-open', '');
+            openChip = chip;
+            place(chip);
+          });
+        })();
       </script>
     </section>
 
@@ -434,7 +488,7 @@ const skillGroups = skillGroupDefs
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="font-medium">{pos.designation}</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400">
-                      {pos.start} - {pos.end || 'Present'}
+                      {pos.start} – {pos.end || 'Present'}
                     </span>
                   </div>
                   <ul class="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
