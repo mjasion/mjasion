@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
 import { Download } from '@lucide/astro';
-import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
-import { education, languages, publications, additionalSkills } from '../data/cv';
+import { author, skills, experiences, presentations } from '../data/portfolio';
+import { education, languages, publications, additionalSkills, credentials } from '../data/cv';
 ---
 
 <BaseLayout
@@ -99,14 +99,14 @@ import { education, languages, publications, additionalSkills } from '../data/cv
         </ul>
       </section>
 
-      <!-- Certifications -->
+      <!-- Certifications & Training -->
       <section class="mt-6 break-inside-avoid print:mt-5">
-        <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Certifications</h2>
+        <h2 class="text-base font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 print:text-xs">Certifications &amp; Training</h2>
         <ul class="mt-2 space-y-1 text-xs text-gray-700 dark:text-gray-300 print:text-[10.5px]">
-          {certifications.map((cert) => (
+          {credentials.map((cert) => (
             <li class="flex flex-wrap items-baseline justify-between gap-x-3">
               <span>
-                <a href={cert.certificateUrl} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{cert.name}</a>
+                <a href={cert.url} class="font-medium hover:text-accent-600 dark:hover:text-accent-400">{cert.name}</a>
                 <span class="text-gray-500 dark:text-gray-400"> - {cert.organization}</span>
               </span>
               <span class="text-gray-500 dark:text-gray-400">{cert.timeline}</span>

@@ -1,10 +1,11 @@
 import type { APIRoute } from 'astro';
-import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
+import { author, skills, experiences, presentations } from '../data/portfolio';
 import {
   education,
   languages,
   publications,
   additionalSkills,
+  credentials,
   inlineRunsToMarkdown,
 } from '../data/cv';
 
@@ -51,9 +52,9 @@ export const GET: APIRoute = () => {
   }
   lines.push(`- ${additionalSkills.map((s) => `**${s}**`).join(', ')}`, '');
 
-  lines.push('## Certifications', '');
-  for (const cert of certifications) {
-    lines.push(`- [${cert.name}](${cert.certificateUrl}) - ${cert.organization} · ${cert.timeline}`);
+  lines.push('## Certifications & Training', '');
+  for (const cert of credentials) {
+    lines.push(`- [${cert.name}](${cert.url}) - ${cert.organization} · ${cert.timeline}`);
   }
   lines.push('');
 
