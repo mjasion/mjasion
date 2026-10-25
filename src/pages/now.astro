@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { author } from '../data/portfolio';
 import { Clock, Briefcase, Sparkles, Hammer, Headphones, Dumbbell, MessageCircle } from '@lucide/astro';
 
-const lastUpdated = new Date('2026-10-24');
+const lastUpdated = new Date('2026-10-25');
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -36,7 +36,7 @@ const sections = [
     icon: Hammer,
     tone: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
     iconAnim: 'origin-bottom-left group-hover:-rotate-12',
-    body: `Slowly refreshing this blog – new About, new CV, this page – mostly programmed with <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude Code</a>. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family. Both expose their own MCP server, so I can query and update them straight from Claude.`,
+    body: `Just refreshed this blog – new About, CV, and this page – mostly programmed with <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude Code</a>. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family. Both expose their own MCP server, so I can query and update them straight from Claude.`,
   },
   {
     heading: 'Sport',
@@ -104,7 +104,7 @@ const sections = [
     <section class="group rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-6 text-sm text-gray-500 dark:text-gray-400">
       <div class="flex items-start gap-3">
         <MessageCircle class={`h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5 ${iconBaseAnim} group-hover:scale-110 group-hover:text-accent-500`} />
-        <p>Want to compare notes on observability, AI agents for operations, or building on Cloudflare? <a href="/about/" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
+        <p>Want to compare notes on observability, AI agents for operations, or building on Cloudflare? <a href="mailto:hello@mjasion.pl" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
       </div>
     </section>
   </div>

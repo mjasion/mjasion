@@ -40,5 +40,3 @@
 /notes / 301
 /notes/* / 301
 
-# Non-existent tag pages (tags with < 5 posts have no dedicated page)
-/tags/* /tags/ 301

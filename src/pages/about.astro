@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
 import { Play, Stethoscope, Workflow, FileCode, PiggyBank, ShieldCheck, ArrowUpRight } from '@lucide/astro';
-import { author, skills, srePractices, platformPractices, experiences, projects, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
+import { author, yearsSince, skills, srePractices, platformPractices, experiences, projects, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
 
 // Skills are grouped by their primary (first) category, so a multi-category skill
 // (e.g. Prometheus = observability + container) lands in the group of its first one.
@@ -57,7 +57,7 @@ const skillRows = skillRowDefs.map((row) =>
 );
 ---
 
-<BaseLayout title="About" description={`${author.name} – ${author.designation}. ${author.summary}`}>
+<BaseLayout title="About" description={`Senior SRE in Warsaw with ${yearsSince('2012-12')} years in tech – observability, Kubernetes, platform engineering, and AI agents that speed up incident diagnosis.`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',

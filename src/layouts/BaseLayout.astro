@@ -17,7 +17,7 @@ interface Props {
 
 const {
   title,
-  description = 'Marcin Jasion - Senior Site Reliability Engineer. Notes on incident response, observability, Kubernetes, and running large fleets of services.',
+  description = 'Marcin Jasion – Senior Site Reliability Engineer. Notes on observability, Kubernetes, platform engineering, and AI agents for operations.',
   image = '/images/mjasion.jpg',
   canonicalUrl,
   articleDate,
@@ -79,7 +79,9 @@ const mdHref = Astro.url.pathname === '/'
     <meta name="twitter:image:alt" content={title} />
 
     <!-- Favicon & Feeds -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="alternate" type="application/atom+xml" title="Marcin Jasion" href="/index.xml" />
     <link rel="alternate" type="text/markdown" title={`${fullTitle} (Markdown)`} href={mdHref} />
 

@@ -111,7 +111,7 @@ export const skills = [
     name: 'Cloudflare',
     logo: '/images/sections/skills/cloudflare.svg',
     summary:
-      'Pages, Workers, R2, DNS, and Zero Trust – running this site on Cloudflare Pages and using Workers for edge content negotiation.',
+      'Workers, D1, R2, Pages, and Zero Trust – building side projects that run entirely on Workers and D1 with their own MCP servers, plus this site on Pages.',
     categories: ['cloud', 'tools'],
     url: 'https://www.cloudflare.com/',
   },
@@ -415,7 +415,7 @@ export const certifications: Certification[] = [
     overview:
       'Cluster administration: installation and upgrades, networking, storage, scheduling, and troubleshooting production clusters.',
     certificateUrl:
-      'https://www.youracclaim.com/badges/d07b5711-5692-4501-a311-18b6358bdf83/linked_in_profile',
+      'https://www.credly.com/badges/d07b5711-5692-4501-a311-18b6358bdf83',
     expired: true,
   },
   {
@@ -426,7 +426,7 @@ export const certifications: Certification[] = [
     overview:
       'Designing, building, and deploying cloud-native applications on Kubernetes: workloads, configuration, probes, and services.',
     certificateUrl:
-      'https://www.youracclaim.com/badges/448c4beb-c7bb-427b-95cd-9b0669e77f81/linked_in_profile',
+      'https://www.credly.com/badges/448c4beb-c7bb-427b-95cd-9b0669e77f81',
     expired: true,
   },
   // {
