@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b1530"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="hot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g stroke="#3b82f6" stroke-opacity="0.08" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- Left: Pages Functions invocations per day -->
+  <rect x="90" y="100" width="560" height="470" rx="16" fill="#0f1d3d" stroke="#3b82f6" stroke-opacity="0.5" stroke-width="1.5"/>
+  <text x="120" y="142" fill="#93c5fd" font-size="18" font-weight="600">Pages Functions invocations / day</text>
+
+  <!-- 100k free-tier limit -->
+  <line x1="110" y1="250" x2="630" y2="250" stroke="#f87171" stroke-width="2" stroke-dasharray="8,6"/>
+  <text x="630" y="238" text-anchor="end" fill="#fca5a5" font-size="14" font-weight="500">100k / day / account</text>
+
+  <!-- Bars: 07.10 – 13.10, then middleware removed -->
+  <g fill="url(#bar)">
+    <rect x="130" y="481" width="32" height="39" rx="4"/>
+    <rect x="174" y="446" width="32" height="74" rx="4"/>
+    <rect x="218" y="422" width="32" height="98" rx="4"/>
+    <rect x="262" y="474" width="32" height="46" rx="4"/>
+    <rect x="306" y="478" width="32" height="42" rx="4"/>
+    <rect x="350" y="339" width="32" height="181" rx="4"/>
+    <rect x="438" y="458" width="32" height="62" rx="4"/>
+  </g>
+  <rect x="394" y="234" width="32" height="286" rx="4" fill="url(#hot)"/>
+  <g fill="#34d399">
+    <rect x="482" y="516" width="32" height="4" rx="2"/>
+    <rect x="526" y="516" width="32" height="4" rx="2"/>
+    <rect x="570" y="516" width="32" height="4" rx="2"/>
+  </g>
+  <line x1="110" y1="520" x2="630" y2="520" stroke="#64748b" stroke-width="1.5"/>
+
+  <!-- Error 1027 badge -->
+  <rect x="350" y="176" width="120" height="36" rx="10" fill="#7f1d1d" stroke="#f87171" stroke-width="1.5"/>
+  <text x="410" y="200" text-anchor="middle" fill="#fecaca" font-size="16" font-weight="700">error 1027</text>
+
+  <text x="542" y="500" text-anchor="middle" fill="#6ee7b7" font-size="14" font-weight="600">→ 0</text>
+  <text x="120" y="550" fill="#94a3b8" font-size="14">07.10</text>
+  <text x="410" y="550" text-anchor="middle" fill="#fdba74" font-size="14" font-weight="600">13.10</text>
+  <text x="600" y="550" text-anchor="end" fill="#94a3b8" font-size="14">after the fix</text>
+
+  <!-- Right: Accept: text/markdown served at the edge -->
+  <g transform="translate(715, 100)">
+    <rect x="0" y="0" width="390" height="100" rx="14" fill="#0f1d3d" stroke="#64748b" stroke-opacity="0.6" stroke-width="1.5"/>
+    <text x="195" y="42" text-anchor="middle" fill="#e2e8f0" font-size="22" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">GET /posts/foo/</text>
+    <text x="195" y="74" text-anchor="middle" fill="#93c5fd" font-size="18" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">Accept: text/markdown</text>
+  </g>
+
+  <line x1="910" y1="208" x2="910" y2="250" stroke="#60a5fa" stroke-opacity="0.7" stroke-width="3" stroke-dasharray="6,5"/>
+  <polygon points="910,262 901,247 919,247" fill="#60a5fa" opacity="0.8"/>
+
+  <g transform="translate(715, 270)">
+    <rect x="0" y="0" width="390" height="110" rx="14" fill="#1e3a8a" fill-opacity="0.45" stroke="#3b82f6" stroke-width="2"/>
+    <text x="195" y="48" text-anchor="middle" fill="#bfdbfe" font-size="24" font-weight="700">URL Rewrite Rule</text>
+    <text x="195" y="80" text-anchor="middle" fill="#94a3b8" font-size="16">Transform Rules · at the edge</text>
+  </g>
+
+  <line x1="910" y1="388" x2="910" y2="430" stroke="#60a5fa" stroke-opacity="0.7" stroke-width="3" stroke-dasharray="6,5"/>
+  <polygon points="910,442 901,427 919,427" fill="#60a5fa" opacity="0.8"/>
+
+  <g transform="translate(715, 450)">
+    <rect x="0" y="0" width="390" height="120" rx="14" fill="#0f1d3d" stroke="#34d399" stroke-opacity="0.7" stroke-width="1.5"/>
+    <text x="195" y="50" text-anchor="middle" fill="#e2e8f0" font-size="22" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">/posts/foo.md</text>
+    <text x="195" y="86" text-anchor="middle" fill="#6ee7b7" font-size="17" font-weight="500">static asset · 0 Worker invocations</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="600" y="625" text-anchor="middle" fill="#cbd5e1" font-size="22" font-weight="500">Markdown for AI agents, without running a single Worker</text>
+</svg>
