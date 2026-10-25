@@ -16,9 +16,11 @@
   Link: </sitemap-index.xml>; rel="sitemap"; type="application/xml"
   Vary: Accept, Accept-Encoding
 
-# The PDF twin of /cv/ - point search engines at the HTML page instead
+# The PDF twin of /cv/ - point search engines at the HTML page instead; open it
+# in the browser, but save it under a readable file name
 /cv.pdf
   Link: <https://mjasion.pl/cv/>; rel="canonical"
+  Content-Disposition: inline; filename="Marcin-Jasion-CV.pdf"
 
 # Markdown twins of every page - keep them out of search results. Requests with
 # Accept: text/markdown are rewritten to the .md path at the edge before they
