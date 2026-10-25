@@ -50,11 +50,8 @@ if (lcpHero && typeof lcpHero !== 'string') {
         '@type': 'Person',
         name: author.name,
         url: 'https://mjasion.pl',
-        knowsAbout: ['Observability', 'Kubernetes', 'Cloud infrastructure', 'AI agents', 'Platform engineering'],
-        sameAs: [
-          'https://www.github.com/mjasion',
-          'https://www.linkedin.com/in/marcinjasion',
-        ],
+        knowsAbout: author.knowsAbout,
+        sameAs: author.sameAs,
       },
     })} />
   </Fragment>

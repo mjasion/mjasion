@@ -2,7 +2,8 @@
 title: How to debug Istio Upstream Reset 502 UPE (old 503 UC)
 date: "2022-04-25"
 dateModified: "2026-05-17"
-description: "Find the root cause of Istio 502 UPE (upstream reset) errors and fix them – formerly reported as 503 UC."
+description: >-
+  How I traced an Istio 502 UPE (formerly 503 UC) upstream reset with Envoy logs, ksniff and Wireshark down to one header: Transfer-Encoding: Chunked.
 hero: ./hero.svg
 tags:
 - istio

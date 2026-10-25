@@ -8,6 +8,7 @@ import {
   transformerNotationFocus,
 } from '@shikijs/transformers';
 import { satteri } from '@astrojs/markdown-satteri';
+import { globSync, readFileSync } from 'node:fs';
 
 // Dev-only: make the dev server tell the browser to cache nothing, so edits to
 // any source asset always show up on a normal reload instead of needing a hard
@@ -74,6 +75,26 @@ const externalLinksNewTab = {
   },
 };
 
+// Sitemap <lastmod>: a post's `dateModified` (or `date`) from its front matter;
+// the listing pages take the newest post. Config runs before content
+// collections load, so the two dates are read straight from the files.
+function postLastmods() {
+  const now = new Date();
+  const byPath = new Map();
+  for (const file of globSync('src/content/posts/**/index.{md,mdx}')) {
+    const fm = readFileSync(file, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+    const field = (name) => fm.match(new RegExp(`^${name}:\\s*["']?([^"'\\s]+)`, 'm'))?.[1];
+    const date = new Date(field('date'));
+    if (/^draft:\s*true/m.test(fm) || !(date <= now)) continue;
+    const id = file.replace(/^src\/content\/posts\//, '').replace(/\/index\.mdx?$/, '');
+    byPath.set(`/posts/${id}/`, new Date(field('dateModified') ?? date));
+  }
+  const newest = new Date(Math.max(...byPath.values()));
+  for (const path of ['/', '/posts/', '/archives/', '/tags/']) byPath.set(path, newest);
+  return byPath;
+}
+const lastmods = postLastmods();
+
 export default defineConfig({
   site: process.env.SITE_URL || 'https://mjasion.pl',
   output: 'static',
@@ -98,7 +119,12 @@ export default defineConfig({
   },
   integrations: [
     mdx(),
-    sitemap(),
+    sitemap({
+      serialize(item) {
+        const lastmod = lastmods.get(new URL(item.url).pathname);
+        return lastmod ? { ...item, lastmod: lastmod.toISOString() } : item;
+      },
+    }),
   ],
   markdown: {
     processor: satteri({ hastPlugins: [externalLinksNewTab] }),

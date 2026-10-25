@@ -1,8 +1,10 @@
 ---
 title: How to enable debug and trace logs in HCP Terraform and Terraform Enterprise
+seoTitle: "How to enable debug and trace logs in HCP Terraform"
 date: "2022-06-10"
 dateModified: "2026-05-17"
-description: "Enable TF_LOG=TRACE/DEBUG in HCP Terraform and Terraform Enterprise remote runs via workspace variables. Includes local execution fallback for fast iteration."
+description: >-
+  Enable TF_LOG=TRACE/DEBUG in HCP Terraform and Terraform Enterprise remote runs via workspace variables. Includes local execution fallback for fast iteration.
 hero: ./hero.svg
 tags:
 - terraform

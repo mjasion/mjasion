@@ -14,6 +14,8 @@ interface Props {
   articleTags?: string[];
   articleCategory?: string;
   twitterCardType?: 'summary' | 'summary_large_image';
+  // Posts drop the " | Marcin Jasion" suffix to fit ~60 chars in search results
+  titleSuffix?: boolean;
 }
 
 const {
@@ -26,6 +28,7 @@ const {
   articleTags,
   articleCategory,
   twitterCardType = 'summary',
+  titleSuffix = true,
 } = Astro.props;
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
@@ -37,7 +40,7 @@ const ogImageType = /\.jpe?g($|\?)/i.test(ogImage) ? 'image/jpeg'
 // Generated /og/ cards are 1200x630; the default profile photo is square.
 const ogImageSize = image === '/images/mjasion.jpg' ? { width: '1083', height: '1080' } : { width: '1200', height: '630' };
 // The home page title already leads with the name, so it gets no suffix.
-const fullTitle = title.startsWith(author.name) ? title : `${title} | ${author.name}`;
+const fullTitle = !titleSuffix || title.startsWith(author.name) ? title : `${title} | ${author.name}`;
 
 // Markdown-for-agents discovery hint - every page has a .md sibling.
 // Accept: text/markdown is content-negotiated at the Cloudflare edge (URL Rewrite Rules), not in code.

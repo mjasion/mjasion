@@ -16,6 +16,7 @@ interface NavPost {
 
 interface Props {
   title: string;
+  seoTitle?: string;
   description: string;
   date: Date;
   dateModified?: Date;
@@ -31,7 +32,7 @@ interface Props {
   nextPost?: NavPost | null;
 }
 
-const { title, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
+const { title, seoTitle, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -83,7 +84,8 @@ const breadcrumbSchema = {
 ---
 
 <BaseLayout
-  title={title}
+  title={seoTitle ?? title}
+  titleSuffix={false}
   description={description}
   image={`/og/${postPath}.png`}
   articleDate={date}

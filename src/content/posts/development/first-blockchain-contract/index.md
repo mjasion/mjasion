@@ -2,7 +2,8 @@
 title: Deploy your first blockchain contract to Ethereum
 date: "2022-04-09T10:00:00.000Z"
 dateModified: "2026-05-17"
-description: "Step by step guide to deploy first contract on Ethereum blockchain"
+description: >-
+  Step-by-step guide to writing a first Solidity smart contract in Remix IDE and deploying it to an Ethereum testnet with MetaMask.
 hero: ./hero.svg
 tags:
 - ethereum

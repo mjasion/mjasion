@@ -67,10 +67,7 @@ const skillRows = skillRowDefs.map((row) =>
       url: 'https://mjasion.pl',
       image: `https://mjasion.pl${author.image}`,
       description: author.summary,
-      sameAs: [
-        'https://www.github.com/mjasion',
-        'https://www.linkedin.com/in/marcinjasion',
-      ],
+      sameAs: author.sameAs,
       worksFor: {
         '@type': 'Organization',
         name: 'NatWest Boxed',

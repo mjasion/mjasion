@@ -92,9 +92,11 @@ Post URLs: `/posts/${post.id}/` (id already includes `category/slug`).
 
 ```yaml
 title: "Post Title"
+seoTitle: "Shorter title"       # Optional, max 60 chars. Used for <title> when `title` is too long for search results.
 date: "YYYY-MM-DD"
-description: |
-  Multi-line description
+dateModified: "YYYY-MM-DD"      # Optional. Feeds the sitemap <lastmod> (falls back to `date`).
+description: >-
+  One paragraph, 120–160 chars. Use `>-` so no newline ends up in the meta tag.
 hero: ./hero.svg                # REQUIRED. Relative path for image optimization.
 tags: [tag1, tag2]
 category: cloud                 # cloud | development | kubernetes

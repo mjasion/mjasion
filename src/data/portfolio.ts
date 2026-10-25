@@ -32,6 +32,9 @@ export const author = {
   // Home page meta description, JSON-LD and the markdown twin
   siteDescription:
     'Practical notes on observability, Kubernetes, cloud and AI agents for operations – lessons from running 1000+ services in production.',
+  // JSON-LD Person on the home page, /about/ and /cv/
+  knowsAbout: ['Observability', 'Kubernetes', 'Cloud infrastructure', 'AI agents', 'Platform engineering'],
+  sameAs: ['https://www.github.com/mjasion', 'https://www.linkedin.com/in/marcinjasion'],
   email: 'hello@mjasion.pl',
   image: '/images/mjasion.jpg',
   summaryShort:

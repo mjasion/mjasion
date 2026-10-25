@@ -61,6 +61,15 @@ const sections = [
 >
   <Fragment slot="head">
     <link rel="canonical" href="https://mjasion.pl/now/" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: `Now – ${author.name}`,
+      url: 'https://mjasion.pl/now/',
+      description: `What ${author.name} is focused on right now – work, learning, and side projects.`,
+      dateModified: lastUpdated.toISOString(),
+      author: { '@type': 'Person', name: author.name, url: 'https://mjasion.pl' },
+    })} />
   </Fragment>
 
   <div class="mx-auto max-w-3xl px-4 py-12 space-y-8">

@@ -7,6 +7,8 @@ const posts = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      // Shorter <title> for search results (~60 chars); the page keeps `title`
+      seoTitle: z.string().max(60).optional(),
       date: z.coerce.date(),
       description: z.string(),
       hero: image().optional(),
