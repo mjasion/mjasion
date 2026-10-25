@@ -14,6 +14,10 @@
   Link: </index.xml>; rel="alternate"; type="application/atom+xml"; title="Marcin Jasion"
   Link: </sitemap-index.xml>; rel="sitemap"; type="application/xml"
 
+# The PDF twin of /cv/ - point search engines at the HTML page instead
+/cv.pdf
+  Link: <https://mjasion.pl/cv/>; rel="canonical"
+
 # Block indexing on non-production domains
 https://mjasion.pages.dev/*
   X-Robots-Tag: noindex
