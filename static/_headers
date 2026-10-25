@@ -2,7 +2,8 @@
 # Security Headers - mjasion.pl
 # ===========================================
 
-# Global security headers for all pages
+# Global security headers for all pages. Vary: Accept because the same URL
+# serves HTML or markdown depending on Accept (edge URL Rewrite Rules).
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
@@ -13,6 +14,7 @@
   Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' giscus.app static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' giscus.app; img-src 'self' data: https:; font-src 'self'; connect-src 'self' cloudflareinsights.com; frame-src giscus.app; media-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; manifest-src 'self'
   Link: </index.xml>; rel="alternate"; type="application/atom+xml"; title="Marcin Jasion"
   Link: </sitemap-index.xml>; rel="sitemap"; type="application/xml"
+  Vary: Accept, Accept-Encoding
 
 # The PDF twin of /cv/ - point search engines at the HTML page instead
 /cv.pdf
