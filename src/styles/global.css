@@ -138,6 +138,13 @@
   background-color: rgba(234, 179, 8, 0.12);
 }
 
+/* Long inline code (API field names, paths) has no break opportunities, so on
+   a 375px screen it pushes the page wider than the viewport. Let it wrap
+   anywhere; code blocks keep scrolling horizontally. */
+.prose :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent-500);
   outline-offset: 2px;
