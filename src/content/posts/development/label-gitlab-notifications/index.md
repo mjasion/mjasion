@@ -1,7 +1,6 @@
 ---
 title: How to label GitLab notifications in Gmail by headers
 date: "2020-04-17T10:00:00.000Z"
-dateModified: "2026-02-24"
 description: >-
   Gmail filters cannot match email headers, but Google Apps Script can: label GitLab notifications by their X-GitLab-* headers, with labels created automatically.
 hero: ./hero.svg

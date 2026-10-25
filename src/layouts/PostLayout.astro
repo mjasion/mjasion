@@ -34,11 +34,11 @@ interface Props {
 
 const { title, seoTitle, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
 
-const formattedDate = date.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+// UTC, so a date-only `dateModified` ("2026-05-17") never shifts a day with the build machine's zone
+const dateFormat: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
+const formattedDate = date.toLocaleDateString('en-US', dateFormat);
+// Shown next to the publish date so the visible date matches JSON-LD dateModified
+const updatedDate = dateModified && dateModified > date ? dateModified : undefined;
 
 const tocHeadings = headings.filter((h) => h.depth <= 3);
 
@@ -129,10 +129,19 @@ const breadcrumbSchema = {
         {title}
       </h1>
 
-      <div class="mt-4 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+      <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
         <time datetime={date.toISOString()}>{formattedDate}</time>
-        <span>&middot;</span>
-        <span>{readingTime} min read</span>
+        {/* Each separator travels with the item after it, so a wrapped line never ends on a dot */}
+        {updatedDate && (
+          <span class="inline-flex items-center gap-3">
+            <span aria-hidden="true">&middot;</span>
+            <span>Updated <time datetime={updatedDate.toISOString().slice(0, 10)}>{updatedDate.toLocaleDateString('en-US', dateFormat)}</time></span>
+          </span>
+        )}
+        <span class="inline-flex items-center gap-3">
+          <span aria-hidden="true">&middot;</span>
+          <span>{readingTime} min read</span>
+        </span>
       </div>
 
       {tags.length > 0 && (
