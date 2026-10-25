@@ -1,28 +1,63 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Play } from '@lucide/astro';
-import { author, skills, experiences, certifications, presentations, categoryColors } from '../data/portfolio';
+import { Play, Stethoscope, Workflow, FileCode, PiggyBank, ShieldCheck, ArrowUpRight } from '@lucide/astro';
+import { author, skills, srePractices, platformPractices, experiences, projects, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
 
 // Skills are grouped by their primary (first) category, so a multi-category skill
 // (e.g. Prometheus = observability + container) lands in the group of its first one.
-const skillGroupDefs = [
-  { label: 'Cloud', match: ['cloud'] },
-  { label: 'Containers & GitOps', match: ['container'] },
-  { label: 'Observability', match: ['observability'] },
-  { label: 'AI & Tools', match: ['ai', 'tools'] },
-  { label: 'Programming', match: ['programming'] },
+// SRE and Platform & DevOps practices have no brand logo, so their chips use
+// Lucide icons instead.
+interface SkillChip {
+  name: string;
+  summary: string;
+  logo?: string;
+  url?: string;
+  icon?: string;
+}
+
+const practiceIcons: Record<string, typeof Stethoscope> = {
+  stethoscope: Stethoscope,
+  workflow: Workflow,
+  'file-code': FileCode,
+  'piggy-bank': PiggyBank,
+  'shield-check': ShieldCheck,
+};
+
+// Skills render as fixed rows of one or two cards on wide screens. In each row
+// the `fill` card takes whatever width the other card's content leaves, so rows
+// run edge to edge without JS. A group lists its matched skills in the order of its
+// `match` categories, then any `extra` chips (practices with Lucide icons).
+const skillRowDefs: { label: string; match?: string[]; extra?: SkillChip[]; fill?: boolean }[][] = [
+  [
+    { label: 'Cloud', match: ['cloud'] },
+    { label: 'Containers & GitOps', match: ['container'], fill: true },
+  ],
+  [
+    { label: 'Observability', match: ['observability'], fill: true },
+    { label: 'Programming & AI', match: ['programming', 'ai'] },
+  ],
+  [
+    { label: 'Platform & SRE', extra: [...platformPractices, ...srePractices], fill: true },
+  ],
 ];
 
-const skillGroups = skillGroupDefs
-  .map((def) => ({
-    label: def.label,
-    items: skills.filter((skill) => def.match.includes(skill.categories[0])),
-  }))
-  .filter((group) => group.items.length > 0);
+const skillRows = skillRowDefs.map((row) =>
+  row.map((def) => {
+    const match = def.match ?? [];
+    const matched = skills
+      .filter((skill) => match.includes(skill.categories[0]))
+      .sort((a, b) => match.indexOf(a.categories[0]) - match.indexOf(b.categories[0]));
+    return {
+      label: def.label,
+      fill: def.fill ?? false,
+      items: [...matched, ...(def.extra ?? [])] as SkillChip[],
+    };
+  }),
+);
 ---
 
-<BaseLayout title="About" description={`${author.name} - ${author.designation}. ${author.summary}`}>
+<BaseLayout title="About" description={`${author.name} – ${author.designation}. ${author.summary}`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
@@ -46,7 +81,7 @@ const skillGroups = skillGroupDefs
   <div class="mx-auto max-w-5xl px-4 py-12 space-y-12">
 
     <!-- Hero / Intro -->
-    <section class="bento-reveal rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
+    <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
       <h1 class="text-3xl font-bold">About Me</h1>
       <p class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
         {author.summary}
@@ -81,25 +116,33 @@ const skillGroups = skillGroupDefs
     </section>
 
     <!-- Skills -->
-    <section id="skills" class="bento-reveal">
+    <section id="skills">
       <h2 class="mb-6 text-2xl font-bold">Skills</h2>
-      <!-- Categories are variable-width bento cards (width ∝ skill count). A small vanilla-JS
-           justified-rows packer (sanctioned zero-JS exception — see CLAUDE.md Critical Rule 7)
-           reflows them into flush rows with no lonely card. No-JS fallback: a plain flex-wrap of
-           content-width cards (variable widths, just a possibly-ragged last row). -->
-      <div id="skills-pack" data-skills-pack class="flex flex-wrap items-stretch gap-4">
-        {skillGroups.map((group) => (
-          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento">
+      <!-- Variable-width bento cards in fixed rows of two: the narrower card keeps its content
+           width and the `fill` card stretches to the row's edge. Below xl the rows stack into a
+           single column of full-width cards. -->
+      <div class="space-y-4">
+        {skillRows.map((row) => (
+          <div class="flex flex-col gap-4 xl:flex-row">
+            {row.map((group) => (
+          <div class:list={[
+            'rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-bento',
+            group.fill ? 'xl:min-w-0 xl:flex-1' : 'xl:flex-none',
+          ]}>
             <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
               {group.label}
             </h3>
             <div class="flex flex-wrap gap-1.5">
               {group.items.map((skill) => {
                 const Chip = skill.url ? 'a' : 'div';
+                const Icon = skill.icon ? practiceIcons[skill.icon] : undefined;
+                const descId = `skill-desc-${skill.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
                 return (
                   <Chip
                     {...(skill.url ? { href: skill.url, target: '_blank', rel: 'noopener noreferrer' } : {})}
                     aria-label={skill.name}
+                    aria-describedby={descId}
+                    data-skill-chip
                     class="group/skill relative inline-flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
                     {skill.logo && (
@@ -110,266 +153,90 @@ const skillGroups = skillGroupDefs
                         loading="lazy"
                       />
                     )}
+                    {Icon && (
+                      <Icon
+                        aria-hidden="true"
+                        class="h-6 w-6 shrink-0 text-gray-700 transition-transform duration-200 ease-out group-hover/skill:scale-110"
+                      />
+                    )}
                     <span class="whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{skill.name}</span>
 
-                    {/* Desktop hover tooltip — display:none on touch (<sm), where the chip links out instead */}
+                    {/* The description always ships in the HTML for screen readers and crawlers;
+                        the visual tooltip below is a duplicate, hidden from assistive tech. */}
+                    <span id={descId} class="sr-only">{skill.summary}</span>
+
+                    {/* Visual tooltip: on hover for mouse users (sm+), on tap for touch devices via
+                        data-open (script below). Kept display:none until shown (fading in via
+                        @starting-style) so a hidden tooltip of a chip at the right edge can't widen the page. */}
                     <span
-                      role="tooltip"
-                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 opacity-0 shadow-lg transition-opacity duration-200 group-hover/skill:opacity-100 sm:block dark:bg-gray-800"
+                      aria-hidden="true"
+                      data-skill-tip
+                      class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden w-56 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-gray-100 shadow-lg transition-opacity duration-200 starting:opacity-0 sm:group-hover/skill:block group-data-open/skill:block dark:bg-gray-800"
                     >
                       {skill.summary}
-                      <span class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-gray-900 dark:bg-gray-800"></span>
+                      <span data-skill-tip-arrow class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-gray-900 dark:bg-gray-800"></span>
                     </span>
                   </Chip>
                 );
               })}
             </div>
           </div>
+            ))}
+          </div>
         ))}
       </div>
 
       <script>
-        // =====================================================================
-        // Skills "balanced-reorder" justified-row packer
-        // ---------------------------------------------------------------------
-        // #skills-pack ships as a plain `flex flex-wrap gap-4` of CONTENT-WIDTH
-        // cards — that is the no-JS fallback (variable widths, possibly one
-        // ragged last row). This script upgrades it to justified rows: it picks
-        // the arrangement of cards into rows that fills the container flush,
-        // never strands a single card alone in a row, and keeps each card's
-        // NATURAL width as the proportional basis so wider cards (more / longer
-        // skills) stay visibly wider. Order is free, so cards may be reordered
-        // across rows to pack densely.
-        //
-        // Vanilla-JS exception to the zero-JS policy for a bin-packing problem
-        // CSS cannot express for variable-width items (see CLAUDE.md, rule 7).
-        // =====================================================================
+        // Touch devices have no hover: the first tap on a skill chip opens its
+        // tooltip, a second tap follows the chip's link (or closes a link-less
+        // one), and a tap anywhere else closes it. Without JS the chip just
+        // links out and the description stays in its sr-only span.
         (() => {
-          const container = document.getElementById('skills-pack');
-          if (!container) return;
+          const noHover = window.matchMedia('(hover: none)');
+          let openChip = null;
 
-          // Direct children are the group cards (snapshot once; nodes reused).
-          const cards = Array.from(container.children);
-          if (cards.length === 0) return;
-
-          let measuring = false; // re-entrancy guard during the measure reset
-          let lastWidth = -1;    // container width of the last layout pass
-          let rafId = 0;
-          let debounceTimer = 0;
-
-          // Read gap + horizontal padding live so a future class change on the
-          // container can't silently desync the maths.
-          function metrics() {
-            const cs = getComputedStyle(container);
-            const gap = parseFloat(cs.columnGap || cs.gap || '16') || 16;
-            const padL = parseFloat(cs.paddingLeft || '0') || 0;
-            const padR = parseFloat(cs.paddingRight || '0') || 0;
-            const avail = Math.floor(container.clientWidth - padL - padR);
-            return { gap, avail };
+          function close() {
+            if (!openChip) return;
+            openChip.removeAttribute('data-open');
+            openChip = null;
           }
 
-          // READ phase: clear imposed sizing so each card collapses to its
-          // content width, flush layout once, then batch-read all widths.
-          function measureNatural() {
-            for (const card of cards) {
-              card.style.flex = '0 0 auto';
-              card.style.width = 'auto';
-              card.style.maxWidth = 'none';
+          // Nudge the tooltip back inside the viewport on narrow screens, keeping
+          // its arrow pointed at the chip.
+          function place(chip) {
+            const tip = chip.querySelector('[data-skill-tip]');
+            const arrow = chip.querySelector('[data-skill-tip-arrow]');
+            if (!tip) return;
+            tip.style.marginLeft = '';
+            const margin = 8;
+            const rect = tip.getBoundingClientRect();
+            let shift = 0;
+            if (rect.left < margin) shift = margin - rect.left;
+            else if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
+            tip.style.marginLeft = `${shift}px`;
+            if (arrow) arrow.style.marginLeft = `${-shift}px`;
+          }
+
+          document.addEventListener('click', (event) => {
+            if (!noHover.matches) return;
+            const chip = event.target instanceof Element ? event.target.closest('[data-skill-chip]') : null;
+            if (chip && chip === openChip) {
+              if (chip.tagName !== 'A') close();
+              return;
             }
-            void container.offsetWidth; // single forced reflow
-            return cards.map((c) => Math.ceil(c.getBoundingClientRect().width));
-          }
-
-          function* permutations(arr) {
-            if (arr.length <= 1) { yield arr.slice(); return; }
-            for (let i = 0; i < arr.length; i++) {
-              const rest = arr.slice(0, i).concat(arr.slice(i + 1));
-              for (const p of permutations(rest)) yield [arr[i], ...p];
-            }
-          }
-
-          function* compositions(n) {
-            const cuts = n - 1;
-            for (let mask = 0; mask < (1 << cuts); mask++) {
-              const rows = [];
-              let start = 0;
-              for (let i = 0; i < cuts; i++) {
-                if (mask & (1 << i)) { rows.push([start, i + 1]); start = i + 1; }
-              }
-              rows.push([start, n]);
-              yield rows;
-            }
-          }
-
-          // Pick the arrangement (free reorder + row composition) that fits
-          // every row, never leaves a lonely single-card row, and minimizes
-          // leftover whitespace plus a mild over-stretch penalty (which avoids
-          // egregious internal voids).
-          function pack(widths, avail, gap) {
-            const n = widths.length;
-            const indices = widths.map((_, i) => i);
-            let best = null;
-            let bestCost = Infinity;
-
-            for (const perm of permutations(indices)) {
-              const permWidths = perm.map((i) => widths[i]);
-              for (const comp of compositions(n)) {
-                let feasible = true, totalSlack = 0, maxStretch = 0, lonelyLast = false;
-                for (let ri = 0; ri < comp.length; ri++) {
-                  const [s, e] = comp[ri];
-                  const count = e - s;
-                  const isLast = ri === comp.length - 1;
-                  // Every row EXCEPT the last must hold >=2 cards, so a lonely
-                  // single card can only ever be the trailing row — it never
-                  // merges with a following row and we leave it un-stretched.
-                  if (count < 2 && !isLast && n > 1) { feasible = false; break; }
-                  let used = 0;
-                  for (let k = s; k < e; k++) used += permWidths[k];
-                  used += gap * (count - 1);
-                  if (used > avail + 0.5) { feasible = false; break; }
-                  if (count === 1 && n > 1) lonelyLast = true;
-                  // Only justified (>=2-card) rows contribute void; a lonely
-                  // trailing card keeps its natural width, so it adds none.
-                  if (count >= 2) {
-                    totalSlack += avail - used;
-                    const stretch = used > 0 ? avail / used : 1;
-                    if (stretch > maxStretch) maxStretch = stretch;
-                  }
-                }
-                if (!feasible) continue;
-                // Prefer arrangements with NO lonely row; allow one (as the last
-                // row) only when no fully-paired arrangement fits the width.
-                const cost = totalSlack + (maxStretch - 1) * avail * 0.15 + (lonelyLast ? avail * 2 : 0);
-                if (cost < bestCost) {
-                  bestCost = cost;
-                  best = {
-                    order: perm.slice(),
-                    rows: comp.map(([s, e]) => {
-                      const r = [];
-                      for (let k = s; k < e; k++) r.push(k);
-                      return r;
-                    }),
-                  };
-                }
-              }
-            }
-            // best is null when no arrangement fits with every non-last row >=2
-            // (e.g. a narrow / mobile viewport where not even pairs fit) — the
-            // caller then falls back to the natural content-width flex-wrap.
-            return best;
-          }
-
-          // WRITE phase: reorder the actual DOM nodes (so keyboard tab / reading
-          // order matches the visual order — no CSS `order` divergence), then
-          // justify each row. Within a row only the LAST card grows to swallow
-          // sub-pixel remainder; the others keep their exact proportional basis
-          // so the width hierarchy stays crisp.
-          function apply(plan, widths, avail, gap) {
-            const { order, rows } = plan;
-            for (const cardIdx of order) container.appendChild(cards[cardIdx]);
-
-            for (const row of rows) {
-              const count = row.length;
-              // A lonely trailing card stays at its natural content width (no
-              // stretch -> no void); it sits alone because the previous justified
-              // row already fills the line and forces it to wrap onto its own.
-              if (count === 1) {
-                const card = cards[order[row[0]]];
-                card.style.minWidth = '0';
-                card.style.maxWidth = 'none';
-                card.style.width = 'auto';
-                card.style.flex = '0 0 auto';
-                continue;
-              }
-              const naturals = row.map((pos) => widths[order[pos]]);
-              const naturalSum = naturals.reduce((a, b) => a + b, 0);
-              const target = avail - gap * (count - 1);
-              row.forEach((pos, k) => {
-                const card = cards[order[pos]];
-                const share = naturalSum > 0 ? naturals[k] / naturalSum : 1 / count;
-                const basis = Math.max(0, Math.floor(target * share));
-                card.style.width = '';
-                card.style.minWidth = '0';
-                card.style.maxWidth = 'none';
-                // Last card grows to absorb rounding; others keep exact width.
-                // Each row's basis + gaps sum to ~avail, so the next card can't
-                // share the line and wraps exactly where we computed.
-                card.style.flex = (k === count - 1) ? `1 1 ${basis}px` : `0 0 ${basis}px`;
-              });
-            }
-          }
-
-          // Clear all imposed sizing and restore the original DOM order so the
-          // CSS `flex flex-wrap` fallback shows content-width cards. Used when no
-          // justified arrangement is possible (narrow / mobile viewports).
-          function resetToNatural() {
-            for (const card of cards) {
-              card.style.flex = '';
-              card.style.width = '';
-              card.style.minWidth = '';
-              card.style.maxWidth = '';
-              container.appendChild(card); // re-append in original order
-            }
-          }
-
-          function relayout() {
-            if (measuring) return;
-            measuring = true;
-            const { gap, avail } = metrics();
-            if (avail <= 0) { measuring = false; return; }
-            lastWidth = avail;
-            const widths = measureNatural();
-            const plan = pack(widths, avail, gap);
-            if (!plan) resetToNatural();
-            else apply(plan, widths, avail, gap);
-            measuring = false;
-          }
-
-          function scheduleRelayout() {
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(relayout);
-          }
-          function debouncedRelayout() {
-            if (debounceTimer) clearTimeout(debounceTimer);
-            debounceTimer = window.setTimeout(scheduleRelayout, 120);
-          }
-
-          scheduleRelayout();
-
-          // Re-pack only when the container WIDTH changes (ignore height-only
-          // shifts caused by our own measurement reset — avoids a feedback loop).
-          if ('ResizeObserver' in window) {
-            new ResizeObserver((entries) => {
-              const w = Math.floor(entries[0].contentRect.width);
-              if (w === lastWidth) return;
-              debouncedRelayout();
-            }).observe(container);
-          } else {
-            window.addEventListener('resize', debouncedRelayout, { passive: true });
-          }
-
-          // Logos and webfont swaps shift card widths — re-pack once they settle.
-          const imgs = container.querySelectorAll('img');
-          let pending = imgs.length;
-          if (pending > 0) {
-            imgs.forEach((img) => {
-              if (img.complete) { if (--pending === 0) scheduleRelayout(); }
-              else {
-                img.addEventListener('load', scheduleRelayout, { once: true });
-                img.addEventListener('error', scheduleRelayout, { once: true });
-              }
-            });
-          }
-          if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(scheduleRelayout).catch(() => {});
-          }
-          window.addEventListener('load', scheduleRelayout, { once: true });
+            close();
+            if (!chip) return;
+            event.preventDefault();
+            chip.setAttribute('data-open', '');
+            openChip = chip;
+            place(chip);
+          });
         })();
       </script>
     </section>
 
     <!-- Experience -->
-    <section id="experience" class="bento-reveal">
+    <section id="experience">
       <h2 class="mb-6 text-2xl font-bold">Experience</h2>
       <div class="space-y-6">
         {experiences.map((exp) => (
@@ -394,7 +261,7 @@ const skillGroups = skillGroupDefs
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="font-medium">{pos.designation}</span>
                     <span class="text-sm text-gray-500 dark:text-gray-400">
-                      {pos.start} - {pos.end || 'Present'}
+                      {pos.start} – {pos.end || 'Present'}
                     </span>
                   </div>
                   <ul class="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-400">
@@ -413,8 +280,34 @@ const skillGroups = skillGroupDefs
       </div>
     </section>
 
+    <!-- Projects -->
+    <section id="projects">
+      <h2 class="mb-6 text-2xl font-bold">Projects</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {projects.map((project) => (
+          <div class="flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
+            <h3 class="font-semibold">{project.name}</h3>
+            <p class="mt-2 text-sm text-gray-600">{project.overview}</p>
+            <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Tech stack">
+              {project.stack.map((tech) => (
+                <li class="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">{tech}</li>
+              ))}
+            </ul>
+            {project.demo && (
+              <p class="mt-auto pt-4 text-sm text-gray-500">
+                <a href={project.demo} target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-medium text-accent-600 hover:underline">
+                  Live demo
+                  <ArrowUpRight class="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- Certifications -->
-    <section id="certifications" class="bento-reveal">
+    <section id="certifications">
       <h2 class="mb-6 text-2xl font-bold">Certifications</h2>
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {certifications.map((cert) => (
@@ -424,8 +317,11 @@ const skillGroups = skillGroupDefs
                 {cert.name}
               </a>
             </h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {cert.organization} &middot; {cert.timeline}
+            <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+              <span>{cert.organization} &middot; {cert.timeline}</span>
+              {cert.expired && (
+                <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">Expired</span>
+              )}
             </p>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
               {cert.overview}
@@ -435,8 +331,30 @@ const skillGroups = skillGroupDefs
       </div>
     </section>
 
+    <!-- Training & Courses -->
+    <section id="training">
+      <h2 class="mb-6 text-2xl font-bold">Training &amp; Courses</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {trainings.map((course) => (
+          <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
+            <h3 class="font-semibold">
+              <a href={course.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">
+                {course.name}
+              </a>
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+              {course.organization} &middot; {course.timeline}
+            </p>
+            <p class="mt-2 text-sm text-gray-600">
+              {course.overview}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- Presentations -->
-    <section id="presentations" class="bento-reveal">
+    <section id="presentations">
       <h2 class="mb-6 text-2xl font-bold">Presentations</h2>
       <div class="space-y-4">
         {presentations.map((talk) => (
@@ -448,7 +366,7 @@ const skillGroups = skillGroupDefs
                   <a href={talk.meetupUrl} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
                     {talk.meetup}
                   </a>
-                  &middot; {talk.date}
+                  {' '}&middot; {talk.date}
                 </p>
               </div>
               <div class="flex flex-wrap gap-2 shrink-0">
@@ -472,39 +390,3 @@ const skillGroups = skillGroupDefs
 
   </div>
 </BaseLayout>
-
-<style>
-  .bento-reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .bento-reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .bento-reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
-</style>
-
-<script>
-  const sections = document.querySelectorAll('.bento-reveal');
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-  sections.forEach((s) => observer.observe(s));
-</script>

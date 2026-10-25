@@ -1,18 +1,19 @@
 import type { APIRoute } from 'astro';
-import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
+import { author, experiences, presentations } from '../data/portfolio';
 import {
   education,
   languages,
   publications,
-  additionalSkills,
+  skillGroups,
+  credentials,
   inlineRunsToMarkdown,
 } from '../data/cv';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [
     '---',
-    `title: "CV - ${author.name}"`,
-    `description: ${JSON.stringify(`Curriculum vitae of ${author.name} - ${author.designation}.`)}`,
+    `title: "CV – ${author.name}"`,
+    `description: ${JSON.stringify(`Curriculum vitae of ${author.name} – ${author.designation}.`)}`,
     'canonical: https://mjasion.pl/cv/',
     '---',
     '',
@@ -35,7 +36,7 @@ export const GET: APIRoute = () => {
   ];
 
   for (const exp of experiences) {
-    lines.push(`### [${exp.company}](${exp.url}) - ${exp.location}`, '', exp.overview, '');
+    lines.push(`### [${exp.company}](${exp.url}) – ${exp.location}`, '', exp.overview, '');
     for (const pos of exp.positions) {
       lines.push(`**${pos.designation}** (${pos.start} – ${pos.end ?? 'Present'})`, '');
       for (const r of pos.responsibilities) {
@@ -46,35 +47,35 @@ export const GET: APIRoute = () => {
   }
 
   lines.push('## Skills', '');
-  for (const skill of skills) {
-    lines.push(`- **${skill.name}** - ${skill.summary}`);
+  for (const group of skillGroups) {
+    lines.push(`- **${group.label}:** ${group.items.join(', ')}`);
   }
-  lines.push(`- ${additionalSkills.map((s) => `**${s}**`).join(', ')}`, '');
+  lines.push('');
 
-  lines.push('## Certifications', '');
-  for (const cert of certifications) {
-    lines.push(`- [${cert.name}](${cert.certificateUrl}) - ${cert.organization} · ${cert.timeline}`);
+  lines.push('## Certifications & Training', '');
+  for (const cert of credentials) {
+    lines.push(`- [${cert.name}](${cert.url}) – ${cert.organization} · ${cert.timeline}`);
   }
   lines.push('');
 
   lines.push('## Talks & Publications', '');
   for (const talk of presentations) {
-    lines.push(`- ${talk.name} - ${talk.meetup} · ${talk.date}`);
+    lines.push(`- ${talk.name} – ${talk.meetup} · ${talk.date}`);
   }
   for (const pub of publications) {
-    lines.push(`- [${pub.title}](${pub.url}) - open-source contribution`);
+    lines.push(`- [${pub.title}](${pub.url}) – open-source contribution · ${pub.year}`);
   }
   lines.push('');
 
   lines.push('## Education', '');
   for (const ed of education) {
-    lines.push(`- ${ed.degree} - ${ed.school} (${ed.years})`);
+    lines.push(`- ${ed.degree} – ${ed.school} (${ed.years})`);
   }
   lines.push('');
 
   lines.push('## Languages', '');
   for (const lang of languages) {
-    lines.push(`- ${lang.name} - ${lang.level}`);
+    lines.push(`- ${lang.name} – ${lang.level}`);
   }
   lines.push('');
 

@@ -1,12 +1,13 @@
 import type { APIRoute } from 'astro';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { author, skills, experiences, certifications, presentations } from '../data/portfolio';
+import { author, experiences, presentations } from '../data/portfolio';
 import {
   education,
   languages,
   publications,
-  additionalSkills,
+  skillGroups,
+  credentials,
   parseInlineLinks,
 } from '../data/cv';
 
@@ -28,8 +29,6 @@ const GRAY_700 = '#374151';
 const GRAY_600 = '#4B5563';
 const GRAY_500 = '#6B7280';
 const GRAY_200 = '#E5E7EB';
-const GRAY_100 = '#F3F4F6';
-const GRAY_800 = '#1F2937';
 
 // A4 (595.28pt) minus 14mm (~40pt) margins on both sides.
 const CONTENT_WIDTH = 515;
@@ -196,7 +195,7 @@ function buildDocDefinition(): Record<string, unknown> {
           // designation (print:text-[12px] medium) <-> dates (text-xs gray-500), print:mt-1.5
           splitRow(
             { text: pos.designation, font: 'InterMedium', fontSize: 9, color: GRAY_900 },
-            { text: `${pos.start} - ${pos.end ?? 'Present'}`, fontSize: 9, color: GRAY_500 },
+            { text: `${pos.start} – ${pos.end ?? 'Present'}`, fontSize: 9, color: GRAY_500 },
             4.5,
           ),
           // bullets - print:text-[10.5px] gray-700, dot print:bg-gray-600, mt-1 + space-y-0.5
@@ -215,36 +214,34 @@ function buildDocDefinition(): Record<string, unknown> {
     });
   }
 
-  // Skills - chip list (bg-gray-100, text gray-800, print:text-[10.5px]), mt-2.
-  const chipNames = [...skills.map((s) => s.name), ...additionalSkills];
+  // Skills - labelled lines (label medium gray-900, items gray-700), space-y-1.
   content.push({
     unbreakable: true,
     stack: [
       sectionHeading('Skills'),
-      {
-        // NBSP padding keeps each chip unbroken and extends its background sideways.
-        text: chipNames.flatMap((name, i) => [
-          ...(i > 0 ? ['   '] : []),
-          { text: ` ${name.replace(/ /g, ' ')} `, background: GRAY_100, color: GRAY_800 },
-        ]),
+      ...skillGroups.map((group) => ({
+        text: [
+          { text: `${group.label}: `, font: 'InterMedium', color: GRAY_900 },
+          group.items.join(', '),
+        ],
         fontSize: 7.9,
-        lineHeight: 1.8,
-        margin: [0, 6, 0, 0],
-      },
+        color: GRAY_700,
+        margin: [0, 3, 0, 0],
+      })),
     ],
   });
 
-  // Certifications - name (medium, link) - org, timeline right; space-y-1.
+  // Certifications & Training - name (medium, link) - org, timeline right; space-y-1.
   content.push({
     unbreakable: true,
     stack: [
-      sectionHeading('Certifications'),
-      ...certifications.map((cert) =>
+      sectionHeading('Certifications & Training'),
+      ...credentials.map((cert) =>
         splitRow(
           {
             text: [
-              { text: cert.name, font: 'InterMedium', link: cert.certificateUrl },
-              { text: ` - ${cert.organization}`, color: GRAY_500 },
+              { text: cert.name, font: 'InterMedium', link: cert.url },
+              { text: ` – ${cert.organization}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -266,7 +263,7 @@ function buildDocDefinition(): Record<string, unknown> {
           {
             text: [
               { text: talk.name, font: 'InterMedium' },
-              { text: ` - ${talk.meetup}`, color: GRAY_500 },
+              { text: ` – ${talk.meetup}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -275,15 +272,20 @@ function buildDocDefinition(): Record<string, unknown> {
           3,
         ),
       ),
-      ...publications.map((pub) => ({
-        text: [
-          { text: pub.title, font: 'InterMedium', link: pub.url },
-          { text: ' - open-source contribution', color: GRAY_500 },
-        ],
-        fontSize: 7.9,
-        color: GRAY_700,
-        margin: [0, 3, 0, 0],
-      })),
+      ...publications.map((pub) =>
+        splitRow(
+          {
+            text: [
+              { text: pub.title, font: 'InterMedium', link: pub.url },
+              { text: ' – open-source contribution', color: GRAY_500 },
+            ],
+            fontSize: 7.9,
+            color: GRAY_700,
+          },
+          { text: pub.year, fontSize: 7.9, color: GRAY_500 },
+          3,
+        ),
+      ),
     ],
   });
 
@@ -310,7 +312,7 @@ function buildDocDefinition(): Record<string, unknown> {
           ...languages.map((lang) => ({
             text: [
               { text: lang.name, font: 'InterMedium' },
-              { text: ` - ${lang.level}`, color: GRAY_500 },
+              { text: ` – ${lang.level}`, color: GRAY_500 },
             ],
             fontSize: 7.9,
             color: GRAY_700,
@@ -328,7 +330,7 @@ function buildDocDefinition(): Record<string, unknown> {
     pageSize: 'A4',
     pageMargins: [40, 40, 40, 40],
     info: {
-      title: `CV - ${author.name}`,
+      title: `CV – ${author.name}`,
       author: author.name,
       subject: author.designation,
       creator: 'mjasion.pl',

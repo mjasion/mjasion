@@ -1,6 +1,24 @@
 // CV-only data and helpers shared by the three CV representations:
 // /cv/ (page), /cv.md (markdown endpoint), /cv.pdf (PDF endpoint).
 // Portfolio-wide data (author, skills, experiences, ...) stays in portfolio.ts.
+import { certifications, trainings } from './portfolio';
+
+// The CV lists certifications and training courses together in one section;
+// /about keeps them as separate sections.
+export const credentials = [
+  ...certifications.map((cert) => ({
+    name: cert.name,
+    url: cert.certificateUrl,
+    organization: cert.organization,
+    timeline: cert.expired ? `${cert.timeline} (expired)` : cert.timeline,
+  })),
+  ...trainings.map((course) => ({
+    name: course.name,
+    url: course.url,
+    organization: course.organization,
+    timeline: course.timeline,
+  })),
+];
 
 export const education = [
   {
@@ -17,18 +35,39 @@ export const education = [
 
 export const languages = [
   { name: 'Polish', level: 'Native' },
-  { name: 'English', level: 'Professional working' },
+  { name: 'English', level: 'Full professional' },
 ];
 
 export const publications = [
   {
     title: 'DNS query metrics plugin for Telegraf',
-    url: 'https://github.com/influxdata/telegraf/tree/master/plugins/inputs/dns_query',
+    year: '2016',
+    url: 'https://github.com/influxdata/telegraf/pull/694',
   },
 ];
 
-// Skills listed on the CV in addition to the portfolio skill cards.
-export const additionalSkills = ['Terraform', 'Helm', 'Prometheus / Grafana'];
+// The CV lists skills as labelled lines (in the /about card order) rather than
+// the /about cards, so it can name tools without a card there (Helm, GitHub
+// Actions) and add context.
+export const skillGroups = [
+  { label: 'Cloud', items: ['AWS', 'GCP', 'Cloudflare'] },
+  {
+    label: 'Containers & GitOps',
+    items: ['Kubernetes', 'Helm', 'Argo CD', 'Istio'],
+  },
+  { label: 'Observability', items: ['Datadog', 'Prometheus', 'Grafana'] },
+  { label: 'Programming & AI', items: ['Go', 'TypeScript', 'Java', 'Claude (Claude Code, AI agents)'] },
+  {
+    label: 'Platform & SRE',
+    items: [
+      'CI/CD (GitHub Actions, GitLab CI)',
+      'Infrastructure as Code (Terraform, GitOps)',
+      'cost optimization',
+      'SOC2/GDPR compliance',
+      'incident diagnosis',
+    ],
+  },
+];
 
 export interface InlineRun {
   text: string;
