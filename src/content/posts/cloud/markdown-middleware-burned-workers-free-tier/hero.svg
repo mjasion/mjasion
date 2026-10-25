@@ -55,6 +55,18 @@
   </g>
   <line x1="110" y1="520" x2="630" y2="520" stroke="#64748b" stroke-width="1.5"/>
 
+  <!-- Bar values (thousands of invocations, 07.10 – 14.10) -->
+  <g fill="#bfdbfe" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="146" y="473">14.5k</text>
+    <text x="190" y="438">27.3k</text>
+    <text x="234" y="414">36.3k</text>
+    <text x="278" y="466">17.1k</text>
+    <text x="322" y="470">15.6k</text>
+    <text x="366" y="331">66.9k</text>
+    <text x="454" y="450">23k</text>
+  </g>
+  <text x="410" y="228" text-anchor="middle" fill="#fdba74" font-size="14" font-weight="700">106.1k</text>
+
   <!-- Error 1027 badge -->
   <rect x="350" y="176" width="120" height="36" rx="10" fill="#7f1d1d" stroke="#f87171" stroke-width="1.5"/>
   <text x="410" y="200" text-anchor="middle" fill="#fecaca" font-size="16" font-weight="700">error 1027</text>
