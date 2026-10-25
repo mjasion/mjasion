@@ -327,8 +327,10 @@ function buildBottomBar(categoryColor: string) {
   };
 }
 
-// Home page card (/og/home.png): profile photo + name, designation, and tagline.
+// Home page card (/og/home.png): profile photo + name, topics, and tagline.
 // Post IDs always include a category segment, so 'home' never collides with a post.
+// The topics line is pinned here, so a sidebar tagline change doesn't re-render the card.
+const HOME_TOPICS = 'Observability · Kubernetes · AI agents';
 const HOME_TAGLINE = 'Practical notes on observability, Kubernetes, cloud and AI agents for operations.';
 
 function buildHomeLayout(accentColor: string) {
@@ -381,7 +383,7 @@ function buildHomeLayout(accentColor: string) {
                 type: 'div',
                 props: {
                   style: { fontSize: '34px', fontWeight: 700, color: accentColor },
-                  children: author.tagline,
+                  children: HOME_TOPICS,
                 },
               },
               {
@@ -450,7 +452,7 @@ export const GET: APIRoute = async ({ props }) => {
 
   if (home) {
     const homeColor = '#6366f1';
-    return renderCached(`home\0${author.tagline}\0${HOME_TAGLINE}\0${homeColor}`, () => buildHomeLayout(homeColor));
+    return renderCached(`home\0${HOME_TOPICS}\0${HOME_TAGLINE}\0${homeColor}`, () => buildHomeLayout(homeColor));
   }
 
   const categoryColor = categoryColorMap[category] ?? '#6366f1';

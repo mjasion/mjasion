@@ -57,13 +57,13 @@ const skillRows = skillRowDefs.map((row) =>
 );
 ---
 
-<BaseLayout title="About" description={`Senior SRE in Warsaw with ${yearsSince('2012-12')} years in tech – observability, Kubernetes, platform engineering, and AI agents that speed up incident diagnosis.`}>
+<BaseLayout title="About" imageAlt={`${author.name} – portrait`} description={`Senior SRE in Warsaw with ${yearsSince('2012-12')} years in tech – observability, Kubernetes, platform engineering, and AI agents that speed up incident diagnosis.`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: author.name,
-      jobTitle: author.designation,
+      jobTitle: author.role,
       url: 'https://mjasion.pl',
       image: `https://mjasion.pl${author.image}`,
       description: author.summary,
@@ -80,6 +80,7 @@ const skillRows = skillRowDefs.map((row) =>
     <!-- Hero / Intro -->
     <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
       <h1 class="text-3xl font-bold">About Me</h1>
+      <p class="mt-1 text-lg text-gray-600 dark:text-gray-300">{author.role}</p>
       <p class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
         {author.summary}
       </p>

@@ -123,12 +123,12 @@ function splitRow(left: Content, right: Content, topMargin: number): Content {
 function buildDocDefinition(): Record<string, unknown> {
   const content: Content[] = [];
 
-  // Header - name (print:text-2xl bold tracking-tight), designation
+  // Header - name (print:text-2xl bold tracking-tight), role
   // (print:text-base gray-600), contact row (print:text-xs gray-600, gap-x-4),
   // bottom border (gray-200, print:pb-3).
   content.push(
     { text: author.name, fontSize: 18, bold: true, color: GRAY_900, characterSpacing: -0.45 },
-    { text: author.designation, fontSize: 12, color: GRAY_600, margin: [0, 3, 0, 0] },
+    { text: author.role, fontSize: 12, color: GRAY_600, margin: [0, 3, 0, 0] },
     {
       columns: [
         { text: 'Warsaw, Poland', width: 'auto' },
@@ -332,7 +332,7 @@ function buildDocDefinition(): Record<string, unknown> {
     info: {
       title: `CV – ${author.name}`,
       author: author.name,
-      subject: author.designation,
+      subject: author.role,
       creator: 'mjasion.pl',
     },
   };

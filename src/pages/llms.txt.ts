@@ -40,7 +40,7 @@ export const GET: APIRoute = async ({ site }) => {
 
 ## About
 
-${author.name} is an engineer based in Warsaw with ${yearsSince('2012-12')} years in tech, starting as a Java developer. He works where code meets infrastructure: diagnosing incidents, closing observability gaps and making large service landscapes (1000+ services) boring to operate. Lately he builds AI agents that speed up incident diagnosis.
+Senior SRE and platform engineer in Warsaw, ${yearsSince('2012-12')} years in tech. Currently a Senior SRE consultant at NatWest Boxed, supporting 30+ engineering teams that run 1000+ services, and building an AI investigation agent for the first phase of incident analysis. Previously Senior Platform Engineer at DataChain (formerly Iterative.ai): a multi-cloud ML platform on AWS and GCP, 40% lower cloud spend, SOC2. CV: ${siteUrl}/cv/
 
 - Website: ${siteUrl}
 - GitHub: https://github.com/mjasion

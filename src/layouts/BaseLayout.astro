@@ -8,6 +8,8 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  // og:image:alt / twitter:image:alt, defaults to the title
+  imageAlt?: string;
   canonicalUrl?: string;
   articleDate?: Date;
   articleModifiedDate?: Date;
@@ -22,6 +24,7 @@ const {
   title,
   description = author.siteDescription,
   image = '/images/mjasion.jpg',
+  imageAlt,
   canonicalUrl,
   articleDate,
   articleModifiedDate,
@@ -71,7 +74,7 @@ const mdHref = Astro.url.pathname === '/'
     <meta property="og:image:width" content={ogImageSize.width} />
     <meta property="og:image:height" content={ogImageSize.height} />
     <meta property="og:image:type" content={ogImageType} />
-    <meta property="og:image:alt" content={title} />
+    <meta property="og:image:alt" content={imageAlt ?? title} />
     {articleDate && <meta property="article:published_time" content={articleDate.toISOString()} />}
     {articleModifiedDate && <meta property="article:modified_time" content={articleModifiedDate.toISOString()} />}
     {articleDate && <meta property="article:author" content="https://mjasion.pl/about/" />}
@@ -83,7 +86,7 @@ const mdHref = Astro.url.pathname === '/'
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content={title} />
+    <meta name="twitter:image:alt" content={imageAlt ?? title} />
 
     <!-- Favicon & Feeds -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
