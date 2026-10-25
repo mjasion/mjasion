@@ -79,25 +79,42 @@
   position: relative;
 }
 
+/* Lay each line out as a full-width grid row. Shiki emits each line as an
+   inline <span class="line">, so by default a line decoration only paints the
+   text run (ragged right edge) and only the font box (gaps between lines).
+   Making <code> a grid stretches every line to the full block width, covers
+   the whole line-height, and drops the newline text nodes between line spans
+   so they don't render as blank rows. */
+.astro-code > code {
+  display: grid;
+}
+
+/* Full-bleed the decoration into the pre's 1.5rem horizontal padding so the
+   colored band runs edge to edge, while keeping the code text aligned with the
+   undecorated lines (3px border + padding back up to 1.5rem). The 1.5rem must
+   match the prose <pre> horizontal padding. */
+.astro-code .line.diff.add,
+.astro-code .line.diff.remove,
+.astro-code .line.highlighted {
+  margin-inline: -1.5rem;
+  padding-left: calc(1.5rem - 3px);
+  padding-right: 1.5rem;
+  border-left: 3px solid transparent;
+}
+
 .astro-code .line.diff.add {
   background-color: rgba(16, 185, 129, 0.14);
-  border-left: 3px solid #10b981;
-  padding-left: 0.75rem;
-  margin-left: -0.75rem;
+  border-left-color: #10b981;
 }
 
 .astro-code .line.diff.remove {
   background-color: rgba(239, 68, 68, 0.14);
-  border-left: 3px solid #ef4444;
-  padding-left: 0.75rem;
-  margin-left: -0.75rem;
+  border-left-color: #ef4444;
 }
 
 .astro-code .line.highlighted {
   background-color: rgba(234, 179, 8, 0.10);
-  border-left: 3px solid #eab308;
-  padding-left: 0.75rem;
-  margin-left: -0.75rem;
+  border-left-color: #eab308;
 }
 
 .astro-code .has-focused .line:not(.focused) {

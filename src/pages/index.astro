@@ -4,9 +4,9 @@ import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 import { author } from '../data/portfolio';
+import { isVisible } from '@/utils/posts';
 
-const now = new Date();
-const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
+const posts = (await getCollection('posts', isVisible))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 // Resolve LCP hero image URL for preloading (WebP, rasterized from SVG by Sharp).

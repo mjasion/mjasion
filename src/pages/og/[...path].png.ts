@@ -7,6 +7,7 @@ import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
 import { resolve, join } from 'node:path';
 import { author } from '../../data/portfolio';
+import { isVisible } from '@/utils/posts';
 
 const require = createRequire(import.meta.url);
 
@@ -425,8 +426,7 @@ function buildHomeLayout(accentColor: string) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const now = new Date();
-  const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+  const posts = await getCollection('posts', isVisible);
   return [
     { params: { path: 'home' }, props: { home: true } },
     ...posts.map((post) => ({

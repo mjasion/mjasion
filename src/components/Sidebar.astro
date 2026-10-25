@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import profileImg from '../assets/images/mjasion.jpg';
 import { author, categoryColors } from '../data/portfolio';
 import SocialLinks from './SocialLinks.astro';
+import { isVisible } from '@/utils/posts';
 
 const pathname = Astro.url.pathname;
 
@@ -15,8 +16,7 @@ const navLinks = [
   { href: '/cv/', label: 'CV', match: (p: string) => p.startsWith('/cv') },
 ];
 
-const now = new Date();
-const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
+const posts = await getCollection('posts', isVisible);
 const categoryCounts = new Map<string, number>();
 for (const post of posts) {
   const cat = post.data.category;
