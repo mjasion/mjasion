@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
+import { author } from '../data/portfolio';
 
 const now = new Date();
 const posts = (await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now)))
@@ -27,7 +28,7 @@ if (lcpHero && typeof lcpHero !== 'string') {
 }
 ---
 
-<BaseLayout title="Marcin Jasion">
+<BaseLayout title="Marcin Jasion – Observability, Kubernetes, AI agents, Cloud" image="/og/home.png" twitterCardType="summary_large_image">
   <Fragment slot="head">
     {lcpPreloadSrc && (
       <link
@@ -42,13 +43,18 @@ if (lcpHero && typeof lcpHero !== 'string') {
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Marcin Jasion',
+      name: author.name,
       url: 'https://mjasion.pl',
-      description: 'Marcin Jasion – Senior Site Reliability Engineer. Notes on observability, Kubernetes, platform engineering, and AI agents for operations.',
+      description: author.siteDescription,
       author: {
         '@type': 'Person',
-        name: 'Marcin Jasion',
+        name: author.name,
         url: 'https://mjasion.pl',
+        knowsAbout: ['Observability', 'Kubernetes', 'Cloud infrastructure', 'AI agents', 'Platform engineering'],
+        sameAs: [
+          'https://www.github.com/mjasion',
+          'https://www.linkedin.com/in/marcinjasion',
+        ],
       },
     })} />
   </Fragment>

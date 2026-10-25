@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { author } from '../data/portfolio';
+import { author, yearsSince } from '../data/portfolio';
 
 export const GET: APIRoute = async () => {
   const now = new Date();
@@ -10,15 +10,18 @@ export const GET: APIRoute = async () => {
   const lines: string[] = [
     '---',
     `title: ${JSON.stringify(author.name)}`,
-    `description: ${JSON.stringify(author.summary)}`,
+    `description: ${JSON.stringify(author.siteDescription)}`,
     'canonical: https://mjasion.pl/',
     '---',
     '',
     `# ${author.name}`,
     '',
-    `${author.designation}.`,
+    `Engineer based in Warsaw with ${yearsSince('2012-12')} years in tech, starting as a Java developer.`,
+    'I work where code meets infrastructure: diagnosing incidents, closing observability',
+    'gaps and making large service landscapes (1000+ services) boring to operate.',
+    'Lately I build AI agents that speed up incident diagnosis.',
     '',
-    author.summary,
+    'Topics: observability, Kubernetes, cloud infrastructure, platform engineering, AI agents.',
     '',
     '## Links',
     '',

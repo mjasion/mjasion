@@ -6,6 +6,7 @@ import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
 import { resolve, join } from 'node:path';
+import { author } from '../../data/portfolio';
 
 const require = createRequire(import.meta.url);
 
@@ -14,7 +15,7 @@ const require = createRequire(import.meta.url);
 // of build time. The output is a pure function of the rendering inputs, so we
 // cache by hash and skip all rendering on a hit. Bump CACHE_VERSION whenever the
 // layout, fonts, or profile photo change (inputs not captured by the per-post hash).
-const CACHE_VERSION = '1';
+const CACHE_VERSION = '2';
 // Lives under Astro's cache dir (node_modules/.astro) so it persists locally and
 // rides along with the same cache Astro uses for optimized images.
 const OG_CACHE_DIR = resolve(process.cwd(), 'node_modules/.astro/og-cache');
@@ -326,36 +327,151 @@ function buildBottomBar(categoryColor: string) {
   };
 }
 
+// Home page card (/og/home.png): profile photo + name, designation, and tagline.
+// Post IDs always include a category segment, so 'home' never collides with a post.
+const HOME_TAGLINE = 'Practical notes on observability, Kubernetes, cloud and AI agents for operations.';
+
+function buildHomeLayout(accentColor: string) {
+  return {
+    type: 'div',
+    props: {
+      style: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '60px',
+        padding: '0 80px',
+        fontFamily: 'Inter',
+        background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} 8%, white 30%)`,
+      },
+      children: [
+        {
+          type: 'img',
+          props: {
+            src: profilePhotoBase64,
+            style: {
+              width: '340px',
+              height: '340px',
+              borderRadius: '50%',
+              border: '8px solid white',
+              flexShrink: 0,
+            },
+          },
+        },
+        {
+          type: 'div',
+          props: {
+            style: {
+              // 1200 - 2 * 80 padding - 340 photo - 60 gap; satori won't wrap text in a flex: 1 column
+              width: '640px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+            },
+            children: [
+              {
+                type: 'div',
+                props: {
+                  style: { fontSize: '72px', fontWeight: 700, color: '#0f172a', lineHeight: 1.1 },
+                  children: 'Marcin Jasion',
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: { fontSize: '34px', fontWeight: 700, color: accentColor },
+                  children: author.tagline,
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: { fontSize: '28px', color: '#475569', lineHeight: 1.4 },
+                  children: HOME_TAGLINE,
+                },
+              },
+              {
+                type: 'div',
+                props: {
+                  style: { display: 'flex', marginTop: '12px' },
+                  children: [
+                    {
+                      type: 'span',
+                      props: {
+                        style: {
+                          color: accentColor,
+                          background: `${accentColor}15`,
+                          border: `2px solid ${accentColor}40`,
+                          padding: '10px 24px',
+                          borderRadius: '9999px',
+                          fontSize: '22px',
+                          fontWeight: 700,
+                        },
+                        children: 'mjasion.pl',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
+}
+
 export const getStaticPaths: GetStaticPaths = async () => {
   const now = new Date();
   const posts = await getCollection('posts', ({ data }) => !data.draft && (!import.meta.env.PROD || data.date <= now));
-  return posts.map((post) => ({
-    params: { path: post.id },
-    props: {
-      title: post.data.title,
-      category: post.data.category,
-      hasHero: !!post.data.hero,
-      postId: post.id,
-    },
-  }));
+  return [
+    { params: { path: 'home' }, props: { home: true } },
+    ...posts.map((post) => ({
+      params: { path: post.id },
+      props: {
+        title: post.data.title,
+        category: post.data.category,
+        hasHero: !!post.data.hero,
+        postId: post.id,
+      },
+    })),
+  ];
 };
 
 export const GET: APIRoute = async ({ props }) => {
-  const { title, category, hasHero, postId } = props as {
+  const { home, title, category, hasHero, postId } = props as {
+    home?: boolean;
     title: string;
     category: string;
     hasHero: boolean;
     postId: string;
   };
+
+  if (home) {
+    const homeColor = '#6366f1';
+    return renderCached(`home\0${author.tagline}\0${HOME_TAGLINE}\0${homeColor}`, () => buildHomeLayout(homeColor));
+  }
+
   const categoryColor = categoryColorMap[category] ?? '#6366f1';
   const sanitizedTitle = title.replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, '').trim();
 
   const heroSvg = hasHero ? readHeroSvg(postId) : null;
 
   // Cache key covers every per-post input that affects the rendered pixels.
-  // Profile photo and fonts are global — invalidate those via CACHE_VERSION.
+  return renderCached(`${sanitizedTitle}\0${category}\0${heroSvg ?? ''}`, () => {
+    const heroDataUri = heroSvg ? renderHeroToDataUri(heroSvg) : null;
+    return heroDataUri
+      ? buildHeroLayout(heroDataUri, sanitizedTitle, category, categoryColor)
+      : buildTextOnlyLayout(sanitizedTitle, category, categoryColor);
+  });
+};
+
+// Renders a satori layout to a 1200x630 PNG, going through the disk cache.
+// Profile photo and fonts are global — invalidate those via CACHE_VERSION.
+async function renderCached(cacheInput: string, buildLayout: () => object): Promise<Response> {
   const cacheKey = createHash('sha256')
-    .update(`${CACHE_VERSION}\0${sanitizedTitle}\0${category}\0${heroSvg ?? ''}`)
+    .update(`${CACHE_VERSION}\0${cacheInput}`)
     .digest('hex');
   const cachePath = join(OG_CACHE_DIR, `${cacheKey}.png`);
 
@@ -367,11 +483,7 @@ export const GET: APIRoute = async ({ props }) => {
     }
   }
 
-  const heroDataUri = heroSvg ? renderHeroToDataUri(heroSvg) : null;
-
-  const layout = heroDataUri
-    ? buildHeroLayout(heroDataUri, sanitizedTitle, category, categoryColor)
-    : buildTextOnlyLayout(sanitizedTitle, category, categoryColor);
+  const layout = buildLayout();
 
   const svg = await satori(layout, {
     width: 1200,
@@ -404,7 +516,7 @@ export const GET: APIRoute = async ({ props }) => {
   }
 
   return pngResponse(pngBuffer);
-};
+}
 
 function pngResponse(pngBuffer: Buffer): Response {
   return new Response(new Uint8Array(pngBuffer), {

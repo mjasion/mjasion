@@ -27,10 +27,15 @@ export const author = {
   name: 'Marcin Jasion',
   nickname: 'Marcin',
   designation: 'Senior Site Reliability Engineer',
+  // Sidebar caption under the avatar – topics, not a job title
+  tagline: 'Observability · Kubernetes · AI agents',
+  // Home page meta description, JSON-LD and the markdown twin
+  siteDescription:
+    'Practical notes on observability, Kubernetes, cloud and AI agents for operations – lessons from running 1000+ services in production.',
   email: 'hello@mjasion.pl',
   image: '/images/mjasion.jpg',
   summaryShort:
-    'Senior SRE. I work where code meets infrastructure – diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
+    'I work where code meets infrastructure – diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
   summary: `Senior Site Reliability Engineer based in Warsaw. I work where code meets infrastructure – diagnosing incidents, fixing the observability gaps that hide them, and shipping the boring-but-important changes that prevent the next outage. Currently helping 30+ engineering teams operate a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – and building AI agents that speed up incident diagnosis. ${yearsSince('2012-12')} years in tech: started as a Java developer, found my home in the messy middle where applications meet production.`,
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
