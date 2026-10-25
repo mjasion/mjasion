@@ -16,42 +16,48 @@ const sections = [
     icon: Briefcase,
     tone: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
     iconAnim: 'group-hover:-rotate-6 group-hover:scale-110',
-    body: `Senior SRE consultant at NatWest Boxed in Warsaw. Supporting 30+ engineering teams operating a system of 1000+ services. Beyond observability, I'm building agents for incident handling and streamlining the resolution process - <a href="https://www.anthropic.com/claude" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude</a> is my main model and agent here, and across most of my day-to-day work. Teams are organised using <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Team Topologies</a> - mine is an enabling team, so it cuts across many different stream-aligned squads.`,
+    body: `Senior SRE consultant at NatWest Boxed, working in an enabling team for 30+ squads that run 1000+ services. Right now:`,
+    bullets: [
+      `an investigation agent that pulls Datadog logs, traces, and metrics together with Confluence docs and GitHub code to speed up the first phase of incident analysis`,
+      `extending a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services`,
+      `observability audits that make services easier to debug`,
+    ],
+    outro: `<a href="https://www.anthropic.com/claude" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude</a> is my main model and agent here and across most of my day-to-day work.`,
   },
   {
     heading: 'Learning',
     icon: Sparkles,
     tone: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
     iconAnim: 'group-hover:rotate-12 group-hover:scale-125',
-    body: `Currently playing with LLM-driven incident triage - can a model usefully pre-summarise an alert before a human looks at it?`,
+    body: `Currently playing with LLM-driven incident triage – can a model usefully pre-summarise an alert before a human looks at it?`,
   },
   {
     heading: 'Building',
     icon: Hammer,
     tone: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
     iconAnim: 'origin-bottom-left group-hover:-rotate-12',
-    body: `Slowly refreshing this blog - new About, new CV, this page - mostly programmed with <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude Code</a>. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family.`,
+    body: `Slowly refreshing this blog – new About, new CV, this page – mostly programmed with <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude Code</a>. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family. Both expose their own MCP server, so I can query and update them straight from Claude.`,
   },
   {
     heading: 'Sport',
     icon: Dumbbell,
     tone: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
     iconAnim: 'group-hover:-translate-y-0.5 group-hover:rotate-12',
-    body: `After two Hyrox finishes - solo in '25 and doubles in '26 here in Warsaw - I'm dialling CrossFit intensity back up and chasing a first strict muscle-up. Also putting more miles on the bike through 2026.`,
+    body: `After two Hyrox finishes – solo in '25 and doubles in '26 here in Warsaw – I'm dialling CrossFit intensity back up and chasing a first strict muscle-up. Also putting more miles on the bike through 2026.`,
   },
   {
     heading: 'Reading',
     icon: Headphones,
     tone: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
     iconAnim: 'group-hover:scale-110 group-hover:-translate-y-0.5',
-    body: `Reading and listening to John Eldredge's "Wild at Heart" ("Dzikie serce. Tęsknoty męskiej duszy" in Polish), switching between the book and the audiobook. Also working through "Observability Engineering" (Majors, Fong-Jones, Miranda) again - it lands differently when the system you operate has four digits of services. Also started on audiobooks - Terry Hayes' "I Am Pilgrim" and working through Jo Nesbø's catalogue.`,
+    body: `Re-reading "Observability Engineering" (Majors, Fong-Jones, Miranda) – it lands differently when the system you operate has four digits of services. Switching between the book and audiobook of John Eldredge's "Wild at Heart" ("Dzikie serce. Tęsknoty męskiej duszy" in Polish). For fiction it's audiobooks: Terry Hayes' "I Am Pilgrim" and working through Jo Nesbø's catalogue.`,
   },
 ];
 ---
 
 <BaseLayout
   title="Now"
-  description={`What ${author.name} is focused on right now - work, learning, and side projects.`}
+  description={`What ${author.name} is focused on right now – work, learning, and side projects.`}
 >
   <Fragment slot="head">
     <link rel="canonical" href="https://mjasion.pl/now/" />
@@ -68,7 +74,7 @@ const sections = [
         <h1 class="text-3xl font-bold tracking-tight">Now</h1>
       </div>
       <p class="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">
-        A snapshot of what I'm focused on right now - inspired by Derek Sivers' <a href="https://nownownow.com/about" class="text-accent-600 dark:text-accent-400 hover:underline">/now</a> page idea.
+        A snapshot of what I'm focused on right now – inspired by Derek Sivers' <a href="https://nownownow.com/about" class="text-accent-600 dark:text-accent-400 hover:underline">/now</a> page idea.
       </p>
       <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
         Last updated <time datetime={lastUpdated.toISOString()}>{formatDate(lastUpdated)}</time>
@@ -85,6 +91,12 @@ const sections = [
           <h2 class="text-lg font-semibold">{s.heading}</h2>
         </div>
         <p class="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed" set:html={s.body}></p>
+        {s.bullets && (
+          <ul class="mt-2 list-disc space-y-1 pl-5 text-gray-600 dark:text-gray-300 leading-relaxed marker:text-gray-400">
+            {s.bullets.map((b) => <li set:html={b} />)}
+          </ul>
+        )}
+        {s.outro && <p class="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed" set:html={s.outro}></p>}
       </section>
     ))}
 
@@ -92,7 +104,7 @@ const sections = [
     <section class="group rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-6 text-sm text-gray-500 dark:text-gray-400">
       <div class="flex items-start gap-3">
         <MessageCircle class={`h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5 ${iconBaseAnim} group-hover:scale-110 group-hover:text-accent-500`} />
-        <p>Want to compare notes on incident response, observability, or running large fleets? <a href="/about/" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
+        <p>Want to compare notes on observability, AI agents for operations, or building on Cloudflare? <a href="/about/" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
       </div>
     </section>
   </div>

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { author, skills, srePractices, experiences, certifications, trainings, presentations } from '../data/portfolio';
+import { author, skills, srePractices, platformPractices, experiences, projects, certifications, trainings, presentations } from '../data/portfolio';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [
@@ -32,8 +32,8 @@ export const GET: APIRoute = () => {
     lines.push(`- **${link}** – ${skill.summary}`);
   }
 
-  lines.push('', '### SRE Practices', '');
-  for (const practice of srePractices) {
+  lines.push('', '### Platform & SRE', '');
+  for (const practice of [...platformPractices, ...srePractices]) {
     lines.push(`- **${practice.name}** – ${practice.summary}`);
   }
 
@@ -46,6 +46,14 @@ export const GET: APIRoute = () => {
         lines.push(`- ${r}`);
       }
       lines.push('');
+    }
+  }
+
+  lines.push('## Projects', '');
+  for (const project of projects) {
+    lines.push(`### ${project.name}`, '', project.overview, '', `Stack: ${project.stack.join(', ')}`, '');
+    if (project.demo) {
+      lines.push(`[Live demo](${project.demo})`, '');
     }
   }
 

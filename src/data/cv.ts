@@ -1,7 +1,7 @@
 // CV-only data and helpers shared by the three CV representations:
 // /cv/ (page), /cv.md (markdown endpoint), /cv.pdf (PDF endpoint).
 // Portfolio-wide data (author, skills, experiences, ...) stays in portfolio.ts.
-import { certifications, trainings, srePractices } from './portfolio';
+import { certifications, trainings } from './portfolio';
 
 // The CV lists certifications and training courses together in one section;
 // /about keeps them as separate sections.
@@ -46,18 +46,27 @@ export const publications = [
   },
 ];
 
-// The CV lists skills as labelled lines rather than the /about cards, so it can
-// name tools without a card there (Helm, GitHub Actions) and add context.
+// The CV lists skills as labelled lines (in the /about card order) rather than
+// the /about cards, so it can name tools without a card there (Helm, GitHub
+// Actions) and add context.
 export const skillGroups = [
+  { label: 'Cloud', items: ['AWS', 'GCP', 'Cloudflare'] },
   {
     label: 'Containers & GitOps',
-    items: ['Kubernetes', 'Helm', 'Argo CD', 'Argo Rollouts', 'Kyverno', 'Istio'],
+    items: ['Kubernetes', 'Helm', 'Argo CD', 'Istio'],
   },
-  { label: 'Cloud', items: ['AWS', 'GCP', 'Cloudflare'] },
   { label: 'Observability', items: ['Datadog', 'Prometheus', 'Grafana'] },
-  { label: 'SRE practices', items: srePractices.map((practice) => practice.name) },
-  { label: 'Programming', items: ['Go', 'TypeScript', 'Java'] },
-  { label: 'AI & tools', items: ['Claude (Claude Code, AI agents)', 'GitHub Actions'] },
+  { label: 'Programming & AI', items: ['Go', 'TypeScript', 'Java', 'Claude (Claude Code, AI agents)'] },
+  {
+    label: 'Platform & SRE',
+    items: [
+      'CI/CD (GitHub Actions, GitLab CI)',
+      'Infrastructure as Code (Terraform, GitOps)',
+      'cost optimization',
+      'SOC2/GDPR compliance',
+      'incident diagnosis',
+    ],
+  },
 ];
 
 export interface InlineRun {

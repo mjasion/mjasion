@@ -119,7 +119,7 @@ export const skills = [
     name: 'Datadog',
     logo: '/images/sections/skills/datadog.svg',
     summary:
-      'Daily driver for observability across 1000+ services – dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident response.',
+      'Daily driver for observability across 1000+ services – dashboards, monitors, SLOs and error budgets, APM traces, and log pipelines for incident diagnosis.',
     categories: ['observability', 'tools'],
     url: 'https://www.datadoghq.com/',
   },
@@ -147,31 +147,9 @@ export const skills = [
     categories: ['container', 'tools'],
     url: 'https://argo-cd.readthedocs.io/',
   },
-  {
-    name: 'Argo Rollouts',
-    logo: '/images/sections/skills/argocd.svg',
-    summary:
-      'Progressive delivery for Kubernetes – canary and blue-green deployments with automated promotion and rollback.',
-    categories: ['container', 'tools'],
-    url: 'https://argoproj.github.io/rollouts/',
-  },
-  {
-    name: 'Kyverno',
-    logo: '/images/sections/skills/kyverno.svg',
-    summary:
-      'Policy-as-code for Kubernetes – validating and mutating resources to enforce security and platform guardrails across clusters.',
-    categories: ['container'],
-    url: 'https://kyverno.io/',
-  },
-  {
-    name: 'GitHub',
-    logo: '/images/sections/skills/github.svg',
-    summary: `${yearsSince('2017-01')}+ years using GitHub for collaboration, code management, and CI/CD with GitHub Actions.`,
-    categories: ['tools'],
-  },
 ];
 
-// SRE practices shown as their own Skills card on /about. Kept out of `skills`
+// SRE practices shown in the Platform & SRE Skills card on /about. Kept out of `skills`
 // so the CV's technology chips stay tool names only. `icon` is a Lucide icon
 // name mapped to a component in about.astro.
 export const srePractices = [
@@ -181,17 +159,35 @@ export const srePractices = [
     summary:
       'Helping 30+ teams find root causes faster: correlating logs, traces, and metrics, and turning findings into fixes that prevent repeats.',
   },
+];
+
+// Platform & DevOps practices, listed before the SRE practices in the Platform &
+// SRE Skills card on /about (same shape: `icon` is a Lucide icon name mapped in
+// about.astro).
+export const platformPractices = [
   {
-    name: 'Observability audits',
-    icon: 'clipboard-check',
+    name: 'CI/CD pipelines',
+    icon: 'workflow',
     summary:
-      'Reviewing services for logging, tracing, and metrics gaps, and rolling out practices that make production issues faster to debug.',
+      'Designing delivery pipelines with GitHub Actions and GitLab CI – including one that cut feature delivery time by 50%.',
   },
   {
-    name: 'Team Topologies',
-    icon: 'users',
+    name: 'Infrastructure as Code',
+    icon: 'file-code',
     summary:
-      'Working as an enabling team: spreading SRE practices to stream-aligned squads instead of owning their operations.',
+      'Keeping infrastructure declarative with GitOps and Terraform, so environments can be rebuilt for disaster recovery.',
+  },
+  {
+    name: 'Cost optimization',
+    icon: 'piggy-bank',
+    summary:
+      'Reviewing system designs for waste – a 40% cut in cloud spend on a multi-cloud ML platform.',
+  },
+  {
+    name: 'Security & compliance',
+    icon: 'shield-check',
+    summary:
+      'Engineering work behind SOC2 and GDPR: encrypted service-to-service traffic (mTLS) and auditable, declarative deployments.',
   },
 ];
 
@@ -222,11 +218,11 @@ export const experiences: Experience[] = [
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Built an investigation agent that supports the first phase of incident analysis – combining Datadog logs, traces, and metrics with relevant Confluence documentation and GitHub code',
-          'Developed a journey monitoring service that tracks end-to-end duration and success rate of business journeys across an asynchronous, Kafka-based architecture',
-          'Run observability audits of services and roll out best practices that shorten time-to-detect and time-to-diagnose',
+          'Built an AI investigation agent that pulls data from multiple sources (Datadog, Confluence, GitHub) to support the first phase of incident analysis',
+          'Reduced alert volume by 10–50% per team by removing duplicate alerts and switching off monitors nobody acted on',
+          'Extended a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services',
+          'Run service audits covering logging, scaling, trace context propagation, and adoption of journey monitors',
           'Support 30+ engineering teams resolving production incidents across a system of 1000+ services',
-          'Act as an enabling team in a <a href="https://martinfowler.com/bliki/TeamTopologies.html" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent-600">Team Topologies</a> setup – bridging stream-aligned squads with shared SRE practice',
         ],
       },
     ],
@@ -269,7 +265,7 @@ export const experiences: Experience[] = [
         end: 'Apr 2022',
         responsibilities: [
           'Led migrations of 3 systems (40 microservices) to make infrastructure GDPR compliant',
-          'Designed architecture and migration process from on-premise to cloud',
+          'Designed architecture and migration process from on-premise to AWS',
           'Delivered automation of cloud infrastructure (K8s, Istio Service Mesh, observability, CD pipelines)',
           'Supported other teams in solving AWS, Kubernetes, and networking issues',
           'Mentored teammates on infrastructure code quality and design',
@@ -290,9 +286,9 @@ export const experiences: Experience[] = [
         start: 'Jan 2020',
         end: 'Jul 2020',
         responsibilities: [
-          'Kept online services and infrastructure running in good health',
-          'Ensured infrastructure security against unauthorized access and interruptions',
-          'Educated engineers on modern cloud computing standards and good practices',
+          'Introduced Istio service mesh with mutual TLS for encrypted service-to-service communication',
+          'Kept production services and infrastructure healthy during the move to Kubernetes',
+          'Educated engineers on cloud-native standards and good practices',
         ],
       },
       {
@@ -338,7 +334,7 @@ export const experiences: Experience[] = [
         start: 'Aug 2015',
         end: 'Feb 2018',
         responsibilities: [
-          'ELK Stack aggregating 50 TB of data for Play Mobile – 16 nodes, 2 TB memory',
+          'Built an ELK Stack from scratch for Play Mobile – 50 TB of data, 16 nodes, 2 TB memory',
           'Play Now – designed scalable cloud-native delivery pipelines and third-party integrations for a new mobile operator',
           'Virgin Mobile MVNO – 2 years of infrastructure maintenance and architectural improvements',
           'Migrated parts of internal infrastructure to AWS (e.g. autoscaling GitLab runners)',
@@ -372,6 +368,31 @@ export const experiences: Experience[] = [
         ],
       },
     ],
+  },
+];
+
+// Side projects shown in the Projects section on /about. Private apps carry no
+// `demo` link.
+export interface Project {
+  name: string;
+  overview: string;
+  stack: string[];
+  demo?: string;
+}
+
+export const projects: Project[] = [
+  {
+    name: 'Family portal on Cloudflare',
+    overview:
+      'Apps running entirely on Cloudflare Workers and D1: investment-return tracking with tax calculations and a meal-planning assistant. Each exposes its own MCP server, so they can be queried and updated straight from Claude.',
+    stack: ['Cloudflare Workers', 'D1', 'MCP'],
+  },
+  {
+    name: 'Student survey portal for WUM',
+    overview:
+      'Portal where students of the Medical University of Warsaw fill in multi-stage interview forms about natural medicines. Passwordless magic-link login, AES-256-GCM encryption of personal data and answers at rest, audit logging, and PDF export.',
+    stack: ['Cloudflare Workers', 'D1', 'R2', 'Hono', 'TanStack Start'],
+    demo: 'https://wum-lek-pochodzenia-naturalnego-main.mjasion.dev/',
   },
 ];
 
