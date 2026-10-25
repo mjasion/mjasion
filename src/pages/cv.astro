@@ -2,13 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
 import { Download } from '@lucide/astro';
-import { author, experiences, presentations } from '../data/portfolio';
+import { author, yearsSince, experiences, presentations } from '../data/portfolio';
 import { education, languages, publications, skillGroups, credentials } from '../data/cv';
 ---
 
 <BaseLayout
   title="CV"
-  description={`Curriculum vitae of ${author.name} – ${author.role}.`}
+  description={`CV of ${author.name} – ${author.role}: ${yearsSince('2012-12')} years in tech, Kubernetes, observability, multi-cloud (AWS, GCP), incident diagnosis and AI agents.`}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({

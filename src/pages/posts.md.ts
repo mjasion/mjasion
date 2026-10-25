@@ -20,7 +20,7 @@ export const GET: APIRoute = async () => {
   const lines: string[] = [
     '---',
     'title: "All Posts - Marcin Jasion"',
-    `description: "Browse all ${posts.length} articles by Marcin Jasion, grouped by category."`,
+    `description: "Articles on observability, Kubernetes, cloud infrastructure and AI agents for operations, grouped by topic."`,
     'canonical: https://mjasion.pl/posts/',
     '---',
     '',

@@ -5,7 +5,7 @@ export const GET: APIRoute = () => {
   const lines: string[] = [
     '---',
     `title: "Now – ${author.name}"`,
-    `description: "What ${author.name} is focused on right now – work, learning, and side projects."`,
+    `description: ${JSON.stringify("What I'm focused on right now: SRE and platform engineering work, AI agents for incident analysis, side projects on Cloudflare, and what I'm learning.")}`,
     'canonical: https://mjasion.pl/now/',
     '---',
     '',

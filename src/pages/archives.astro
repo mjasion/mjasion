@@ -16,6 +16,9 @@ for (const post of posts) {
   postsByYear.set(year, yearPosts);
 }
 
+const oldestYear = posts.at(-1)?.data.date.getFullYear();
+const description = `All posts in chronological order – Kubernetes, observability, Terraform, cloud networking and AI agents, from ${oldestYear} to today.`;
+
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
 
 const breadcrumbSchema = {
@@ -30,7 +33,7 @@ const breadcrumbSchema = {
 
 <BaseLayout
   title="Archives"
-  description="All blog posts by Marcin Jasion, organized by year"
+  description={description}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

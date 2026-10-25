@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { author, experiences, presentations } from '../data/portfolio';
+import { author, yearsSince, experiences, presentations } from '../data/portfolio';
 import {
   education,
   languages,
@@ -13,7 +13,7 @@ export const GET: APIRoute = () => {
   const lines: string[] = [
     '---',
     `title: "CV – ${author.name}"`,
-    `description: ${JSON.stringify(`Curriculum vitae of ${author.name} – ${author.role}.`)}`,
+    `description: ${JSON.stringify(`CV of ${author.name} – ${author.role}: ${yearsSince('2012-12')} years in tech, Kubernetes, observability, multi-cloud (AWS, GCP), incident diagnosis and AI agents.`)}`,
     'canonical: https://mjasion.pl/cv/',
     '---',
     '',

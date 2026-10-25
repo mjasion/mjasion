@@ -26,7 +26,7 @@ const collectionPageSchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'All Posts',
-  description: 'Browse all articles by Marcin Jasion, grouped by category',
+  description: 'Articles on observability, Kubernetes, cloud infrastructure and AI agents for operations, grouped by topic.',
   url: `${siteUrl}/posts/`,
   mainEntity: {
     '@type': 'ItemList',
@@ -42,7 +42,7 @@ const collectionPageSchema = {
 
 <BaseLayout
   title="All Posts"
-  description="Browse all articles by Marcin Jasion, grouped by category"
+  description="Articles on observability, Kubernetes, cloud infrastructure and AI agents for operations, grouped by topic."
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
