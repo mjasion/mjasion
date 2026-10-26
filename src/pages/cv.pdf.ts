@@ -8,6 +8,7 @@ import {
   publications,
   skillGroups,
   credentials,
+  emphasizeMetrics,
   parseInlineLinks,
 } from '../data/cv';
 
@@ -26,12 +27,46 @@ const require = createRequire(import.meta.url);
 // Tailwind grays used by the CV's print view.
 const GRAY_900 = '#111827';
 const GRAY_700 = '#374151';
-const GRAY_600 = '#4B5563';
 const GRAY_500 = '#6B7280';
-const GRAY_200 = '#E5E7EB';
+
+// CV palette - the --cv-* tokens in cv.astro (light values).
+const BAND_BG = '#0F172A';
+const BAND_TEXT = '#FFFFFF';
+const BAND_ROLE = '#A5B4FC';
+const BAND_MUTED = '#CBD5E1';
+const HEADING = '#0F172A';
+const ACCENT = '#4F46E5';
+const CHIP_BG = '#EEF2FF';
+const CHIP_TEXT = '#3730A3';
+const MUTED = '#64748B';
 
 // A4 (595.28pt) minus 14mm (~40pt) margins on both sides.
+const PAGE_MARGIN = 40;
 const CONTENT_WIDTH = 515;
+
+// Skill chips - page: 11px medium, 1px 7px padding, 4px radius, 14px line,
+// gap-1 between chips and rows; labels in a 120px print column, gap-3.
+const CHIP_FONT_SIZE = 8.25;
+const CHIP_PAD_X = 5.25;
+const CHIP_PAD_Y = 0.75;
+const CHIP_HEIGHT = 10.5 + 2 * CHIP_PAD_Y;
+const CHIP_GAP = 3;
+const SKILL_LABEL_WIDTH = 90;
+const SKILL_LABEL_GAP = 9;
+
+// pdfmake can't flow boxes inline, so the chips are wrapped into rows by hand.
+// Their text is measured with fontkit - the font engine pdfkit renders with,
+// reached through pdfmake's own dependency tree - from the same Inter file.
+interface Font {
+  unitsPerEm: number;
+  layout: (text: string) => { advanceWidth: number };
+}
+const fontkit = createRequire(createRequire(require.resolve('pdfmake')).resolve('pdfkit'))(
+  'fontkit',
+) as { create: (buffer: Buffer) => Font };
+const chipFont = fontkit.create(
+  readFileSync(require.resolve('@fontsource/inter/files/inter-latin-500-normal.woff')),
+);
 
 interface PdfMakeServer {
   fonts: Record<string, { normal: string; bold: string; italics: string; bolditalics: string }>;
@@ -87,25 +122,73 @@ async function loadPdfMake(): Promise<PdfMakeServer> {
   return pdfmake;
 }
 
-// Runs for a string that may embed inline HTML anchors (kept clickable).
+// Runs for a string that may embed inline HTML anchors (kept clickable) and
+// <strong> (bold, same colour).
 function textRuns(html: string): Array<string | Content> {
   return parseInlineLinks(html).map((run) =>
-    run.href ? { text: run.text, link: run.href } : run.text,
+    run.href ? { text: run.text, link: run.href } : run.strong ? { text: run.text, bold: true } : run.text,
   );
 }
 
 // Section heading - page: text-base -> print:text-xs, semibold, uppercase,
-// tracking-wide, gray-500, section print:mt-5.
+// tracking-wider, dark, after a 16x3px rounded accent bar (gap 8px); section
+// print:mt-5.
 function sectionHeading(title: string): Content {
   return {
-    text: title.toUpperCase(),
-    font: 'InterMedium',
-    bold: true,
-    fontSize: 9,
-    color: GRAY_500,
-    characterSpacing: 0.25,
+    columns: [
+      { width: 12, canvas: [{ type: 'rect', x: 0, y: 4.3, w: 12, h: 2.25, r: 1.1, color: ACCENT }] },
+      {
+        width: '*',
+        text: title.toUpperCase(),
+        font: 'InterMedium',
+        bold: true,
+        fontSize: 9,
+        color: HEADING,
+        characterSpacing: 0.45,
+      },
+    ],
+    columnGap: 6,
     margin: [0, 15, 0, 0],
   };
+}
+
+// One skill chip: a rounded background rect with the label pulled up over it.
+function chip(item: string, width: number): Content {
+  return {
+    width,
+    stack: [
+      { canvas: [{ type: 'rect', x: 0, y: 0, w: width, h: CHIP_HEIGHT, r: 3, color: CHIP_BG }] },
+      {
+        text: item,
+        font: 'InterMedium',
+        fontSize: CHIP_FONT_SIZE,
+        color: CHIP_TEXT,
+        lineHeight: 1,
+        margin: [CHIP_PAD_X, CHIP_PAD_Y - CHIP_HEIGHT + 0.2, 0, 0],
+      },
+    ],
+  };
+}
+
+// Chips wrapped into rows that fit maxWidth (page: flex-wrap gap-1).
+function chipRows(items: string[], maxWidth: number): Content[] {
+  const rows: Array<Array<{ item: string; width: number }>> = [[]];
+  let x = 0;
+  for (const item of items) {
+    const textWidth = (chipFont.layout(item).advanceWidth / chipFont.unitsPerEm) * CHIP_FONT_SIZE;
+    const width = Math.ceil(textWidth + 2 * CHIP_PAD_X);
+    if (x > 0 && x + width > maxWidth) {
+      rows.push([]);
+      x = 0;
+    }
+    rows[rows.length - 1].push({ item, width });
+    x += width + CHIP_GAP;
+  }
+  return rows.map((row, i) => ({
+    columns: row.map((c) => chip(c.item, c.width)),
+    columnGap: CHIP_GAP,
+    margin: [0, i === 0 ? 0 : CHIP_GAP, 0, 0],
+  }));
 }
 
 // left/right baseline row (page: flex justify-between).
@@ -123,36 +206,53 @@ function splitRow(left: Content, right: Content, topMargin: number): Content {
 function buildDocDefinition(): Record<string, unknown> {
   const content: Content[] = [];
 
-  // Header - name (print:text-2xl bold tracking-tight), role
-  // (print:text-base gray-600), contact row (print:text-xs gray-600, gap-x-4),
-  // bottom border (gray-200, print:pb-3).
-  content.push(
-    { text: author.name, fontSize: 18, bold: true, color: GRAY_900, characterSpacing: -0.45 },
-    { text: author.role, fontSize: 12, color: GRAY_600, margin: [0, 3, 0, 0] },
-    {
-      columns: [
-        { text: 'Warsaw, Poland', width: 'auto' },
-        { text: author.email, link: `mailto:${author.email}`, width: 'auto' },
-        { text: 'mjasion.pl', link: 'https://mjasion.pl', width: 'auto' },
-        {
-          text: 'linkedin.com/in/marcinjasion',
-          link: 'https://www.linkedin.com/in/marcinjasion',
-          width: 'auto',
-        },
-        { text: 'github.com/mjasion', link: 'https://www.github.com/mjasion', width: 'auto' },
+  // Header band - a one-cell table pulled out over the page margins so its
+  // fill bleeds to the top and side edges of page 1. Inside: name
+  // (print:text-2xl bold tracking-tight, white), role (print:text-base),
+  // contact row (print:text-xs, gap-x-4). Compact padding (~28px top, ~20px
+  // bottom) so the band doesn't cost the 2-page fit.
+  content.push({
+    table: {
+      widths: ['*'],
+      body: [
+        [
+          {
+            fillColor: BAND_BG,
+            stack: [
+              { text: author.name, fontSize: 18, bold: true, color: BAND_TEXT, characterSpacing: -0.45 },
+              { text: author.role, fontSize: 12, color: BAND_ROLE, margin: [0, 3, 0, 0] },
+              {
+                columns: [
+                  { text: 'Warsaw, Poland', width: 'auto' },
+                  { text: author.email, link: `mailto:${author.email}`, width: 'auto' },
+                  { text: 'mjasion.pl', link: 'https://mjasion.pl', width: 'auto' },
+                  {
+                    text: 'linkedin.com/in/marcinjasion',
+                    link: 'https://www.linkedin.com/in/marcinjasion',
+                    width: 'auto',
+                  },
+                  { text: 'github.com/mjasion', link: 'https://www.github.com/mjasion', width: 'auto' },
+                ],
+                columnGap: 12,
+                fontSize: 9,
+                color: BAND_MUTED,
+                margin: [0, 9, 0, 0],
+              },
+            ],
+          },
+        ],
       ],
-      columnGap: 12,
-      fontSize: 9,
-      color: GRAY_600,
-      margin: [0, 9, 0, 0],
     },
-    {
-      canvas: [
-        { type: 'line', x1: 0, y1: 0, x2: CONTENT_WIDTH, y2: 0, lineWidth: 0.75, lineColor: GRAY_200 },
-      ],
-      margin: [0, 9, 0, 0],
+    layout: {
+      hLineWidth: () => 0,
+      vLineWidth: () => 0,
+      paddingLeft: () => PAGE_MARGIN,
+      paddingRight: () => PAGE_MARGIN,
+      paddingTop: () => 21,
+      paddingBottom: () => 15,
     },
-  );
+    margin: [-PAGE_MARGIN, -PAGE_MARGIN, -PAGE_MARGIN, 0],
+  });
 
   // Summary - print:text-[11.5px] gray-700 leading-relaxed, print:mt-4.
   content.push({
@@ -180,30 +280,36 @@ function buildDocDefinition(): Record<string, unknown> {
             fontSize: 10.5,
             color: GRAY_900,
           },
-          { text: exp.location, fontSize: 9, color: GRAY_500 },
+          { text: exp.location, fontSize: 9, color: MUTED },
           0,
         ),
-        // overview - print:text-[10.5px] gray-600 leading-snug, mt-0.5
+        // overview - print:text-[10.5px] muted leading-snug, mt-0.5
         {
           text: exp.overview,
           fontSize: 7.9,
-          color: GRAY_600,
+          color: MUTED,
           lineHeight: 1.15,
           margin: [0, 1.5, 0, 0],
         },
         ...exp.positions.flatMap((pos): Content[] => [
-          // designation (print:text-[12px] medium) <-> dates (text-xs gray-500), print:mt-1.5
+          // designation (print:text-[12px] medium, accent) <-> dates (text-xs muted), print:mt-1.5
           splitRow(
-            { text: pos.designation, font: 'InterMedium', fontSize: 9, color: GRAY_900 },
-            { text: `${pos.start} – ${pos.end ?? 'Present'}`, fontSize: 9, color: GRAY_500 },
+            { text: pos.designation, font: 'InterMedium', fontSize: 9, color: ACCENT },
+            { text: `${pos.start} – ${pos.end ?? 'Present'}`, fontSize: 9, color: MUTED },
             4.5,
           ),
-          // bullets - print:text-[10.5px] gray-700, dot print:bg-gray-600, mt-1 + space-y-0.5
+          // bullets - print:text-[10.5px] gray-700, accent markers, metrics bold, mt-1 + space-y-0.5
           {
             stack: pos.responsibilities.map((r) => ({
               columns: [
-                { text: '•', width: 8, fontSize: 7.9, color: GRAY_600 },
-                { text: textRuns(r), fontSize: 7.9, color: GRAY_700, lineHeight: 1.1, width: '*' },
+                { text: '•', width: 8, fontSize: 7.9, color: ACCENT },
+                {
+                  text: textRuns(emphasizeMetrics(exp.company, r)),
+                  fontSize: 7.9,
+                  color: GRAY_700,
+                  lineHeight: 1.1,
+                  width: '*',
+                },
               ],
               margin: [0, 1.5, 0, 0],
             })),
@@ -214,18 +320,25 @@ function buildDocDefinition(): Record<string, unknown> {
     });
   }
 
-  // Skills - labelled lines (label medium gray-900, items gray-700), space-y-1.
+  // Skills - label column (medium gray-900) + wrapped chips, space-y-1.
+  const chipsWidth = CONTENT_WIDTH - SKILL_LABEL_WIDTH - SKILL_LABEL_GAP;
   content.push({
     unbreakable: true,
     stack: [
       sectionHeading('Skills'),
       ...skillGroups.map((group) => ({
-        text: [
-          { text: `${group.label}: `, font: 'InterMedium', color: GRAY_900 },
-          group.items.join(', '),
+        columns: [
+          {
+            text: group.label,
+            width: SKILL_LABEL_WIDTH,
+            font: 'InterMedium',
+            fontSize: 7.9,
+            color: GRAY_900,
+            margin: [0, 1.2, 0, 0],
+          },
+          { width: '*', stack: chipRows(group.items, chipsWidth) },
         ],
-        fontSize: 7.9,
-        color: GRAY_700,
+        columnGap: SKILL_LABEL_GAP,
         margin: [0, 3, 0, 0],
       })),
     ],
@@ -328,7 +441,7 @@ function buildDocDefinition(): Record<string, unknown> {
     content,
     defaultStyle: { font: 'Inter', fontSize: 9, color: GRAY_700, lineHeight: 1.1 },
     pageSize: 'A4',
-    pageMargins: [40, 40, 40, 40],
+    pageMargins: [PAGE_MARGIN, PAGE_MARGIN, PAGE_MARGIN, PAGE_MARGIN],
     info: {
       title: `CV – ${author.name}`,
       author: author.name,
