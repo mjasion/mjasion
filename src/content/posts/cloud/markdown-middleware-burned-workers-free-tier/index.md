@@ -16,6 +16,7 @@ On 13 October my blog used up the whole daily Workers quota of my Cloudflare acc
 The Workers free plan gives you 100,000 requests per day. The limit is **per account**, not per Worker. When you hit it, Cloudflare returns error 1027 until midnight UTC – for every Worker on the account. In my case that meant not only the blog, but also my private portal and a small app that university students use for one of their courses.
 
 ![Pages Functions invocations on mjasion.pl per UTC day, 1–25 October, against the 100k free limit](./workers-invocations.svg)
+<!-- Chart data: ./chart-data.json → workersInvocations (per-day Pages Functions vs other Workers, 1–25.10.2026, UTC). -->
 
 Pages Functions invocations on mjasion.pl went from 14.5k on 7 October to 66.9k on the 12th and **106.1k on the 13th**. Everything else on the account together stayed under 4k a day. After 14 October the bars simply stop.
 
@@ -98,11 +99,7 @@ Last 7 days before the fix: 505k requests, **410k of them to `/`**. Cache hit ra
 
 **A scanning campaign from Google Cloud (AS396982)** – 75–90% of all traffic every day. Between 12 and 14 October alone, 181 GCP addresses sent 382k requests and pulled 8.4 GB.
 
-**CERT Polska's Artemis.** From midday on 13 October a single address crawled the site, tried Cloudflare's alternative ports (`:8080`, `:2053`…), enumerated subdomains and ran harmless SQL injection probes: 22–27k requests a day, around 14% of the traffic. Noticeable, but it started after the climb had already begun.
-
-**Real crawlers** – Googlebot, Bingbot, GPTBot, ClaudeBot, Meta, Grok – were a few thousand requests each. Background noise.
-
-The per-day counts in this post come from Cloudflare's adaptive HTTP analytics. The daily rollup the dashboard shows by default reports about 10% less for the same days.
+(Per-day counts in this post come from Cloudflare's adaptive HTTP analytics; the dashboard's default daily rollup shows about 10% less.)
 
 ## Anatomy of the campaign
 
@@ -110,7 +107,6 @@ The per-day counts in this post come from Cloudflare's adaptive HTTP analytics. 
 
 | When | What happened |
 |---|---|
-| 1.10, 9.10 | Earlier, smaller waves (Netherlands and US, then Japan) – visible only in hindsight |
 | 11.10 | 36k requests from 86 GCP addresses |
 | 12.10, ~06:00 UTC | The real ramp-up: 97k requests from 96 addresses |
 | 13.10 | 153k from 114 addresses – the blog's middleware crosses 100k invocations |
@@ -122,11 +118,11 @@ The peak rate I measured was about 890 requests per minute from a single address
 
 ### Fresh cloud machines every day
 
-The addresses came from the usual Google Cloud pools (`34.x`, `35.x`, later `136.8x–11x`), spread over GCP regions in Asia, Europe and North America. The most telling detail: **the top address was different every day** (`35.221.115.223` on the 11th, `35.195.114.228` on the 12th, `34.87.51.216` on the 13th, `35.194.96.26` on the 14th). On AbuseIPDB, each one's report history started on the very day it started scanning me – dozens of reports from different site owners, nothing older. Whoever runs this gets clean, reputation-free machines daily. Blocking IPs one by one is pointless; you have to match on behaviour or on the network.
+The addresses came from the usual Google Cloud pools (`34.x`, `35.x`, later `136.8x–11x`) in Asia, Europe and North America – and **the top address was different every day**. On AbuseIPDB, each one's report history started on the very day it started scanning me, with dozens of reports from other site owners and nothing older. Whoever runs this gets clean, reputation-free machines daily, so blocking IPs one by one is pointless; you have to match on behaviour or on the network.
 
 ### One client, thirty-four names
 
-A single address, `34.87.51.216`, sent requests under **34 different User-Agents**, each about 800 times: GPTBot, ChatGPT-User, ClaudeBot, Claude-User, Googlebot, bingbot, PerplexityBot, DeepSeekBot, GrokBot, Bytespider… plus thousands of plain `Chrome/153.0.0.0` on Windows. When the Chrome variant started getting challenged, a mobile `Pixel 6` variant showed up.
+A single address, `34.87.51.216`, sent requests under **34 different User-Agents**, each about 800 times – GPTBot, ClaudeBot, Googlebot, PerplexityBot and thirty more – plus thousands of plain `Chrome/153` on Windows. When that started getting challenged, a mobile `Pixel 6` variant showed up.
 
 None of it was what it claimed to be:
 
@@ -141,14 +137,11 @@ The most likely reason for the costume: checking whether a site lets "AI bots" t
 
 Between the homepage hits – a few thousand probes on each domain:
 
-- **Secrets:** `.env` in every variant (`.env.local`, `.env.production`, `/backend/.env`, `/supabase/.env`), `.git/config`, `.git-credentials`, `id_rsa`;
-- **cloud credentials:** `.aws/credentials`, `firebase-service-account.json`, `google-services.json`, `.azure/accessTokens.json`, `rclone.conf`;
+- **secrets and credentials:** `.env` in every variant, `.git/config`, `id_rsa`, `.aws/credentials`, `firebase-service-account.json`, `.azure/accessTokens.json`;
 - **path traversal:** `/static/..;/..;/proc/self/environ`, `/assets../.env`, and a Vite source-map trick (`/__vite_rsc_findSourceMapURL?filename=…/.aws/credentials`);
-- **exploits:** React2Shell (CVE-2025-55182) payloads against React Server Components, plus WordPress, Grafana and Apache probes;
-- **panels and APIs:** `/sign-in`, `/dashboard`, `/settings/api-keys`, `/api/graphql`;
-- **writes:** ~13k `POST` and ~3k `DELETE` on `/`, checking whether anything accepts them.
+- **exploits:** React2Shell (CVE-2025-55182) payloads against React Server Components, plus WordPress, Grafana and Apache probes.
 
-On a static site none of this exists, so it all ended as 404, 405 or – once the rules were in – 403. Nothing leaked. But the list is a good checklist of what *not* to have publicly reachable on anything you run.
+On a static site none of this exists, so it all ended as 404 or – once the rules were in – 403. Nothing leaked. But the list is a good checklist of what *not* to have publicly reachable on anything you run.
 
 ### It went for everything
 
@@ -158,11 +151,11 @@ The worst-hit was a parked domain with no working site at all: ~118k requests in
 
 ### Who is behind it
 
-I don't know – only Google knows who rents those machines. What is public looks like an earlier wave of the same thing. In mid-August a Hacker News thread (305 points, 228 comments) collected site owners seeing the same scans from fake ClaudeBots. On 28 August GreyNoise published an analysis: six AI crawler names from Anthropic, OpenAI, Google and Perplexity forged from 824 addresses across 795 different /24 networks, all by one HTTP client fingerprint (JA4H). The fakes never asked for `robots.txt`, and they went for the same files as mine. Nobody has named an operator.
+I don't know – only Google knows who rents those machines. It looks like a later wave of something already described: in August a Hacker News thread collected site owners seeing fake ClaudeBots, and GreyNoise traced forged AI crawler names to 824 addresses sharing one HTTP client fingerprint – never asking for `robots.txt`, going for the same files as mine. Nobody has named an operator.
 
 What is clear: **I was not a target.** I was a row in a list of every reachable host. The payloads alone prove it: React2Shell exploits for React Server Components and WordPress probes for PHP, fired at a static Astro site that runs neither. I had posted about the blog on X around then, but the timing was a coincidence – the ramp-up started 14 hours before that post.
 
-### Telling a fake bot from a real one
+## Telling a fake bot from a real one
 
 - **Trust `cf.client.bot`, not the User-Agent.** Cloudflare verifies real crawlers by IP ranges and reverse DNS. Every bot rule I wrote has `not cf.client.bot` in it, so Googlebot and the real GPTBot pass and the costumes don't.
 - **Never allow-list by User-Agent.** A rule like "let in anything that says `Claude-User`" lets in exactly this scanner – it was rotating those names.
@@ -184,6 +177,7 @@ The `wildcard` operator is available on Free; `matches` (regex) is not. The bot 
 The share of scanner requests that got a 200 went from about 65% before any rules, to 20% after the first round, to under 2% after extending the bot rule.
 
 ![Requests to mjasion.pl per day by response status, 1–25 October](./traffic-by-status.svg)
+<!-- Chart data: ./chart-data.json → trafficByStatus (per-day requests by edge status, 1–25.10.2026, UTC). -->
 
 The 403s before 15 October came from rules I already had: a country rule (Taiwan, one of the scanner's GCP regions, was on the list) and Bot Fight Mode. A managed challenge is a 403 too, so on the chart "403" means "blocked or challenged".
 
@@ -196,7 +190,9 @@ The busiest day came *after* the fix: 269k requests on 15 October, but 53% of th
 | Bandwidth per day | ~2.5 GB | 0.07–0.16 GB |
 | Workers invocations from the blog | 106k / 23k | 0 |
 
-Once the scanner had moved on, I loosened the blog again. Sensitive paths, countries and the rate limit stay; the bot rule now guards only one private subdomain and the Google Cloud rule is off. My app domain, which has logins and APIs, keeps the cloud-ASN rule with the Anthropic exception.
+Once the scanner had moved on, I loosened the blog again. Sensitive paths, countries and the rate limit stay; the bot rule now guards only my private photo album and the Google Cloud rule is off. My app domain, which has logins and APIs, keeps the cloud-ASN rule with the Anthropic exception.
+
+Eleven days after the peak, the blog is down to ~18k requests a day. Google Cloud is about 14% of it – 80 addresses that still try, mostly without luck – and the blog's production deployment hasn't run a single Worker since 14 October.
 
 ## What helped the most: Claude with the Cloudflare MCP server
 
@@ -211,17 +207,15 @@ The part I did not expect: reading the live config back, it caught my mistakes.
 - An `X-Robots-Tag` rule sat in the request phase, where it does nothing – it has to be a *Response Header* Transform Rule.
 - The new rate limit blocked exactly one IP – mine, testing the site in Development Mode.
 
-What made that work was one question after every change: *how does the traffic look now?* A 3.5-minute window right after extending the bot rule already showed 96% of the scanner's requests ending in a 403; a check a day later exposed the rate limit hitting a human and the rule that was never saved. The findings went into a running note in a Claude Project, so each check started from the last state instead of from zero.
+What made that work was one question after every change: *how does the traffic look now?* A check minutes later showed whether a rule bit; a check a day later caught the rate limit hitting a human and the rule that was never saved. The findings went into a running note in a Claude Project, so each check started from the last state.
 
-One Free plan gotcha: GraphQL Analytics has a tight rate limit (about a 5-minute cooldown, and malformed queries count too). Write access stays with me – every change it proposed, it showed first and applied only after I confirmed.
-
-The scanner is still knocking today. It just gets a challenge instead of my homepage – and I get a short report instead of a surprise.
+Changes stayed with me: it proposed rules and DNS edits, I applied them.
 
 ## What I took away from it
 
 - **Never run a Pages middleware without `_routes.json`.** If you need Functions, scope them to the paths that need them. If you can do it with a Transform Rule, do it with a Transform Rule.
 - **The Workers limit is per account.** A runaway static site can take down unrelated apps.
-- **Keep Pages Functions failing open.** A Pages project has a `fail_open` setting (`deployment_configs.production.fail_open` in the API – both of my projects have it set to `true`). With it, if Functions ever exceed the limit again, requests should fall through to the static site instead of returning 1027. Check yours before you add Functions.
+- **Check that Pages Functions fail open.** With `fail_open` on (`deployment_configs.production.fail_open` in the API), a quota overrun should fall back to the static site instead of returning 1027.
 - **A spoofed AI bot User-Agent is not an AI bot.** Trust `cf.client.bot`, and let real agents in by their published IP ranges, never by name.
 - **Cloudflare won't punish you for being a target.** Exceeding Workers quota means errors until midnight UTC, not a suspended account. DDoS protection and WAF actions don't count towards any limit.
 
