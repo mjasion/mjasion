@@ -138,11 +138,43 @@
   background-color: rgba(234, 179, 8, 0.12);
 }
 
-/* Long inline code (API field names, paths) has no break opportunities, so on
-   a 375px screen it pushes the page wider than the viewport. Let it wrap
-   anywhere; code blocks keep scrolling horizontally. */
+/* Inline code: a quiet chip instead of typography's backticks and bold. The
+   white matches the Shiki code blocks (github-light), which sit as white cards
+   on the page - --color-white is the page's own #f8fafc. Code blocks are untouched. */
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
 .prose :not(pre) > code {
+  font-weight: 500;
+  font-size: 0.85em;
+  padding: 0.12em 0.38em;
+  border-radius: 0.375rem;
+  background-color: #fff;
+  border: 1px solid var(--color-gray-100);
+  color: var(--color-gray-700);
+  /* Long inline code (API field names, paths) has no break opportunities, so on
+     a 375px screen it pushes the page wider than the viewport. Let it wrap
+     anywhere, with the chip drawn on every line; code blocks keep scrolling. */
   overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Headings: monospace only, no chip. */
+.prose :is(h1, h2, h3, h4) code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-weight: inherit;
+  font-size: 0.9em;
+  color: inherit;
+}
+
+/* Code inside links keeps the link colour. */
+.prose a code {
+  color: inherit;
 }
 
 :focus-visible {
