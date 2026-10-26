@@ -1,6 +1,15 @@
-import type { APIRoute } from 'astro';
+import path from 'node:path';
+import type { APIRoute, ImageMetadata } from 'astro';
 import { getCollection } from 'astro:content';
 import { isVisible } from '@/utils/posts';
+
+// Co-located post images, keyed by project-root path (`/src/content/posts/...`).
+// The raw body links them relatively (`./chart.svg`), which resolves to a 404 next to
+// the .md URL - the build emits them under `/_astro/` with a content hash.
+const images = import.meta.glob<ImageMetadata>('/src/content/posts/**/*.{png,jpg,jpeg,gif,webp,svg}', {
+  eager: true,
+  import: 'default',
+});
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', isVisible);
@@ -16,7 +25,7 @@ export async function getStaticPaths() {
   });
 }
 
-export const GET: APIRoute = ({ props }) => {
+export const GET: APIRoute = ({ props, site }) => {
   const { post } = props as { post: Awaited<ReturnType<typeof getCollection<'posts'>>>[number] };
 
   const fmDate = post.data.date.toISOString().slice(0, 10);
@@ -43,7 +52,18 @@ export const GET: APIRoute = ({ props }) => {
     ? post.body.replace(/^import\s+[^;]+;?\s*$/gm, '').replace(/\n{3,}/g, '\n\n').trimStart()
     : '';
 
-  const markdown = frontmatter + body;
+  // Point relative markdown images at their absolute built URLs. Unknown paths are left as-is.
+  const postDir = path.posix.dirname(`/${post.filePath}`);
+  const bodyWithImages = body.replace(
+    /(!\[[^\]]*\]\()([^)\s]+)((?:\s+"[^"]*")?\))/g,
+    (match, open: string, src: string, close: string) => {
+      if (/^([a-z][a-z0-9+.-]*:|\/|#)/i.test(src)) return match;
+      const image = images[path.posix.join(postDir, src)];
+      return image ? open + new URL(image.src, site ?? 'https://mjasion.pl').href + close : match;
+    },
+  );
+
+  const markdown = frontmatter + bodyWithImages;
 
   return new Response(markdown, {
     status: 200,

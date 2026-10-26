@@ -7,13 +7,13 @@ const isPreview = !!process.env.CF_PAGES_BRANCH && process.env.CF_PAGES_BRANCH !
  * Shared visibility filter for blog posts.
  *
  * - Dev (`pnpm dev`): everything, including `draft: true` and future-dated posts.
- * - Preview deployments: published posts, future-dated ones included, so a
- *   scheduled post can be reviewed on its branch URL.
+ * - Preview deployments: everything too, drafts and future-dated posts included,
+ *   so a post can be reviewed on its branch URL before it goes live.
  * - Production: published posts whose date has already arrived.
  *
  *   const posts = await getCollection('posts', isVisible);
  */
 export function isVisible({ data }: CollectionEntry<'posts'>): boolean {
-  if (!import.meta.env.PROD) return true;
-  return !data.draft && (isPreview || data.date <= new Date());
+  if (!import.meta.env.PROD || isPreview) return true;
+  return !data.draft && data.date <= new Date();
 }

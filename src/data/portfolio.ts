@@ -26,9 +26,7 @@ export const categoryLabels: Record<string, string> = {
 export const author = {
   name: 'Marcin Jasion',
   nickname: 'Marcin',
-  // Post author box
-  designation: 'Senior Site Reliability Engineer',
-  // Role line under the name on /about and /cv (pages, markdown twins, CV PDF) and JSON-LD jobTitle
+  // Role line under the name on /about, /cv (pages, markdown twins, CV PDF), the post author box and JSON-LD jobTitle
   role: 'Senior SRE & Platform Engineer',
   // Sidebar caption under the avatar – topics, not a job title
   tagline: 'Observability · Kubernetes · Platform · AI agents',
