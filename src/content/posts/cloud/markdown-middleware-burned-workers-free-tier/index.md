@@ -9,7 +9,7 @@ category: cloud
 draft: true
 ---
 
-On 13 October my blog used up the whole daily Workers quota of my Cloudflare account. A static blog. No backend, no database, nothing that should ever need compute. This is the story of why it happened, who was hammering the site, and how the blog now serves markdown to AI agents without running a single Worker.
+On 13 October my blog used up the whole daily Workers quota of my Cloudflare account. A static blog. No backend, no database, nothing that should ever need compute. This is the story of why it happened, how the blog now serves markdown to AI agents without running a single Worker, and who was hammering the site.
 
 ## The symptom: 100k invocations on a static site
 
@@ -39,13 +39,78 @@ A Pages middleware with no `_routes.json` runs **on every request**. HTML, CSS, 
 
 The fix went out on the morning of 14 October as a one-line commit message: *remove Pages middleware to stop exhausting Workers limit*. Invocations went from 5–6k per hour to 100 at 05:00 UTC and to zero from 06:00 UTC.
 
+## How markdown is served now: three URL Rewrite Rules
+
+Content negotiation did not need a Worker in the first place. Cloudflare Transform Rules can rewrite the path based on a request header, and they run at the edge **before** the request reaches Pages. The markdown files are already static assets in the build, and Pages serves static assets for free and without limit.
+
+Three rules in *Rules → Transform Rules → URL Rewrite*:
+
+**1. Homepage**
+
+```
+http.request.uri.path eq "/"
+and any(http.request.headers["accept"][*] contains "text/markdown")
+```
+Rewrite path to static `/index.md`.
+
+**2. Pages without a trailing slash** (`/now` → `/now.md`)
+
+```
+not ends_with(http.request.uri.path, "/")
+and not http.request.uri.path contains "."
+and any(http.request.headers["accept"][*] contains "text/markdown")
+```
+Rewrite path, dynamic: `concat(http.request.uri.path, ".md")`
+
+**3. Pages with a trailing slash** (`/posts/foo/` → `/posts/foo.md`)
+
+```
+ends_with(http.request.uri.path, "/")
+and http.request.uri.path ne "/"
+and not http.request.uri.path contains "."
+and any(http.request.headers["accept"][*] contains "text/markdown")
+```
+Rewrite path, dynamic: `concat(substring(http.request.uri.path, 0, -1), ".md")`
+
+The `not contains "."` condition keeps assets (`.js`, `.webp`, `.xml`) out of the rewrite. All three expressions work on the Free plan – no regex needed.
+
+Try it:
+
+```bash
+curl -s -H 'Accept: text/markdown' https://mjasion.pl/ | head
+curl -sI -H 'Accept: text/markdown' https://mjasion.pl/now/ | grep -i content-type
+```
+
+### Keeping the twins out of search results
+
+Every page now exists twice, as HTML and as markdown. Search engines should only see the HTML, while agents should still be able to read the `.md`. `noindex` only affects search engines, so it does exactly that. In `static/_headers`:
+
+```
+# Markdown twins of every page – keep them out of search results.
+# Accept: text/markdown requests are rewritten to the .md path at the edge
+# before they reach Pages, so this rule covers negotiated responses too.
+/*.md
+  X-Robots-Tag: noindex
+```
+
+Because the rewrite happens before Pages, the header applies to both `/posts/foo.md` and `/posts/foo/` requested with `Accept: text/markdown`. And since the same URL now returns two different representations, `Vary: Accept` tells intermediate caches not to mix them up:
+
+```
+/*
+  Vary: Accept, Accept-Encoding
+```
+
+Cloudflare's own cache is not affected – the rewrite changes the path before the cache lookup – but a corporate proxy might be.
+
 ## Who was hitting the site
+
+That fixed the bill. It did not explain why a quiet blog suddenly needed 100k invocations a day.
 
 Last 7 days before the fix: 505k requests, **410k of them to `/`**. Cache hit rate: 0.2%.
 
-**A scanning campaign from Google Cloud (AS396982)** – 75–90% of all traffic every day. Between 12 and 14 October alone, 181 GCP addresses sent 382k requests and pulled 8.4 GB. More on it in the next section.
+**A scanning campaign from Google Cloud (AS396982)** – three quarters or more of all traffic every day. Between 12 and 14 October alone, 181 GCP addresses sent 382k requests and pulled 8.4 GB. More on it in the next section.
 
-**CERT Polska's Artemis.** On 13 October a single address, 195.164.49.70, made ~38k requests: crawled the site, tried Cloudflare's alternative ports (`:8080`, `:8443`, `:2083`…), enumerated subdomains and ran harmless SQL injection probes in the User-Agent. That was about 18% of the day's traffic – noticeable, but it started after the climb had already begun on 12 October. The main driver was GCP.
+**CERT Polska's Artemis.** On 13 October a single address, 195.164.49.70, made ~38k requests: crawled the site, tried Cloudflare's alternative ports (`:8080`, `:8443`, `:2083`…), enumerated subdomains and ran harmless SQL injection probes in the User-Agent. Noticeable, but it started after the climb had already begun on 12 October. The main driver was GCP.
 
 **Real crawlers** – Googlebot, Bingbot, GPTBot, ClaudeBot, Meta, Grok – were a few thousand requests each. Background noise.
 
@@ -114,14 +179,14 @@ I don't know, and Cloudflare's data cannot tell. These are someone's rented Goog
 What is public looks like an earlier wave of the same thing:
 
 - **Mid-August 2026** – a Hacker News thread with 150+ upvotes: site owners noticing mass vulnerability scans from "ClaudeBot" and "Googlebot" that were neither.
-- **28 August 2026 – GreyNoise** published the first proper analysis. Between 28 July and 23 August they saw 13 AI crawler names from eight companies being forged from 824 addresses spread over 795 different /24 networks – too scattered to block by network. All of it came from one HTTP client fingerprint (JA4H), which over 90 days wore more than 1,500 User-Agent strings, most of them ordinary browsers. The six forged AI names never asked for `robots.txt`, while the real ClaudeBot asked for it more than for any other path and never touched a credential file. None of the 824 addresses was inside the IP ranges the vendors publish. A nice detail: `Google-Extended` was forged in over 260k sessions – a token Google says no crawler ever sends. Targets: `.env` variants, `.aws/credentials`, `.git/config`, private keys, plus the Vite file-disclosure bug CVE-2025-30208. GreyNoise did not name an operator and only saw requests, not stolen files.
+- **28 August 2026 – GreyNoise** published the first proper analysis. Between 28 July and 23 August they saw 13 AI crawler names from eight companies being forged. The core cluster – six names from Anthropic, OpenAI, Google and Perplexity – came from 824 addresses spread over 795 different /24 networks, too scattered to block by network (DeepSeek is in the report's title, but not in that cluster). The cluster came from one HTTP client fingerprint (JA4H), which over 90 days wore more than 1,500 User-Agent strings, most of them ordinary browsers. The six forged AI names never asked for `robots.txt`, while the real ClaudeBot asked for it more than for any other path and never touched a credential file. None of the 824 addresses was inside the IP ranges the vendors publish. A nice detail: `Google-Extended` was forged in over 260k sessions – a token Google says no crawler ever sends. Targets: `.env` variants, `.aws/credentials`, `.git/config`, private keys, plus the Vite file-disclosure bug CVE-2025-30208. GreyNoise did not name an operator and only saw requests, not stolen files.
 - **React2Shell (CVE-2025-55182)**, which showed up in my logs, is older and separate: a critical RCE in React Server Components, mass-exploited since December 2025 – for credential theft, cryptominers and Mirai, with AWS attributing some of it to China-linked groups. My scanner simply had it in the toolbox.
 
 I could not find any public write-up of the October wave I saw. As far as I can tell this post is one.
 
 Daily fresh projects in many regions fit two explanations: hijacked GCP accounts or leaked service-account keys, or accounts mass-created on stolen cards and free trials. The irony of a credential-hunting botnet possibly running on stolen credentials is not lost on me – but nobody has confirmed it.
 
-What is clear: **I was not a target.** I was a row in a list of every reachable host. The payloads alone prove it: React2Shell exploits for React Server Components and WordPress probes for PHP, fired at a static Astro site that runs neither. Anyone who had looked at mjasion.pl even once would not have bothered. The timing with my post on X was a coincidence – the ramp-up started 14 hours before it.
+What is clear: **I was not a target.** I was a row in a list of every reachable host. The payloads alone prove it: React2Shell exploits for React Server Components and WordPress probes for PHP, fired at a static Astro site that runs neither. Anyone who had looked at mjasion.pl even once would not have bothered. I had posted about the blog on X around then, but the timing was a coincidence – the ramp-up started 14 hours before that post.
 
 ### Telling a fake bot from a real one
 
@@ -140,72 +205,6 @@ Further reading:
 - [Cloudflare – React2Shell threat brief](https://blog.cloudflare.com/react2shell-rsc-vulnerabilities-exploitation-threat-brief/)
 - [AbuseIPDB – 34.87.51.216](https://www.abuseipdb.com/check/34.87.51.216)
 
-## How markdown is served now: three URL Rewrite Rules
-
-Content negotiation did not need a Worker in the first place. Cloudflare Transform Rules can rewrite the path based on a request header, and they run at the edge **before** the request reaches Pages. The markdown files are already static assets in the build, and Pages serves static assets for free and without limit.
-
-Three rules in *Rules → Transform Rules → URL Rewrite*:
-
-**1. Homepage**
-
-```
-http.request.uri.path eq "/"
-and any(http.request.headers["accept"][*] contains "text/markdown")
-```
-Rewrite path to static `/index.md`.
-
-**2. Pages without a trailing slash** (`/now` → `/now.md`)
-
-```
-not ends_with(http.request.uri.path, "/")
-and not http.request.uri.path contains "."
-and any(http.request.headers["accept"][*] contains "text/markdown")
-```
-Rewrite path, dynamic: `concat(http.request.uri.path, ".md")`
-
-**3. Pages with a trailing slash** (`/posts/foo/` → `/posts/foo.md`)
-
-```
-ends_with(http.request.uri.path, "/")
-and http.request.uri.path ne "/"
-and not http.request.uri.path contains "."
-and any(http.request.headers["accept"][*] contains "text/markdown")
-```
-Rewrite path, dynamic: `concat(substring(http.request.uri.path, 0, -1), ".md")`
-
-The `not contains "."` condition keeps assets (`.js`, `.webp`, `.xml`) out of the rewrite. All three expressions work on the Free plan – no regex needed.
-
-Try it:
-
-```bash
-curl -s -H 'Accept: text/markdown' https://mjasion.pl/ | head
-curl -sI -H 'Accept: text/markdown' https://mjasion.pl/now/ | grep -i content-type
-```
-
-### Keeping the twins out of search results
-
-Every page now exists twice, as HTML and as markdown. Search engines should only see the HTML, while agents should still be able to read the `.md`. `noindex` only affects search engines, so it does exactly that. In `static/_headers`:
-
-```
-# Markdown twins of every page – keep them out of search results.
-# Accept: text/markdown requests are rewritten to the .md path at the edge
-# before they reach Pages, so this rule covers negotiated responses too.
-/*.md
-  X-Robots-Tag: noindex
-
-/cv.pdf
-  Link: <https://mjasion.pl/cv/>; rel="canonical"
-```
-
-Because the rewrite happens before Pages, the header applies to both `/posts/foo.md` and `/posts/foo/` requested with `Accept: text/markdown`. And since the same URL now returns two different representations, `Vary: Accept` tells intermediate caches not to mix them up:
-
-```
-/*
-  Vary: Accept, Accept-Encoding
-```
-
-Cloudflare's own cache is not affected – the rewrite changes the path before the cache lookup – but a corporate proxy might be.
-
 ## Stopping the scanner
 
 Removing the middleware made the traffic free. It did not make it go away. On the Free plan you get five custom WAF rules and one rate-limiting rule per zone, which turned out to be enough:
@@ -213,8 +212,8 @@ Removing the middleware made the traffic free. It did not make it go away. On th
 1. **Sensitive paths – block.** `.env*`, `.git`, cloud credential files, traversal patterns. Nobody legitimate asks for these.
 2. **Countries – block/challenge** for regions with no readers and lots of scanning.
 3. **Unknown bots – managed challenge.** Anything with `bot`, `spider` or `crawler` in the User-Agent that is *not* a Cloudflare-verified bot (`not cf.client.bot`), limited to `/`. Real Googlebot and the real GPTBot pass; a GCP VM pretending to be GPTBot gets a challenge it cannot solve.
-4. **Cloud scanner – managed challenge** for AS396982 on `/`, with carve-outs for Anthropic's IP range and MCP paths so my own connectors keep working.
-5. **Rate limit** on `/`: 100 requests per 10 seconds per IP.
+4. **Cloud scanner – managed challenge** for AS396982 on `/`, with exceptions for Anthropic's published IP range and for my own connectors.
+5. **Rate limit** on `/` per IP, set well above anything a human or an honest crawler does.
 
 The `wildcard` operator is available on Free; `matches` (regex) is not. Limiting the bot rules to `/` was deliberate: the scanner hit the homepage 96% of the time, while legitimate agents read posts and `.md` files.
 
@@ -230,15 +229,6 @@ The busiest day was actually *after* the fix: 249k requests on 15 October, but 5
 | 200 responses per day | 84–91k | 1–6k |
 | Bandwidth per day | ~2.5 GB | 0.07–0.16 GB |
 | Workers invocations from the blog | 106k / 23k | 0 |
-
-## What I took away from it
-
-- **Never run a Pages middleware without `_routes.json`.** If you need Functions, scope them to the paths that need them. If you can do it with a Transform Rule, do it with a Transform Rule.
-- **The Workers limit is per account.** A runaway static site can take down unrelated apps.
-- **Set Pages to *Fail open*** (Settings → Runtime). If Functions ever exceed the limit again, the site is served as static instead of throwing 1027.
-- **Don't reach for "Cache Everything" on Pages.** Pages already serves assets from Cloudflare's CDN; a domain cache rule can serve stale deploys and, with header-based rewrites, the wrong representation.
-- **A spoofed AI bot User-Agent is not an AI bot.** `cf.client.bot` is the only signal worth trusting on the Free plan.
-- **Cloudflare won't punish you for being a target.** Exceeding Workers quota means errors until midnight UTC, not a suspended account. DDoS protection and WAF actions don't count towards any limit.
 
 ## What helped the most: Claude with the Cloudflare MCP server
 
@@ -275,3 +265,12 @@ The single most useful habit was not a rule but a question I kept asking after e
 - **A running state file.** After each check, the findings went into a note in a Claude Project: per-domain status, active rules, open to-dos, known quirks of the API. The next check started from that file instead of from zero – which also meant the to-do list ("add the trailing slashes", "decide what to do with the abandoned Worker") did not get lost between evenings.
 
 The scanner is still knocking today. It just gets a challenge instead of my homepage – and I get a short report instead of a surprise.
+
+## What I took away from it
+
+- **Never run a Pages middleware without `_routes.json`.** If you need Functions, scope them to the paths that need them. If you can do it with a Transform Rule, do it with a Transform Rule.
+- **The Workers limit is per account.** A runaway static site can take down unrelated apps.
+- **Set Pages to *Fail open*** (Settings → Runtime). If Functions ever exceed the limit again, the site is served as static instead of throwing 1027.
+- **Don't reach for "Cache Everything" on Pages.** Pages already serves assets from Cloudflare's CDN; a domain cache rule can serve stale deploys and, with header-based rewrites, the wrong representation.
+- **A spoofed AI bot User-Agent is not an AI bot.** `cf.client.bot` is the only signal worth trusting on the Free plan.
+- **Cloudflare won't punish you for being a target.** Exceeding Workers quota means errors until midnight UTC, not a suspended account. DDoS protection and WAF actions don't count towards any limit.
