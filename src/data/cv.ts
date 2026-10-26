@@ -62,9 +62,9 @@ export const skillGroups = [
     items: [
       'CI/CD (GitHub Actions, GitLab CI)',
       'Infrastructure as Code (Terraform, GitOps)',
-      'cost optimization',
+      'Cost optimization',
       'SOC2/GDPR compliance',
-      'incident diagnosis',
+      'Incident diagnosis',
     ],
   },
 ];

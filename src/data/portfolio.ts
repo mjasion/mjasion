@@ -223,7 +223,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
-      'Banking-as-a-Service platform from NatWest Group. I work in an SRE enabling team supporting stream-aligned squads that run 1000+ mostly Java services in an asynchronous, Kafka-based architecture.',
+      'Banking-as-a-Service platform from NatWest Group. SRE enabling team supporting stream-aligned squads.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer (Consultant)',
@@ -473,7 +473,7 @@ export const presentations = [
   {
     name: 'GitOps – Czyli konfigurowanie Kubernetesa Gitem',
     icon: 'github',
-    date: '27.02.2020',
+    date: 'Feb 2020',
     meetup: 'SysOps/DevOps Warszawa MeetUp #48',
     meetupUrl:
       'https://www.sysopspolska.pl/multimedia/warszawa-meetup-48/',
@@ -487,7 +487,7 @@ export const presentations = [
   {
     name: 'GitOps – Czyli konfigurowanie Kubernetesa Gitem',
     icon: 'github',
-    date: '29.06.2019',
+    date: 'Jun 2019',
     meetup: 'Confitura 2019',
     meetupUrl: 'https://2019.confitura.pl/#home',
     assets: [
@@ -500,7 +500,7 @@ export const presentations = [
   {
     name: 'Autoscaling GitLab CI',
     icon: 'gitlab',
-    date: '27.06.2019',
+    date: 'Jun 2019',
     meetup: 'SysOps/DevOps Warszawa MeetUp #42',
     meetupUrl:
       'https://www.sysopspolska.pl/multimedia/warszawa-meetup-42/',

@@ -44,6 +44,10 @@ const MUTED = '#64748B';
 const PAGE_MARGIN = 40;
 const CONTENT_WIDTH = 515;
 
+// Body text (bullets, overviews, lists). The print view uses 10.5px (7.9pt);
+// the PDF runs 0.7pt larger to fill its 2 pages, as Chrome print would spill to 3.
+const BODY_FONT_SIZE = 8.6;
+
 // Skill chips - page: 11px medium, 1px 7px padding, 4px radius, 14px line,
 // gap-1 between chips and rows; labels in a 120px print column, gap-3.
 const CHIP_FONT_SIZE = 8.25;
@@ -286,7 +290,7 @@ function buildDocDefinition(): Record<string, unknown> {
         // overview - print:text-[10.5px] muted leading-snug, mt-0.5
         {
           text: exp.overview,
-          fontSize: 7.9,
+          fontSize: BODY_FONT_SIZE,
           color: MUTED,
           lineHeight: 1.15,
           margin: [0, 1.5, 0, 0],
@@ -302,10 +306,10 @@ function buildDocDefinition(): Record<string, unknown> {
           {
             stack: pos.responsibilities.map((r) => ({
               columns: [
-                { text: '•', width: 8, fontSize: 7.9, color: ACCENT },
+                { text: '•', width: 8, fontSize: BODY_FONT_SIZE, color: ACCENT },
                 {
                   text: textRuns(emphasizeMetrics(exp.company, r)),
-                  fontSize: 7.9,
+                  fontSize: BODY_FONT_SIZE,
                   color: GRAY_700,
                   lineHeight: 1.1,
                   width: '*',
@@ -332,7 +336,7 @@ function buildDocDefinition(): Record<string, unknown> {
             text: group.label,
             width: SKILL_LABEL_WIDTH,
             font: 'InterMedium',
-            fontSize: 7.9,
+            fontSize: BODY_FONT_SIZE,
             color: GRAY_900,
             margin: [0, 1.2, 0, 0],
           },
@@ -356,10 +360,10 @@ function buildDocDefinition(): Record<string, unknown> {
               { text: cert.name, font: 'InterMedium', link: cert.url },
               { text: ` – ${cert.organization}`, color: GRAY_500 },
             ],
-            fontSize: 7.9,
+            fontSize: BODY_FONT_SIZE,
             color: GRAY_700,
           },
-          { text: cert.timeline, fontSize: 7.9, color: GRAY_500 },
+          { text: cert.timeline, fontSize: BODY_FONT_SIZE, color: GRAY_500 },
           3,
         ),
       ),
@@ -378,10 +382,10 @@ function buildDocDefinition(): Record<string, unknown> {
               { text: talk.name, font: 'InterMedium' },
               { text: ` – ${talk.meetup}`, color: GRAY_500 },
             ],
-            fontSize: 7.9,
+            fontSize: BODY_FONT_SIZE,
             color: GRAY_700,
           },
-          { text: talk.date, fontSize: 7.9, color: GRAY_500 },
+          { text: talk.date, fontSize: BODY_FONT_SIZE, color: GRAY_500 },
           3,
         ),
       ),
@@ -392,10 +396,10 @@ function buildDocDefinition(): Record<string, unknown> {
               { text: pub.title, font: 'InterMedium', link: pub.url },
               { text: ' – open-source contribution', color: GRAY_500 },
             ],
-            fontSize: 7.9,
+            fontSize: BODY_FONT_SIZE,
             color: GRAY_700,
           },
-          { text: pub.year, fontSize: 7.9, color: GRAY_500 },
+          { text: pub.year, fontSize: BODY_FONT_SIZE, color: GRAY_500 },
           3,
         ),
       ),
@@ -412,8 +416,8 @@ function buildDocDefinition(): Record<string, unknown> {
           { ...sectionHeading('Education'), margin: [0, 0, 0, 0] },
           ...education.map((ed) => ({
             stack: [
-              { text: ed.degree, font: 'InterMedium', fontSize: 7.9, color: GRAY_700 },
-              { text: `${ed.school} · ${ed.years}`, fontSize: 7.9, color: GRAY_500 },
+              { text: ed.degree, font: 'InterMedium', fontSize: BODY_FONT_SIZE, color: GRAY_700 },
+              { text: `${ed.school} · ${ed.years}`, fontSize: BODY_FONT_SIZE, color: GRAY_500 },
             ],
             margin: [0, 3, 0, 0],
           })),
@@ -427,7 +431,7 @@ function buildDocDefinition(): Record<string, unknown> {
               { text: lang.name, font: 'InterMedium' },
               { text: ` – ${lang.level}`, color: GRAY_500 },
             ],
-            fontSize: 7.9,
+            fontSize: BODY_FONT_SIZE,
             color: GRAY_700,
             margin: [0, 3, 0, 0],
           })),
