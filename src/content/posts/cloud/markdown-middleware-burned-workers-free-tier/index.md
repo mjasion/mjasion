@@ -169,13 +169,6 @@ What is clear: **I was not a target.** I was a row in a list of every reachable 
 - **Allow real agents by their published ranges – and check who announces them.** Anthropic [documents](https://platform.claude.com/docs/en/api/ip-addresses) `160.79.104.0/21` for its outgoing requests (MCP tool calls, web fetch). Cloudflare Radar shows that /21 split between Anthropic's AS399358, Google Cloud's AS396982 and Amazon's AS16509, so an ASN rule against GCP or AWS also catches real Claude. My GCP rule on the blog challenged the real Claude-User; on my app domain the rule now carries `not ip.src in {160.79.104.0/21}`.
 - **Look at behaviour.** No `robots.txt`, no assets, hundreds of hits on `/` per minute, `POST` and `DELETE` on a static page – no human or honest crawler does that.
 
-Further reading:
-
-- [GreyNoise – Threat Actors Are Posing as OpenAI, Anthropic and DeepSeek to Target Credentials and Secrets](https://www.greynoise.io/blog/threat-actors-posing-as-ai-crawlers) (28.08.2026)
-- [Hacker News – Someone is running mass vulnerability scans, spoofing AI bots like ClaudeBot](https://news.ycombinator.com/item?id=49272569) (August 2026)
-- [Cloudflare – React2Shell threat brief](https://blog.cloudflare.com/react2shell-rsc-vulnerabilities-exploitation-threat-brief/)
-- [AbuseIPDB – 34.87.51.216](https://www.abuseipdb.com/check/34.87.51.216)
-
 ## Stopping the scanner
 
 Removing the middleware made the traffic free. It did not make it go away. On the Free plan you get five custom WAF rules and one rate-limiting rule per zone. During the campaign (14–17 October) the blog ran with these:
@@ -209,7 +202,7 @@ Once the scanner had moved on, I loosened the blog again. Sensitive paths, count
 
 I did not dig through this by hand. Almost the whole investigation ran in Claude, connected to my Cloudflare account through MCP, while I made the changes in the repo and the dashboard.
 
-The *Cloudflare Developer Platform* connector I started with sees Workers, KV, D1 and R2, but no traffic analytics, WAF or DNS – the first diagnosis came from Claude clicking through the dashboard in my Chrome. The full Cloudflare MCP server works in *code mode*: two tools, `search` over Cloudflare's OpenAPI spec and `execute`, which runs a short JavaScript function against the whole API. One call can pull GraphQL analytics, WAF rulesets and DNS records together – that is where every chart and per-day number in this post comes from.
+The *Cloudflare Developer Platform* connector I started with sees no traffic, WAF or DNS, so the real work fell to the full Cloudflare MCP server. It works in *code mode*: two tools, `search` over Cloudflare's OpenAPI spec and `execute`, which runs a short JavaScript function against the whole API. One call can pull GraphQL analytics, WAF rulesets and DNS records together – that is where every chart and per-day number in this post comes from.
 
 The part I did not expect: reading the live config back, it caught my mistakes.
 
@@ -231,3 +224,10 @@ The scanner is still knocking today. It just gets a challenge instead of my home
 - **Keep Pages Functions failing open.** A Pages project has a `fail_open` setting (`deployment_configs.production.fail_open` in the API – both of my projects have it set to `true`). With it, if Functions ever exceed the limit again, requests should fall through to the static site instead of returning 1027. Check yours before you add Functions.
 - **A spoofed AI bot User-Agent is not an AI bot.** Trust `cf.client.bot`, and let real agents in by their published IP ranges, never by name.
 - **Cloudflare won't punish you for being a target.** Exceeding Workers quota means errors until midnight UTC, not a suspended account. DDoS protection and WAF actions don't count towards any limit.
+
+## Further reading
+
+- [GreyNoise – Threat Actors Are Posing as OpenAI, Anthropic and DeepSeek to Target Credentials and Secrets](https://www.greynoise.io/blog/threat-actors-posing-as-ai-crawlers) (28.08.2026)
+- [Hacker News – Someone is running mass vulnerability scans, spoofing AI bots like ClaudeBot](https://news.ycombinator.com/item?id=49272569) (August 2026)
+- [Cloudflare – React2Shell threat brief](https://blog.cloudflare.com/react2shell-rsc-vulnerabilities-exploitation-threat-brief/)
+- [AbuseIPDB – 34.87.51.216](https://www.abuseipdb.com/check/34.87.51.216)
