@@ -6,7 +6,6 @@ date: "2026-10-26"
 hero: ./hero.svg
 tags: ["cloudflare", "workers", "pages", "waf", "ai-agents"]
 category: cloud
-draft: true
 ---
 
 On 13 October my blog used up the whole daily Workers quota of my Cloudflare account. A static blog. No backend, no database, nothing that should ever need compute. This is the story of why it happened, how the blog now serves markdown to AI agents without running a single Worker, and who was hammering the site.
