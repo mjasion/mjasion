@@ -45,8 +45,9 @@ const PAGE_MARGIN = 40;
 const CONTENT_WIDTH = 515;
 
 // Body text (bullets, overviews, lists). The print view uses 10.5px (7.9pt);
-// the PDF runs 0.7pt larger to fill its 2 pages, as Chrome print would spill to 3.
-const BODY_FONT_SIZE = 8.6;
+// the PDF runs at 12px, the /cv screen size before it grew to 14px. Chrome print
+// would spill that to 3 pages; the PDF stays at 2 by breaking between positions.
+const BODY_FONT_SIZE = 9;
 
 // Skill chips - page: 11px medium, 1px 7px padding, 4px radius, 14px line,
 // gap-1 between chips and rows; labels in a 120px print column, gap-3.
@@ -258,44 +259,50 @@ function buildDocDefinition(): Record<string, unknown> {
     margin: [-PAGE_MARGIN, -PAGE_MARGIN, -PAGE_MARGIN, 0],
   });
 
-  // Summary - print:text-[11.5px] gray-700 leading-relaxed, print:mt-4.
+  // Summary - print:text-[11.5px] gray-700 leading-relaxed, print:mt-4; kept
+  // 0.5pt above the body, as the page keeps it 1px above.
   content.push({
     text: author.summary,
-    fontSize: 8.6,
+    fontSize: 9.5,
     color: GRAY_700,
     lineHeight: 1.34,
     margin: [0, 12, 0, 0],
   });
 
-  // Experience - entries print:space-y-3, each break-inside-avoid.
+  // Experience - entries print:space-y-3. The page keeps each entry whole
+  // (break-inside-avoid); the PDF keeps each position whole instead, with the
+  // company header riding on the first one, so a long entry can span the break.
   content.push(sectionHeading('Experience'));
   for (const exp of experiences) {
-    content.push({
-      unbreakable: true,
-      margin: [0, 9, 0, 0],
-      stack: [
-        // company (print:text-sm semibold) <-> location (text-xs gray-500)
-        splitRow(
-          {
-            text: exp.company,
-            link: exp.url,
-            font: 'InterMedium',
-            bold: true,
-            fontSize: 10.5,
-            color: GRAY_900,
-          },
-          { text: exp.location, fontSize: 9, color: MUTED },
-          0,
-        ),
-        // overview - print:text-[10.5px] muted leading-snug, mt-0.5
+    const header: Content[] = [
+      // company (print:text-sm semibold) <-> location (text-xs gray-500)
+      splitRow(
         {
-          text: exp.overview,
-          fontSize: BODY_FONT_SIZE,
-          color: MUTED,
-          lineHeight: 1.15,
-          margin: [0, 1.5, 0, 0],
+          text: exp.company,
+          link: exp.url,
+          font: 'InterMedium',
+          bold: true,
+          fontSize: 10.5,
+          color: GRAY_900,
         },
-        ...exp.positions.flatMap((pos): Content[] => [
+        { text: exp.location, fontSize: 9, color: MUTED },
+        0,
+      ),
+      // overview - print:text-[10.5px] muted leading-snug, mt-0.5
+      {
+        text: exp.overview,
+        fontSize: BODY_FONT_SIZE,
+        color: MUTED,
+        lineHeight: 1.15,
+        margin: [0, 1.5, 0, 0],
+      },
+    ];
+    exp.positions.forEach((pos, i) =>
+      content.push({
+        unbreakable: true,
+        margin: [0, i === 0 ? 9 : 0, 0, 0],
+        stack: [
+          ...(i === 0 ? header : []),
           // designation (print:text-[12px] medium, accent) <-> dates (text-xs muted), print:mt-1.5
           splitRow(
             { text: pos.designation, font: 'InterMedium', fontSize: 9, color: ACCENT },
@@ -319,9 +326,9 @@ function buildDocDefinition(): Record<string, unknown> {
             })),
             margin: [0, 1.5, 0, 0],
           },
-        ]),
-      ],
-    });
+        ],
+      }),
+    );
   }
 
   // Skills - label column (medium gray-900) + wrapped chips, space-y-1.

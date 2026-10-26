@@ -218,7 +218,7 @@ export const experiences: Experience[] = [
   {
     company: 'NatWest Boxed',
     url: 'https://www.natwestboxed.com',
-    location: 'Warsaw, Poland',
+    location: 'London, UK',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
       'Banking-as-a-Service platform from NatWest Group. SRE enabling team supporting stream-aligned squads.',
