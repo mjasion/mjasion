@@ -1,0 +1,73 @@
+---
+// Custom GA4 events sent through Cloudflare Zaraz: the Zaraz "All other events" action
+// (AllTracks trigger) forwards every zaraz.track(name, params) to GA4.
+// Without Zaraz on the page (not enabled on the zone, or blocked) every call is a no-op.
+---
+<script>
+  type Params = Record<string, string | number>;
+  type Zaraz = { track: (name: string, params?: Params) => void };
+
+  function track(name: string, params: Params) {
+    try {
+      (window as Window & { zaraz?: Zaraz }).zaraz?.track(name, params);
+    } catch {
+      // Analytics must never break the page
+    }
+  }
+
+  const page_path = location.pathname;
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element | null;
+
+    // Outbound links and file downloads (/cv.pdf)
+    const link = target?.closest<HTMLAnchorElement>('a[href]');
+    if (link && /^https?:$/.test(link.protocol)) {
+      if (link.hostname !== location.hostname) {
+        // GA4 caps parameter values at 100 characters
+        track('outbound_click', { link_domain: link.hostname, link_url: link.href.slice(0, 100), page_path });
+      }
+      if (/\.(pdf|zip|tar\.gz|tgz|docx?|xlsx?|csv)$/i.test(link.pathname)) {
+        track('file_download', { file_name: link.pathname.split('/').pop() ?? '', page_path });
+      }
+    }
+
+    // Copy button that PostLayout injects into code blocks
+    const copyBtn = target?.closest('.copy-btn');
+    if (copyBtn) {
+      track('code_copy', { code_language: copyBtn.closest('pre')?.dataset.language ?? 'unknown', copy_method: 'button', page_path });
+    }
+  }, { capture: true });
+
+  // Ctrl/Cmd+C inside a code block (the copy button uses the Clipboard API, so it fires no copy event)
+  document.addEventListener('copy', () => {
+    const node = document.getSelection()?.anchorNode;
+    const pre = (node instanceof Element ? node : node?.parentElement)?.closest('pre');
+    if (pre) {
+      track('code_copy', { code_language: pre.dataset.language ?? 'unknown', copy_method: 'manual', page_path });
+    }
+  });
+
+  // Read depth of the post body: progress at 50% and 90%, and article_read once 90% is
+  // reached after at least 30 s on the page (filters out quick skims and bots)
+  const postBody = document.querySelector<HTMLElement>('article .prose');
+  if (postBody) {
+    const fired = new Set<number>();
+    const onScroll = () => {
+      const rect = postBody.getBoundingClientRect();
+      const percent = Math.min(100, Math.round(((window.innerHeight - rect.top) / rect.height) * 100));
+      for (const mark of [50, 90]) {
+        if (percent >= mark && !fired.has(mark)) {
+          fired.add(mark);
+          track('article_progress', { percent: mark, page_path });
+        }
+      }
+      const seconds = Math.round(performance.now() / 1000);
+      if (percent >= 90 && seconds >= 30) {
+        track('article_read', { read_seconds: seconds, page_path });
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

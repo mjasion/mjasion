@@ -33,6 +33,7 @@ src/
 │   ├── SocialLinks.astro       # Social icon row (used by Sidebar + Footer)
 │   ├── ShareButtons.astro      # Post share buttons (X, LinkedIn, copy)
 │   ├── Comments.astro          # Giscus comments (client-side)
+│   ├── Analytics.astro         # Custom GA4 events via Zaraz (outbound links, downloads, code copy, read depth)
 │   ├── ObfuscatedEmail.astro   # Email obfuscation (ROT13 + reverse)
 │   └── mdx/
 │       ├── Alert.astro         # Alert boxes (success/warning/info/danger)
@@ -132,7 +133,8 @@ import Mermaid from '../../../components/mdx/Mermaid.astro';
 - **Cloudflare Pages**: primary deployment target
 - **GitHub Actions**: `.github/workflows/cloudflare-deploy.yml`
 - Build output: `dist/`
-- Google Analytics: `G-0B464DB9YX`
+- Google Analytics: `G-0B464DB9YX` through Cloudflare Zaraz, which sends to GA4 server-side (no GA tag in the HTML, ever). Zaraz is served from the custom path `/_m/` (`/_m/s.js`, `/_m/i.js`), so `/cdn-cgi/zaraz/*` returning 404 is expected, and a curl from the sandbox may not see the loader at all — check `window.zaraz` in a real browser. The GA4 tool and the "All other events" action are already configured in Zaraz; don't add them again (duplicate events).
+- `Analytics.astro` sends custom events with `zaraz.track()`. The "Cookie settings" button (Footer below `lg`, Sidebar bottom on `lg+`) calls `zaraz.showConsentModal()`.
 
 ---
 
@@ -435,7 +437,7 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 ## Performance
 
-- Static site generation (zero JS by default, except mermaid + post-page interactivity)
+- Static site generation (zero JS by default, except mermaid, post-page interactivity and the analytics events in `Analytics.astro`)
 - Image optimization via Sharp (auto WebP conversion)
 - Shiki syntax highlighting (built-in, no client JS)
 - `loading="lazy"` on all images except hero/profile
@@ -449,7 +451,7 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 
 - **Astro components** (`.astro`) for all UI - no React/Vue/Svelte
 - **TypeScript** in frontmatter for type safety
-- **Vanilla JS** in `<script>` tags only when truly needed (email decode, mermaid, copy-button, share buttons, reading progress)
+- **Vanilla JS** in `<script>` tags only when truly needed (email decode, mermaid, copy-button, share buttons, reading progress, analytics events)
 - **Icons**: `@lucide/astro` only. Inline animated icon libraries (e.g. lucide-animated) are **not allowed** — they require React + Framer Motion runtime which violates the zero-JS policy. CSS `group-hover` micro-animations on plain Lucide SVGs are the project standard (see "Icon Micro-animations").
 
 ## Naming Conventions
@@ -485,7 +487,7 @@ PostLayout sets `og:image` and `twitter:image` to `/og/{postPath}.png` and uses 
 4. **Bento grid consistency** - New pages/sections must follow the bento card system. No one-off layouts.
 5. **Mobile-first** - Responsive styles start from mobile, scale up. Test at 375px, 768px, 1280px.
 6. **Accessibility** - Every interactive element needs keyboard support. Every image needs alt text. Semantic HTML (`<nav>`, `<article>`, `<section>`, `<aside>`).
-7. **Zero client JS by default** - Only add `<script>` tags when truly needed (email decode, mermaid, post-page interactions, Skills tooltips on touch in `about.astro`). No JS frameworks. No React/Vue/Svelte islands. This rules out React-based icon/animation libraries (lucide-animated, motion components, etc.) — use CSS `group-hover` on Lucide SVGs instead.
+7. **Zero client JS by default** - Only add `<script>` tags when truly needed (email decode, mermaid, post-page interactions, Skills tooltips on touch in `about.astro`, analytics events in `Analytics.astro`). No JS frameworks. No React/Vue/Svelte islands. This rules out React-based icon/animation libraries (lucide-animated, motion components, etc.) — use CSS `group-hover` on Lucide SVGs instead.
    - **Skills layout is CSS-only:** `about.astro` renders the Skills cards in fixed rows of one or two (`skillRowDefs`). On `xl+` the `fill` card takes whatever width the other card leaves (a card alone in its row spans the full width), so each row runs edge to edge. Below `xl` they stack into one column. Don't bring back a JS packer.
    - **Sanctioned JS exception — Skills tooltips on touch:** the same section's skill descriptions open on tap on no-hover devices (first tap opens, second follows the link). Each description also ships server-rendered in an `sr-only` span, so without JS nothing is lost.
 8. **Content-first URLs** - Blog posts at `/posts/{category}/{slug}/`. No URL changes without redirect.

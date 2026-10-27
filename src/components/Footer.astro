@@ -6,9 +6,13 @@ import SocialLinks from './SocialLinks.astro';
 <footer class="lg:hidden print:hidden border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
   <div class="mx-auto max-w-6xl px-4 py-8">
     <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-      <p class="text-sm text-gray-500 dark:text-gray-400">
-        &copy; {new Date().getFullYear()} {author.name}. All rights reserved.
-      </p>
+      <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+        <p>&copy; {new Date().getFullYear()} {author.name}. All rights reserved.</p>
+        <!-- Zaraz consent modal; optional chaining keeps it a no-op when Zaraz is blocked -->
+        <button type="button" onclick="window.zaraz?.showConsentModal?.()" class="cursor-pointer hover:text-gray-900 transition-colors">
+          Cookie settings
+        </button>
+      </div>
       <SocialLinks class="gap-4" />
     </div>
   </div>
