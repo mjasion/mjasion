@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { author } from '../data/portfolio';
 import { Clock, Briefcase, Sparkles, Hammer, Headphones, Dumbbell, MessageCircle } from '@lucide/astro';
 
-const lastUpdated = new Date('2026-10-25');
+const lastUpdated = new Date('2026-10-27');
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -18,7 +18,6 @@ const sections = [
     iconAnim: 'group-hover:-rotate-6 group-hover:scale-110',
     body: `Senior SRE consultant at NatWest Boxed, working in an enabling team for 30+ squads that run 1000+ services. Right now:`,
     bullets: [
-      `an investigation agent that pulls Datadog logs, traces, and metrics together with Confluence docs and GitHub code to speed up the first phase of incident analysis`,
       `extending a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services`,
       `observability audits that make services easier to debug`,
     ],

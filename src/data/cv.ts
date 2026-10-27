@@ -72,7 +72,7 @@ export const skillGroups = [
 // Key metrics the CV page and PDF set in bold, per company. /about and the
 // markdown twins keep the plain strings.
 const cvMetrics: Record<string, string[]> = {
-  'NatWest Boxed': ['10–50% per team', '50+ business journeys', '30+ engineering teams', '1000+ services'],
+  'NatWest Boxed': ['30+ teams', '10–50% per team', '50+ business journeys', '30+ engineering teams', '1000+ services'],
   'DataChain (formerly Iterative.ai)': ['40% reduction', '50%'],
   TouK: ['50 TB of data, 16 nodes, 2 TB memory'],
   Equinix: ['3 systems (40 microservices)'],

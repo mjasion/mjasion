@@ -40,7 +40,7 @@ export const author = {
   image: '/images/mjasion.jpg',
   summaryShort:
     'I work where code meets infrastructure – diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
-  summary: `Senior SRE and platform engineer based in Warsaw, with ${yearsSince('2012-12')} years in tech. Right now I help 30+ engineering teams run a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – and build AI agents that speed up incident diagnosis. I started as a Java developer and moved into DevOps, platform, and SRE work: Kubernetes, multi-cloud on AWS and GCP, GitOps, and observability. The part I enjoy most is the messy middle where applications meet production – finding the gap that hid an outage and closing it for good.`,
+  summary: `Senior SRE and platform engineer based in Warsaw, with ${yearsSince('2012-12')} years in tech. Right now I help 30+ engineering teams run a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – with a focus on observability, alert quality, incident management, and end-to-end monitoring of business journeys. Outside work I build AI agents and MCP servers on Cloudflare. I started as a Java developer and moved into DevOps, platform, and SRE work: Kubernetes, multi-cloud on AWS and GCP, GitOps, and observability. The part I enjoy most is the messy middle where applications meet production – finding the gap that hid an outage and closing it for good.`,
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },
     {
@@ -227,11 +227,11 @@ export const experiences: Experience[] = [
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Built an AI investigation agent that pulls data from multiple sources (Datadog, Confluence, GitHub) to support the first phase of incident analysis',
+          'Helped migrate incident management for 30+ teams from PagerDuty to incident.io and reworked the incident process around it – post-incident review templates and workflow automations',
           'Reduced alert volume by 10–50% per team by removing duplicate alerts and switching off monitors nobody acted on',
           'Extended a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services',
           'Run service audits covering logging, scaling, trace context propagation, and adoption of journey monitors',
-          'Support 30+ engineering teams resolving production incidents across a system of 1000+ services',
+          'Help 30+ engineering teams investigate production incidents across a system of 1000+ services',
         ],
       },
     ],
@@ -288,7 +288,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/codility_logo.jpeg',
     overview:
-      'Technical interview platform for testing coding skills. Joined ahead of the migration from instance-based (EC2) infrastructure to cloud-native Kubernetes.',
+      'Technical interview platform for testing coding skills. Joined ahead of the switch from EC2 to cloud-native Kubernetes.',
     positions: [
       {
         designation: 'Senior Site Reliability Engineer',
