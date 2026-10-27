@@ -16,7 +16,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.4.2",
     "mermaid": "^12.2.0",
-    "pdfmake": "^0.3.12",
+    "pdfmake": "^0.3.13",
     "satori": "^0.63.2",
     "sharp": "^0.35.5"
   },
