@@ -5,7 +5,7 @@ export const GET: APIRoute = () => {
   const lines: string[] = [
     '---',
     `title: "Now – ${author.name}"`,
-    `description: ${JSON.stringify("What I'm focused on right now: SRE and platform engineering work, AI agents for incident analysis, side projects on Cloudflare, and what I'm learning.")}`,
+    `description: ${JSON.stringify("What Marcin Jasion is focused on right now – observability work, side projects on Cloudflare, sport, and reading.")}`,
     'canonical: https://mjasion.pl/now/',
     '---',
     '',
@@ -30,7 +30,7 @@ export const GET: APIRoute = () => {
     '',
     '## Building',
     '',
-    'Just refreshed this blog – new About, CV, and this page – mostly programmed with Claude Code. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family. Both expose their own MCP server, so I can query and update them straight from Claude.',
+    'Just refreshed this blog – new About, CV, and this page – mostly programmed with Claude Code. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family. Each exposes its own MCP server, so I can query and update them straight from Claude.',
     '',
     '## Sport',
     '',

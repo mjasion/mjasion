@@ -217,7 +217,7 @@ export const experiences: Experience[] = [
         responsibilities: [
           'Reduced alert volume by 10–50% per team by removing duplicate alerts and switching off monitors nobody acted on',
           'Ran observability audits with development teams – logging, scaling, trace context propagation, and journey monitor adoption – to establish consistent observability patterns',
-          'Reworked the incident process: automated escalations and notifications for each incident role, and improved post-incident reviews, automating parts of them with AI',
+          'Reworked the incident process: automated escalations and notifications for each incident role, and improved post-incident reviews with AI-assisted automation',
           'Extended a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services',
           'Investigated production incidents with service teams, tracing root causes through logs, traces, and metrics across a system of 1000+ services',
         ],
