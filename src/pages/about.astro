@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
-import { Play, Stethoscope, Workflow, FileCode, PiggyBank, ShieldCheck, ArrowUpRight } from '@lucide/astro';
-import { author, yearsSince, skills, srePractices, platformPractices, experiences, projects, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
+import { Play, Workflow, FileCode, PiggyBank, ShieldCheck, ArrowUpRight } from '@lucide/astro';
+import { author, yearsSince, skills, platformPractices, experiences, projects, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
 
 // Skills are grouped by their primary (first) category, so a multi-category skill
 // (e.g. Prometheus = observability + container) lands in the group of its first one.
-// SRE and Platform & DevOps practices have no brand logo, so their chips use
-// Lucide icons instead.
+// Platform & DevOps practices have no brand logo, so their chips use Lucide
+// icons instead.
 interface SkillChip {
   name: string;
   summary: string;
@@ -16,8 +16,7 @@ interface SkillChip {
   icon?: string;
 }
 
-const practiceIcons: Record<string, typeof Stethoscope> = {
-  stethoscope: Stethoscope,
+const practiceIcons: Record<string, typeof Workflow> = {
   workflow: Workflow,
   'file-code': FileCode,
   'piggy-bank': PiggyBank,
@@ -38,7 +37,7 @@ const skillRowDefs: { label: string; match?: string[]; extra?: SkillChip[]; fill
     { label: 'Programming & AI', match: ['programming', 'ai'] },
   ],
   [
-    { label: 'Platform & SRE', extra: [...platformPractices, ...srePractices], fill: true },
+    { label: 'Platform & SRE', extra: platformPractices, fill: true },
   ],
 ];
 
@@ -57,7 +56,7 @@ const skillRows = skillRowDefs.map((row) =>
 );
 ---
 
-<BaseLayout title="About" imageAlt={`${author.name} – portrait`} description={`Senior SRE in Warsaw with ${yearsSince('2012-12')} years in tech – observability, Kubernetes, platform engineering, and AI agents that speed up incident diagnosis.`}>
+<BaseLayout title="About" imageAlt={`${author.name} – portrait`} description={`Senior SRE in Warsaw with ${yearsSince('2012-12')} years in tech – observability, alert quality, incident management, Kubernetes, and platform engineering.`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',

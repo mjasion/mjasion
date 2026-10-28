@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { author, skills, srePractices, platformPractices, experiences, projects, certifications, trainings, presentations } from '../data/portfolio';
+import { author, skills, platformPractices, experiences, projects, certifications, trainings, presentations } from '../data/portfolio';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [
@@ -33,7 +33,7 @@ export const GET: APIRoute = () => {
   }
 
   lines.push('', '### Platform & SRE', '');
-  for (const practice of [...platformPractices, ...srePractices]) {
+  for (const practice of platformPractices) {
     lines.push(`- **${practice.name}** – ${practice.summary}`);
   }
 

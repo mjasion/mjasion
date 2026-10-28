@@ -158,21 +158,9 @@ export const skills = [
   },
 ];
 
-// SRE practices shown in the Platform & SRE Skills card on /about. Kept out of `skills`
-// so the CV's technology chips stay tool names only. `icon` is a Lucide icon
-// name mapped to a component in about.astro.
-export const srePractices = [
-  {
-    name: 'Incident diagnosis',
-    icon: 'stethoscope',
-    summary:
-      'Helping 30+ teams find root causes faster: correlating logs, traces, and metrics, and turning findings into fixes that prevent repeats.',
-  },
-];
-
-// Platform & DevOps practices, listed before the SRE practices in the Platform &
-// SRE Skills card on /about (same shape: `icon` is a Lucide icon name mapped in
-// about.astro).
+// Platform & DevOps practices shown in the Platform & SRE Skills card on /about.
+// Kept out of `skills` so the CV's technology chips stay tool names only. `icon`
+// is a Lucide icon name mapped to a component in about.astro.
 export const platformPractices = [
   {
     name: 'CI/CD pipelines',
@@ -451,7 +439,7 @@ export const certifications: Certification[] = [
 export const trainings = [
   {
     name: 'AI_Devs 3: Agents',
-    timeline: '2024',
+    timeline: '2025',
     organization: 'AI_Devs',
     organizationUrl: 'https://www.aidevs.pl',
     overview:
