@@ -20,7 +20,7 @@ import {
 // for Inter), while CSS line-height multiplies font-size - so the values below
 // are the page's effective CSS multipliers divided by 1.21. Calibrated against
 // a Chrome print-to-PDF of /cv/ (same pagination: 2 pages, page 1 ends after
-// Codility).
+// Codility's first position).
 
 const require = createRequire(import.meta.url);
 
@@ -269,9 +269,9 @@ function buildDocDefinition(): Record<string, unknown> {
     margin: [0, 12, 0, 0],
   });
 
-  // Experience - entries print:space-y-3. The page keeps each entry whole
-  // (break-inside-avoid); the PDF keeps each position whole instead, with the
-  // company header riding on the first one, so a long entry can span the break.
+  // Experience - entries print:space-y-3. Like the page's print view, the PDF
+  // keeps each position whole, with the company header riding on the first one,
+  // so a long entry can span the break.
   content.push(sectionHeading('Experience'));
   for (const exp of experiences) {
     const header: Content[] = [

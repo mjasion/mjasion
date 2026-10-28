@@ -227,11 +227,11 @@ export const experiences: Experience[] = [
         designation: 'Senior Site Reliability Engineer (Consultant)',
         start: 'Feb 2025',
         responsibilities: [
-          'Helped migrate incident management for 30+ teams from PagerDuty to incident.io and reworked the incident process around it – post-incident review templates and workflow automations',
           'Reduced alert volume by 10–50% per team by removing duplicate alerts and switching off monitors nobody acted on',
+          'Ran observability audits with development teams – logging, scaling, trace context propagation, and journey monitor adoption – to establish consistent observability patterns',
+          'Reworked the incident process: automated escalations and notifications for each incident role, and improved post-incident reviews, automating parts of them with AI',
           'Extended a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services',
-          'Run service audits covering logging, scaling, trace context propagation, and adoption of journey monitors',
-          'Help 30+ engineering teams investigate production incidents across a system of 1000+ services',
+          'Investigated production incidents with service teams, tracing root causes through logs, traces, and metrics across a system of 1000+ services',
         ],
       },
     ],
@@ -251,7 +251,7 @@ export const experiences: Experience[] = [
         responsibilities: [
           'Designed a multi-cloud platform for running distributed ML experiments with billions of objects (AWS and GCP)',
           'Designed and implemented Kubernetes Pod autoscaling based on Celery queue depth',
-          'Designed the on-premise, enterprise edition of DVC Studio to run reliably in arbitrary customer environments (ESXi, Hyper-V, KVM)',
+          'Designed the on-premise edition of DVC Studio to run reliably in any customer environment (ESXi, Hyper-V, KVM)',
           'Implemented new CI/CD pipeline reducing feature delivery time by 50%',
           'Coordinated large-scale engineering efforts for SOC2 certification',
           'Achieved 40% reduction in cloud expenses by optimizing system designs',
@@ -266,7 +266,7 @@ export const experiences: Experience[] = [
     location: 'Warsaw, Poland',
     logo: '/images/sections/experiences/equinix_logo.jpeg',
     overview:
-      'Equinix is the leader in the colocation data center market. Joined to implement cloud-native practices on Kubernetes and automate Istio Service Mesh for GDPR-compliant connectivity.',
+      'Colocation data center market leader. Joined to automate Kubernetes and Istio Service Mesh for GDPR compliance.',
     positions: [
       {
         designation: 'Senior DevOps Engineer',
