@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { author, experiences, presentations } from '../data/portfolio';
 import {
+  cvSummary,
   education,
   languages,
   publications,
@@ -13,14 +14,15 @@ import {
 } from '../data/cv';
 
 // Build-time PDF twin of the /cv/ page: same data (portfolio.ts + cv.ts), same
-// print design (A4, 14mm margins, Inter, the print:* sizes and gray palette from
-// cv.astro). pdfmake is pure JS, so this renders identically on any build host.
+// print design (A4, Inter, the print:* sizes and gray palette from cv.astro),
+// with narrower margins and larger body text (see below). pdfmake is pure JS,
+// so this renders identically on any build host.
 // All sizes below are in pt; the page's print sizes are px * 0.75.
 // lineHeight caveat: pdfmake multiplies the font's NATURAL line height (~1.21
 // for Inter), while CSS line-height multiplies font-size - so the values below
 // are the page's effective CSS multipliers divided by 1.21. Calibrated against
 // a Chrome print-to-PDF of /cv/ (same pagination: 2 pages, page 1 ends after
-// Codility's first position).
+// Codility).
 
 const require = createRequire(import.meta.url);
 
@@ -40,14 +42,17 @@ const CHIP_BG = '#EEF2FF';
 const CHIP_TEXT = '#3730A3';
 const MUTED = '#64748B';
 
-// A4 (595.28pt) minus 14mm (~40pt) margins on both sides.
-const PAGE_MARGIN = 40;
-const CONTENT_WIDTH = 515;
+// A4 (595.28pt) minus 36pt (~12.7mm) margins on both sides. The print view
+// uses 14mm; the wider text column keeps the larger body text from wrapping
+// onto extra lines.
+const PAGE_MARGIN = 36;
+const CONTENT_WIDTH = 523;
 
 // Body text (bullets, overviews, lists). The print view uses 10.5px (7.9pt);
-// the PDF runs at 12px, the /cv screen size before it grew to 14px. Chrome print
-// would spill that to 3 pages; the PDF stays at 2 by breaking between positions.
-const BODY_FONT_SIZE = 9;
+// the PDF runs at 9.25pt (~12.3px). Chrome print would spill that to 3 pages;
+// the PDF still fits 2. Bullet and overview line heights keep the line pitch
+// they had at 9pt (~12pt and ~12.5pt), so the larger text costs no height.
+const BODY_FONT_SIZE = 9.25;
 
 // Skill chips - page: 11px medium, 1px 7px padding, 4px radius, 14px line,
 // gap-1 between chips and rows; labels in a 120px print column, gap-3.
@@ -262,7 +267,7 @@ function buildDocDefinition(): Record<string, unknown> {
   // Summary - print:text-[11.5px] gray-700 leading-relaxed, print:mt-4; kept
   // 0.5pt above the body, as the page keeps it 1px above.
   content.push({
-    text: author.summary,
+    text: cvSummary,
     fontSize: 9.5,
     color: GRAY_700,
     lineHeight: 1.34,
@@ -270,8 +275,7 @@ function buildDocDefinition(): Record<string, unknown> {
   });
 
   // Experience - entries print:space-y-3. Like the page's print view, the PDF
-  // keeps each position whole, with the company header riding on the first one,
-  // so a long entry can span the break.
+  // keeps each entry whole (company header + all its positions).
   content.push(sectionHeading('Experience'));
   for (const exp of experiences) {
     const header: Content[] = [
@@ -293,42 +297,36 @@ function buildDocDefinition(): Record<string, unknown> {
         text: exp.overview,
         fontSize: BODY_FONT_SIZE,
         color: MUTED,
-        lineHeight: 1.15,
+        lineHeight: 1.12,
         margin: [0, 1.5, 0, 0],
       },
     ];
-    exp.positions.forEach((pos, i) =>
-      content.push({
-        unbreakable: true,
-        margin: [0, i === 0 ? 9 : 0, 0, 0],
-        stack: [
-          ...(i === 0 ? header : []),
-          // designation (print:text-[12px] medium, accent) <-> dates (text-xs muted), print:mt-1.5
-          splitRow(
-            { text: pos.designation, font: 'InterMedium', fontSize: 9, color: ACCENT },
-            { text: `${pos.start} – ${pos.end ?? 'Present'}`, fontSize: 9, color: MUTED },
-            4.5,
-          ),
-          // bullets - print:text-[10.5px] gray-700, accent markers, metrics bold, mt-1 + space-y-0.5
-          {
-            stack: pos.responsibilities.map((r) => ({
-              columns: [
-                { text: '•', width: 8, fontSize: BODY_FONT_SIZE, color: ACCENT },
-                {
-                  text: textRuns(emphasizeMetrics(exp.company, r)),
-                  fontSize: BODY_FONT_SIZE,
-                  color: GRAY_700,
-                  lineHeight: 1.1,
-                  width: '*',
-                },
-              ],
-              margin: [0, 1.5, 0, 0],
-            })),
-            margin: [0, 1.5, 0, 0],
-          },
-        ],
-      }),
-    );
+    const positions: Content[] = exp.positions.flatMap((pos) => [
+      // designation (print:text-[12px] medium, accent) <-> dates (text-xs muted), print:mt-1.5
+      splitRow(
+        { text: pos.designation, font: 'InterMedium', fontSize: 9, color: ACCENT },
+        { text: `${pos.start} – ${pos.end ?? 'Present'}`, fontSize: 9, color: MUTED },
+        4.5,
+      ),
+      // bullets - print:text-[10.5px] gray-700, accent markers, metrics bold, mt-1 + space-y-0.5
+      {
+        stack: pos.responsibilities.map((r) => ({
+          columns: [
+            { text: '•', width: 8, fontSize: BODY_FONT_SIZE, color: ACCENT },
+            {
+              text: textRuns(emphasizeMetrics(exp.company, r)),
+              fontSize: BODY_FONT_SIZE,
+              color: GRAY_700,
+              lineHeight: 1.07,
+              width: '*',
+            },
+          ],
+          margin: [0, 1.5, 0, 0],
+        })),
+        margin: [0, 1.5, 0, 0],
+      },
+    ]);
+    content.push({ unbreakable: true, margin: [0, 9, 0, 0], stack: [...header, ...positions] });
   }
 
   // Skills - label column (medium gray-900) + wrapped chips, space-y-1.

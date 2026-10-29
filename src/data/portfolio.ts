@@ -2,13 +2,13 @@ export function getReadingTime(body: string | undefined): number {
   return Math.max(1, Math.ceil((body?.split(/\s+/).length ?? 0) / 200));
 }
 
-// Years from a 'YYYY-MM' start to build time, rounded to the nearest year,
-// so experience figures stay current without manual edits.
+// Full years from a 'YYYY-MM' start to build time (rounded down, so a figure
+// never overstates experience); stays current without manual edits.
 export function yearsSince(start: string): number {
   const [year, month] = start.split('-').map(Number);
   const now = new Date();
   const months = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
-  return Math.round(months / 12);
+  return Math.floor(months / 12);
 }
 
 export const categoryColors: Record<string, string> = {
@@ -206,7 +206,7 @@ export const experiences: Experience[] = [
   {
     company: 'NatWest Boxed',
     url: 'https://www.natwestboxed.com',
-    location: 'London, UK',
+    location: 'London, UK (Remote)',
     logo: '/images/sections/experiences/natwest_boxed_logo.jpeg',
     overview:
       'Banking-as-a-Service platform from NatWest Group. SRE enabling team supporting stream-aligned squads.',

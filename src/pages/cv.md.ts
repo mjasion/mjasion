@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { author, yearsSince, experiences, presentations } from '../data/portfolio';
 import {
+  cvSummary,
   education,
   languages,
   publications,
@@ -29,7 +30,7 @@ export const GET: APIRoute = () => {
     '',
     '## Summary',
     '',
-    author.summary,
+    cvSummary,
     '',
     '## Experience',
     '',

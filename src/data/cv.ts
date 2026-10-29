@@ -1,7 +1,11 @@
 // CV-only data and helpers shared by the three CV representations:
 // /cv/ (page), /cv.md (markdown endpoint), /cv.pdf (PDF endpoint).
 // Portfolio-wide data (author, skills, experiences, ...) stays in portfolio.ts.
-import { certifications, trainings } from './portfolio';
+import { certifications, trainings, yearsSince } from './portfolio';
+
+// The CV opens with this shorter summary; /about and about.md keep the long bio
+// (author.summary).
+export const cvSummary = `Senior SRE and platform engineer with ${yearsSince('2012-12')} years in tech – from Java development through DevOps to SRE. I work on observability, alert quality, and incident management for a system of 1000+ services at NatWest Boxed, and previously designed multi-cloud platforms on AWS and GCP with Kubernetes and GitOps. Outside work I build AI agents and MCP servers on Cloudflare.`;
 
 // The CV lists certifications and training courses together in one section;
 // /about keeps them as separate sections.
