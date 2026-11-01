@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 10 1120 630" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2d6b45"/>
+      <stop offset="100%" stop-color="#3d8a5a"/>
+    </linearGradient>
+    <linearGradient id="lineGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)"/>
+
+  <!-- Soft organic shapes in background -->
+  <circle cx="200" cy="500" r="300" fill="#ffffff" opacity="0.03"/>
+  <circle cx="1000" cy="150" r="250" fill="#ffffff" opacity="0.03"/>
+  <circle cx="600" cy="700" r="400" fill="#ffffff" opacity="0.02"/>
+
+  <!-- Leaf-dot pattern (series continuity with the build post) -->
+  <g opacity="0.04" fill="#ffffff">
+    <circle cx="150" cy="120" r="40"/>
+    <circle cx="1050" cy="550" r="35"/>
+    <circle cx="950" cy="100" r="25"/>
+    <circle cx="250" cy="580" r="30"/>
+    <circle cx="500" cy="80" r="20"/>
+    <circle cx="700" cy="600" r="22"/>
+    <circle cx="100" cy="350" r="18"/>
+    <circle cx="1100" cy="320" r="28"/>
+  </g>
+
+  <!-- Center circle behind the chart -->
+  <circle cx="600" cy="280" r="120" fill="url(#circleGrad)"/>
+  <circle cx="600" cy="280" r="120" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.15"/>
+
+  <!-- Usage / activity chart: traffic climbing to a peak (the busy day) -->
+  <g>
+    <!-- baseline -->
+    <line x1="512" y1="345" x2="690" y2="345" stroke="#ffffff" stroke-width="1.5" opacity="0.22"/>
+    <!-- faint gridlines -->
+    <g stroke="#ffffff" stroke-width="1" opacity="0.08">
+      <line x1="548" y1="218" x2="548" y2="345"/>
+      <line x1="600" y1="218" x2="600" y2="345"/>
+      <line x1="652" y1="218" x2="652" y2="345"/>
+    </g>
+    <!-- area fill under the line -->
+    <path d="M 512 330 L 548 318 L 584 326 L 620 292 L 652 300 L 690 230 L 690 345 L 512 345 Z" fill="url(#areaGrad)"/>
+    <!-- the line itself -->
+    <path d="M 512 330 L 548 318 L 584 326 L 620 292 L 652 300 L 690 230"
+          fill="none" stroke="url(#lineGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- peak marker (the busiest day) -->
+    <circle cx="690" cy="230" r="13" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+    <circle cx="690" cy="230" r="7" fill="#ffffff"/>
+  </g>
+
+  <!-- Sprout badge - white disc with a green sprout (matches the build post's hero),
+       anchored on the chart circle's edge (bottom-right) like a verified badge. -->
+  <g>
+    <!-- green halo: matches the background so the badge reads as punched-through -->
+    <circle cx="685" cy="365" r="41" fill="#367c51"/>
+    <!-- badge face -->
+    <circle cx="685" cy="365" r="35" fill="#ffffff"/>
+    <!-- sprout icon (Lucide) -->
+    <g transform="translate(685, 365) scale(1.7) translate(-12, -12)" fill="none" stroke="#2d6b45" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/>
+      <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/>
+      <path d="M5 21h14"/>
+    </g>
+  </g>
+</svg>
