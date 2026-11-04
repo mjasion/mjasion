@@ -2,11 +2,14 @@
 import BaseLayout from './BaseLayout.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import { ArrowLeft } from '@lucide/astro';
-import { author, categoryColors } from '@/data/portfolio';
+import { ArrowUp, ChevronLeft, ChevronRight } from '@lucide/astro';
+import { author, categoryColors, categoryLabels } from '@/data/portfolio';
 import type { MarkdownHeading } from 'astro';
 import Comments from '@/components/Comments.astro';
 import ShareButtons from '@/components/ShareButtons.astro';
+import BackToBlog from '@/components/BackToBlog.astro';
+import profileImg from '@/assets/images/mjasion.jpg';
+import { formatPostDate, isoDate, siteUrlOf } from '@/utils/posts';
 
 interface NavPost {
   title: string;
@@ -22,7 +25,6 @@ interface Props {
   dateModified?: Date;
   category: string;
   tags: string[];
-  heroSrc?: string;
   hero?: ImageMetadata | string;
   headings: MarkdownHeading[];
   readingTime: number;
@@ -32,17 +34,15 @@ interface Props {
   nextPost?: NavPost | null;
 }
 
-const { title, seoTitle, description, date, dateModified, category, tags, heroSrc, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
+const { title, seoTitle, description, date, dateModified, category, tags, hero, headings, readingTime, popularTags = new Set(), relatedPosts = [], prevPost, nextPost } = Astro.props;
 
-// UTC, so a date-only `dateModified` ("2026-05-17") never shifts a day with the build machine's zone
-const dateFormat: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' };
-const formattedDate = date.toLocaleDateString('en-US', dateFormat);
+const formattedDate = formatPostDate(date);
 // Shown next to the publish date so the visible date matches JSON-LD dateModified
 const updatedDate = dateModified && dateModified > date ? dateModified : undefined;
 
 const tocHeadings = headings.filter((h) => h.depth <= 3);
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+const siteUrl = siteUrlOf(Astro.site);
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const postPath = Astro.url.pathname.replace(/^\/posts\//, '').replace(/\/$/, '');
 const ogImage = `${siteUrl}/og/${postPath}.png`;
@@ -79,7 +79,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-    { '@type': 'ListItem', position: 2, name: category.charAt(0).toUpperCase() + category.slice(1), item: `${siteUrl}/posts/${category}/` },
+    { '@type': 'ListItem', position: 2, name: categoryLabels[category] ?? category, item: `${siteUrl}/posts/${category}/` },
     { '@type': 'ListItem', position: 3, name: title },
   ],
 };
@@ -117,10 +117,7 @@ const breadcrumbSchema = {
     <!-- Header -->
     <header class="animate-bento-in">
       <div class="flex items-center gap-3 mb-6">
-        <a href="/" class="group inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-          <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
-          Back to blog
-        </a>
+        <BackToBlog />
         <span class="text-gray-300 dark:text-gray-600">/</span>
         <a href={`/posts/${category}/`} class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${categoryColors[category]} hover:opacity-80 transition-opacity`}>
           {category}
@@ -137,7 +134,7 @@ const breadcrumbSchema = {
         {updatedDate && (
           <span class="inline-flex items-center gap-3">
             <span aria-hidden="true">&middot;</span>
-            <span>Updated <time datetime={updatedDate.toISOString().slice(0, 10)}>{updatedDate.toLocaleDateString('en-US', dateFormat)}</time></span>
+            <span>Updated <time datetime={isoDate(updatedDate)}>{formatPostDate(updatedDate)}</time></span>
           </span>
         )}
         <span class="inline-flex items-center gap-3">
@@ -195,9 +192,13 @@ const breadcrumbSchema = {
         <!-- Author card -->
         <div class="mt-12">
           <div class="flex items-center gap-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 p-5">
-            <img
-              src={author.image}
+            <Image
+              src={profileImg}
               alt={author.name}
+              width={112}
+              height={112}
+              format="webp"
+              quality={80}
               class="h-14 w-14 shrink-0 rounded-full"
               loading="lazy"
             />
@@ -222,7 +223,7 @@ const breadcrumbSchema = {
                   class="group flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    <ChevronLeft class="h-3 w-3 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
                     Older post
                   </span>
                   <span class={`mt-1 inline-block self-start rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[prevPost.category] ?? ''}`}>
@@ -240,7 +241,7 @@ const breadcrumbSchema = {
                 >
                   <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     Newer post
-                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    <ChevronRight class="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
                   </span>
                   <span class={`mt-1 inline-block self-end rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[nextPost.category] ?? ''}`}>
                     {nextPost.category}
@@ -318,7 +319,7 @@ const breadcrumbSchema = {
                 {related.title}
               </p>
               <time class="mt-1.5 block text-xs text-gray-500 dark:text-gray-500" datetime={related.date.toISOString()}>
-                {related.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                {formatPostDate(related.date)}
               </time>
             </a>
           ))}
@@ -331,14 +332,14 @@ const breadcrumbSchema = {
   <!-- Back to top button with progress ring -->
   <button
     id="back-to-top"
-    class="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:shadow-xl print:hidden"
+    class="group fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:shadow-xl print:hidden"
     aria-label="Back to top"
   >
     <svg class="h-14 w-14" viewBox="0 0 56 56">
       <circle cx="28" cy="28" r="24" fill="none" stroke-width="2.5" class="stroke-gray-200 dark:stroke-gray-700" />
       <circle id="btt-ring" cx="28" cy="28" r="24" fill="none" stroke-width="2.5" class="stroke-accent-500" stroke-linecap="round" stroke-dasharray="150.796" stroke-dashoffset="150.796" transform="rotate(-90 28 28)" />
     </svg>
-    <svg class="absolute inset-0 m-auto h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+    <ArrowUp class="absolute inset-0 m-auto h-5 w-5 text-gray-600 dark:text-gray-300 transition-transform duration-200 ease-out group-hover:-translate-y-0.5" />
   </button>
 
   <!-- Lightbox overlay -->
@@ -434,44 +435,6 @@ const breadcrumbSchema = {
 </style>
 
 <script>
-  const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
-  if (tocLinks.length > 0) {
-    const headingIds = Array.from(tocLinks).map((a) => a.dataset.toc!);
-    const headingEls = headingIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
-
-    function updateActive() {
-      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
-      let activeId = headingIds[0];
-      if (atBottom) {
-        activeId = headingIds[headingIds.length - 1];
-      } else {
-        const midpoint = window.innerHeight * 0.4;
-        for (const el of headingEls) {
-          if (el.getBoundingClientRect().top <= midpoint) {
-            activeId = el.id;
-          }
-        }
-      }
-      tocLinks.forEach((link) => {
-        link.classList.toggle('is-active', link.dataset.toc === activeId);
-      });
-    }
-
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateActive();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-    updateActive();
-  }
-
   // Lightbox for prose images
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
@@ -542,57 +505,76 @@ const breadcrumbSchema = {
     el.prepend(anchor);
   });
 
-  // Reading progress bar
+  // Scroll-driven UI: reading progress bar, back-to-top ring and the active TOC link.
+  // One passive listener, one requestAnimationFrame per frame, and the layout values
+  // (viewport, document height, heading positions) are read once for all three.
   const progressBar = document.getElementById('reading-progress-bar');
   const progressContainer = document.getElementById('reading-progress');
-  if (progressBar && progressContainer) {
-    let progressTicking = false;
-    function updateProgress() {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrolled = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
-      const pct = Math.round(scrolled * 100);
-      progressBar!.style.width = `${pct}%`;
-      progressContainer!.setAttribute('aria-valuenow', String(pct));
-    }
-    window.addEventListener('scroll', () => {
-      if (!progressTicking) {
-        requestAnimationFrame(() => { updateProgress(); progressTicking = false; });
-        progressTicking = true;
-      }
-    }, { passive: true });
-    updateProgress();
-  }
-
-  // Back to top button with progress ring
   const bttBtn = document.getElementById('back-to-top');
   const bttRing = document.getElementById('btt-ring');
   const CIRCUMFERENCE = 2 * Math.PI * 24; // r=24
-  if (bttBtn && bttRing) {
-    let bttTicking = false;
-    function updateBackToTop() {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrolled = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
-      const offset = CIRCUMFERENCE - scrolled * CIRCUMFERENCE;
-      bttRing!.style.strokeDashoffset = String(offset);
-      if (scrolled > 0.2) {
-        bttBtn!.style.opacity = '1';
-        bttBtn!.style.pointerEvents = 'auto';
-      } else {
-        bttBtn!.style.opacity = '0';
-        bttBtn!.style.pointerEvents = 'none';
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+  const headingEls = tocLinks
+    .map((a) => document.getElementById(a.dataset.toc!))
+    .filter((el): el is HTMLElement => el !== null);
+  let activeTocId: string | undefined;
+  let bttVisible: boolean | undefined;
+
+  function updateToc(viewport: number, atBottom: boolean) {
+    if (headingEls.length === 0) return;
+    let activeId = headingEls[0].id;
+    if (atBottom) {
+      activeId = headingEls[headingEls.length - 1].id;
+    } else {
+      const midpoint = viewport * 0.4;
+      for (const el of headingEls) {
+        if (el.getBoundingClientRect().top > midpoint) break; // headings are in document order
+        activeId = el.id;
       }
     }
-    window.addEventListener('scroll', () => {
-      if (!bttTicking) {
-        requestAnimationFrame(() => { updateBackToTop(); bttTicking = false; });
-        bttTicking = true;
-      }
-    }, { passive: true });
-    bttBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    updateBackToTop();
+    if (activeId === activeTocId) return;
+    activeTocId = activeId;
+    for (const link of tocLinks) link.classList.toggle('is-active', link.dataset.toc === activeId);
   }
+
+  function onScrollFrame() {
+    const viewport = window.innerHeight;
+    const scrollY = window.scrollY;
+    const scrollable = document.documentElement.scrollHeight - viewport;
+    const scrolled = scrollable > 0 ? Math.min(scrollY / scrollable, 1) : 0;
+
+    if (progressBar && progressContainer) {
+      const pct = Math.round(scrolled * 100);
+      progressBar.style.width = `${pct}%`;
+      progressContainer.setAttribute('aria-valuenow', String(pct));
+    }
+
+    if (bttBtn && bttRing) {
+      bttRing.style.strokeDashoffset = String(CIRCUMFERENCE - scrolled * CIRCUMFERENCE);
+      const visible = scrolled > 0.2;
+      if (visible !== bttVisible) {
+        bttVisible = visible;
+        bttBtn.style.opacity = visible ? '1' : '0';
+        bttBtn.style.pointerEvents = visible ? 'auto' : 'none';
+      }
+    }
+
+    updateToc(viewport, scrollY >= scrollable - 2);
+  }
+
+  let scrollTicking = false;
+  window.addEventListener('scroll', () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      onScrollFrame();
+      scrollTicking = false;
+    });
+  }, { passive: true });
+  bttBtn?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  onScrollFrame();
 
   // Copy link share buttons (multiple instances: mobile + sidebar)
   document.querySelectorAll('.copy-link-btn-trigger').forEach((btn) => {
