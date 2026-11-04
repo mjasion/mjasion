@@ -23,6 +23,13 @@ export const categoryLabels: Record<string, string> = {
   kubernetes: 'Kubernetes',
 };
 
+// Intro line of the /posts/{category}/ pages
+export const categoryDescriptions: Record<string, string> = {
+  cloud: 'Articles about cloud infrastructure, AWS, Terraform, and cloud services',
+  development: 'Articles about software development, tools, and best practices',
+  kubernetes: 'Articles about Kubernetes, container orchestration, and service mesh',
+};
+
 export const author = {
   name: 'Marcin Jasion',
   nickname: 'Marcin',
@@ -40,6 +47,8 @@ export const author = {
   image: '/images/mjasion.jpg',
   summaryShort:
     'I work where code meets infrastructure – diagnosing incidents, fixing observability gaps, and making 1000+ services boring to operate.',
+  // About blurb of the markdown home page (/index.md) and /llms.txt – one paragraph for agents
+  summaryForAgents: `Senior SRE and platform engineer based in Warsaw, with ${yearsSince('2012-12')} years in tech. Right now I help 30+ engineering teams run a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – with a focus on observability, alert quality, incident management, and end-to-end monitoring of business journeys. Outside work I build AI agents and MCP servers on Cloudflare. Previously Senior Platform Engineer at DataChain (formerly Iterative.ai): a multi-cloud ML platform on AWS and GCP, 40% lower cloud spend, SOC2.`,
   summary: `Senior SRE and platform engineer based in Warsaw, with ${yearsSince('2012-12')} years in tech. Right now I help 30+ engineering teams run a system of 1000+ services at NatWest Boxed – mostly Java services in an asynchronous, Kafka-based architecture – with a focus on observability, alert quality, incident management, and end-to-end monitoring of business journeys. Outside work I build AI agents and MCP servers on Cloudflare. I started as a Java developer and moved into DevOps, platform, and SRE work: Kubernetes, multi-cloud on AWS and GCP, GitOps, and observability. The part I enjoy most is the messy middle where applications meet production – finding the gap that hid an outage and closing it for good.`,
   socialLinks: [
     { name: 'GitHub', url: 'https://www.github.com/mjasion', icon: 'github' },

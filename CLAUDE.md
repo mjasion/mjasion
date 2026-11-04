@@ -32,6 +32,7 @@ src/
 │   ├── Footer.astro            # Footer with social links
 │   ├── SocialLinks.astro       # Social icon row (used by Sidebar + Footer)
 │   ├── ShareButtons.astro      # Post share buttons (X, LinkedIn, copy)
+│   ├── BackToBlog.astro        # "Back to blog" link (archives, tags, category pages, post header)
 │   ├── Comments.astro          # Giscus comments (client-side)
 │   ├── Analytics.astro         # Custom GA4 events via Zaraz (outbound links, downloads, code copy, read depth)
 │   ├── ObfuscatedEmail.astro   # Email obfuscation (ROT13 + reverse)
@@ -60,6 +61,8 @@ src/
 │   └── posts/[category]/[...slug].astro  # Dynamic blog post route
 ├── styles/
 │   └── global.css              # Tailwind v4 config + theme tokens
+├── utils/
+│   └── posts.ts                # isVisible, getSortedPosts, groupBy*/tagCounts, MIN_POSTS_FOR_TAG_PAGE, date formatters, markdownResponse
 └── content.config.ts           # Content collection schema (Zod)
 public/
 ├── _redirects                  # Cloudflare Pages redirects
@@ -88,6 +91,14 @@ const { Content, headings } = await render(post);  // NOT post.render()
 ```
 
 Post URLs: `/posts/${post.id}/` (id already includes `category/slug`).
+
+Shared post helpers live in `src/utils/posts.ts` - use them instead of re-implementing:
+`getSortedPosts()` (visible posts, newest first), `groupByCategory` / `groupByTag` / `tagCounts` /
+`popularTags`, `MIN_POSTS_FOR_TAG_PAGE`, `formatPostDate` (UTC), `isoDate`, `pluralPosts`,
+`postItemList` (JSON-LD ItemList) and `markdownResponse` (every `.md` twin).
+
+Every image file in a post directory ships to `dist/` (the `.md` twin route eager-globs them to
+rewrite relative image links), so never leave unused images or videos next to a post.
 
 ## Blog Post Front Matter
 

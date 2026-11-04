@@ -1,21 +1,10 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
 import { categoryLabels } from '../data/portfolio';
-import { isVisible } from '@/utils/posts';
+import { getSortedPosts, groupByCategory, isoDate, markdownResponse, pluralPosts, postUrl } from '@/utils/posts';
 
 export const GET: APIRoute = async () => {
-  const posts = (await getCollection('posts', isVisible))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-  const categories = new Map<string, typeof posts>();
-  for (const post of posts) {
-    const cat = post.data.category;
-    const existing = categories.get(cat) ?? [];
-    existing.push(post);
-    categories.set(cat, existing);
-  }
-
-  const sortedCategories = Array.from(categories.entries()).sort((a, b) => b[1].length - a[1].length);
+  const posts = await getSortedPosts();
+  const categories = groupByCategory(posts);
 
   const lines: string[] = [
     '---',
@@ -26,28 +15,18 @@ export const GET: APIRoute = async () => {
     '',
     '# All Posts',
     '',
-    `${posts.length} posts across ${sortedCategories.length} categories.`,
+    `${posts.length} posts across ${categories.length} categories.`,
     '',
   ];
 
-  for (const [cat, catPosts] of sortedCategories) {
+  for (const [cat, catPosts] of categories) {
     const label = categoryLabels[cat] ?? cat;
-    lines.push(
-      `## [${label}](https://mjasion.pl/posts/${cat}/) (${catPosts.length} ${catPosts.length === 1 ? 'post' : 'posts'})`,
-      '',
-    );
+    lines.push(`## [${label}](https://mjasion.pl/posts/${cat}/) (${pluralPosts(catPosts.length)})`, '');
     for (const post of catPosts) {
-      const date = post.data.date.toISOString().slice(0, 10);
-      lines.push(`- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/)`);
+      lines.push(`- ${isoDate(post.data.date)} - [${post.data.title}](${postUrl(post)})`);
     }
     lines.push('');
   }
 
-  return new Response(lines.join('\n'), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-    },
-  });
+  return markdownResponse(lines);
 };

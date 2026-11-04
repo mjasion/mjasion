@@ -1,26 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import { categoryColors, categoryLabels } from '../../data/portfolio';
-import { isVisible } from '@/utils/posts';
+import { getSortedPosts, groupByCategory, pluralPosts, postItemList, siteUrlOf } from '@/utils/posts';
 
-const posts = (await getCollection('posts', isVisible))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = await getSortedPosts();
+// Biggest category first
+const sortedCategories = groupByCategory(posts);
 
-const categories = new Map<string, typeof posts>();
-for (const post of posts) {
-  const cat = post.data.category;
-  const existing = categories.get(cat) ?? [];
-  existing.push(post);
-  categories.set(cat, existing);
-}
-
-// Sort categories by post count descending
-const sortedCategories = Array.from(categories.entries())
-  .sort((a, b) => b[1].length - a[1].length);
-
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+const siteUrl = siteUrlOf(Astro.site);
 
 const collectionPageSchema = {
   '@context': 'https://schema.org',
@@ -28,15 +16,7 @@ const collectionPageSchema = {
   name: 'All Posts',
   description: 'Articles on observability, Kubernetes, cloud infrastructure and AI agents for operations, grouped by topic.',
   url: `${siteUrl}/posts/`,
-  mainEntity: {
-    '@type': 'ItemList',
-    numberOfItems: posts.length,
-    itemListElement: posts.map((post, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      url: `${siteUrl}/posts/${post.id}/`,
-    })),
-  },
+  mainEntity: postItemList(posts, siteUrl),
 };
 ---
 
@@ -62,7 +42,7 @@ const collectionPageSchema = {
               {categoryLabels[category] ?? category}
             </a>
             <span class="text-sm text-gray-500 dark:text-gray-400">
-              {categoryPosts.length} {categoryPosts.length === 1 ? 'post' : 'posts'}
+              {pluralPosts(categoryPosts.length)}
             </span>
           </div>
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

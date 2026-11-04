@@ -1,45 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
+import type { InferGetStaticPropsType } from 'astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogCard from '../../../components/BlogCard.astro';
-import { ArrowLeft } from '@lucide/astro';
-import { isVisible } from '@/utils/posts';
-
-const categoryLabels: Record<string, string> = {
-  cloud: 'Cloud',
-  development: 'Development',
-  kubernetes: 'Kubernetes',
-};
-
-const categoryDescriptions: Record<string, string> = {
-  cloud: 'Articles about cloud infrastructure, AWS, Terraform, and cloud services',
-  development: 'Articles about software development, tools, and best practices',
-  kubernetes: 'Articles about Kubernetes, container orchestration, and service mesh',
-};
+import BackToBlog from '../../../components/BackToBlog.astro';
+import { categoryDescriptions, categoryLabels } from '../../../data/portfolio';
+import { getSortedPosts, groupByCategory, pluralPosts, postItemList, siteUrlOf } from '@/utils/posts';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('posts', isVisible))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-  const categories = new Map<string, typeof posts>();
-  for (const post of posts) {
-    const cat = post.data.category;
-    const existing = categories.get(cat) ?? [];
-    existing.push(post);
-    categories.set(cat, existing);
-  }
-
-  return Array.from(categories.entries()).map(([category, categoryPosts]) => ({
+  return groupByCategory(await getSortedPosts()).map(([category, categoryPosts]) => ({
     params: { category },
     props: { category, posts: categoryPosts },
   }));
 }
 
-const { category, posts } = Astro.props;
+const { category, posts } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
 const label = categoryLabels[category] ?? category;
 const description = categoryDescriptions[category] ?? `Articles about ${category}`;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+const siteUrl = siteUrlOf(Astro.site);
 
 const collectionPageSchema = {
   '@context': 'https://schema.org',
@@ -47,15 +25,7 @@ const collectionPageSchema = {
   name: `${label} Articles`,
   description,
   url: `${siteUrl}/posts/${category}/`,
-  mainEntity: {
-    '@type': 'ItemList',
-    numberOfItems: posts.length,
-    itemListElement: posts.map((post: any, i: number) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      url: `${siteUrl}/posts/${post.id}/`,
-    })),
-  },
+  mainEntity: postItemList(posts, siteUrl),
 };
 ---
 
@@ -67,19 +37,16 @@ const collectionPageSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
   </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
-    <a href="/" class="group inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
-      <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
-      Back to blog
-    </a>
+    <BackToBlog class="mb-6" />
 
     <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
       {label}
     </h1>
     <p class="mt-3 max-w-2xl text-gray-600 dark:text-gray-300 leading-relaxed">{description}.</p>
-    <p class="mt-2 text-sm text-gray-500 dark:text-gray-500">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</p>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-500">{pluralPosts(posts.length)}</p>
 
     <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {posts.map((post: any) => (
+      {posts.map((post) => (
         <BlogCard post={post} />
       ))}
     </div>

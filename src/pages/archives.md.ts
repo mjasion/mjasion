@@ -1,20 +1,10 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
-import { isVisible } from '@/utils/posts';
+import { getSortedPosts, groupBy, isoDate, markdownResponse, pluralPosts, postUrl } from '@/utils/posts';
 
 export const GET: APIRoute = async () => {
-  const posts = (await getCollection('posts', isVisible))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-  const postsByYear = new Map<number, typeof posts>();
-  for (const post of posts) {
-    const year = post.data.date.getFullYear();
-    const yearPosts = postsByYear.get(year) ?? [];
-    yearPosts.push(post);
-    postsByYear.set(year, yearPosts);
-  }
-
-  const oldestYear = Array.from(postsByYear.keys()).pop();
+  const posts = await getSortedPosts();
+  const postsByYear = groupBy(posts, (p) => p.data.date.getUTCFullYear());
+  const oldestYear = posts.at(-1)?.data.date.getUTCFullYear();
 
   const lines: string[] = [
     '---',
@@ -29,20 +19,13 @@ export const GET: APIRoute = async () => {
     '',
   ];
 
-  for (const [year, yearPosts] of postsByYear.entries()) {
-    lines.push(`## ${year} (${yearPosts.length} ${yearPosts.length === 1 ? 'post' : 'posts'})`, '');
+  for (const [year, yearPosts] of postsByYear) {
+    lines.push(`## ${year} (${pluralPosts(yearPosts.length)})`, '');
     for (const post of yearPosts) {
-      const date = post.data.date.toISOString().slice(0, 10);
-      lines.push(`- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/) (${post.data.category})`);
+      lines.push(`- ${isoDate(post.data.date)} - [${post.data.title}](${postUrl(post)}) (${post.data.category})`);
     }
     lines.push('');
   }
 
-  return new Response(lines.join('\n'), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-    },
-  });
+  return markdownResponse(lines);
 };

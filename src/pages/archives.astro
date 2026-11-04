@@ -1,25 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { ArrowLeft } from '@lucide/astro';
+import BackToBlog from '../components/BackToBlog.astro';
 import { categoryColors } from '../data/portfolio';
-import { isVisible } from '@/utils/posts';
+import { formatMonthDay, getSortedPosts, groupBy, pluralPosts, siteUrlOf } from '@/utils/posts';
 
-const posts = (await getCollection('posts', isVisible))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = await getSortedPosts();
+const postsByYear = groupBy(posts, (post) => post.data.date.getUTCFullYear());
 
-const postsByYear = new Map<number, typeof posts>();
-for (const post of posts) {
-  const year = post.data.date.getFullYear();
-  const yearPosts = postsByYear.get(year) ?? [];
-  yearPosts.push(post);
-  postsByYear.set(year, yearPosts);
-}
-
-const oldestYear = posts.at(-1)?.data.date.getFullYear();
+const oldestYear = posts.at(-1)?.data.date.getUTCFullYear();
 const description = `All posts in chronological order – Kubernetes, observability, Terraform, cloud networking and AI agents, from ${oldestYear} to today.`;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+const siteUrl = siteUrlOf(Astro.site);
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -39,20 +30,17 @@ const breadcrumbSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
-    <a href="/" class="group inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
-      <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
-      Back to blog
-    </a>
+    <BackToBlog class="mb-6" />
 
     <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Archives</h1>
-    <p class="mt-2 text-gray-600 dark:text-gray-400">{posts.length} posts since {Array.from(postsByYear.keys()).pop()}</p>
+    <p class="mt-2 text-gray-600 dark:text-gray-400">{posts.length} posts since {oldestYear}</p>
 
     <div class="mt-10 space-y-10">
       {Array.from(postsByYear.entries()).map(([year, yearPosts]) => (
         <section>
           <h2 class="flex items-center gap-3 text-xl font-bold text-gray-900 dark:text-gray-100">
             <span>{year}</span>
-            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">({yearPosts.length} {yearPosts.length === 1 ? 'post' : 'posts'})</span>
+            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">({pluralPosts(yearPosts.length)})</span>
           </h2>
           <div class="mt-4 ml-4 border-l-2 border-gray-200 dark:border-gray-800 pl-6 space-y-4">
             {yearPosts.map((post) => (
@@ -63,7 +51,7 @@ const breadcrumbSchema = {
                     datetime={post.data.date.toISOString()}
                     class="shrink-0 text-sm text-gray-500 dark:text-gray-400 tabular-nums"
                   >
-                    {post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    {formatMonthDay(post.data.date)}
                   </time>
                   <span class={`inline-block self-start rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[post.data.category] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'}`}>
                     {post.data.category}

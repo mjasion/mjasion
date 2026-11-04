@@ -2,9 +2,9 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import profileImg from '../assets/images/mjasion.jpg';
-import { author, categoryColors } from '../data/portfolio';
+import { author, categoryColors, categoryLabels } from '../data/portfolio';
 import SocialLinks from './SocialLinks.astro';
-import { isVisible } from '@/utils/posts';
+import { groupBy, isVisible } from '@/utils/posts';
 
 const pathname = Astro.url.pathname;
 
@@ -16,17 +16,12 @@ const navLinks = [
   { href: '/cv/', label: 'CV', match: (p: string) => p.startsWith('/cv') },
 ];
 
-const posts = await getCollection('posts', isVisible);
-const categoryCounts = new Map<string, number>();
-for (const post of posts) {
-  const cat = post.data.category;
-  categoryCounts.set(cat, (categoryCounts.get(cat) ?? 0) + 1);
-}
-const categoryLinks = Array.from(categoryCounts.entries())
-  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-  .map(([cat, count]) => ({
+// Biggest category first, then alphabetical
+const categoryLinks = [...groupBy(await getCollection('posts', isVisible), (post) => post.data.category)]
+  .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
+  .map(([cat]) => ({
     href: `/posts/${cat}/`,
-    label: cat.charAt(0).toUpperCase() + cat.slice(1),
+    label: categoryLabels[cat] ?? cat,
     color: categoryColors[cat] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
   }));
 ---

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { author, yearsSince, experiences, presentations } from '../data/portfolio';
+import { markdownResponse } from '@/utils/posts';
 import {
   cvSummary,
   education,
@@ -80,11 +81,5 @@ export const GET: APIRoute = () => {
   }
   lines.push('');
 
-  return new Response(lines.join('\n'), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-    },
-  });
+  return markdownResponse(lines);
 };

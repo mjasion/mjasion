@@ -1,0 +1,20 @@
+---
+import { ArrowLeft } from '@lucide/astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a
+  href="/"
+  class:list={[
+    'group inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors',
+    className,
+  ]}
+>
+  <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
+  Back to blog
+</a>
