@@ -1,6 +1,6 @@
 name: pnpm upgrade
 
-# One PR with every in-range dependency bump at once (instead of a Renovate PR per
+# One PR with every minor / patch dependency bump at once (instead of a Renovate PR per
 # package). The branch is rebuilt from main on every run — reset, `pnpm update`,
 # commit, force-push — so it never has rebase conflicts: the lockfile is simply
 # regenerated on top of the current main.
@@ -58,6 +58,11 @@ jobs:
         # Within the ranges of package.json (no majors), respecting pnpm's
         # minimumReleaseAge gate (24h by default).
         run: pnpm update
+
+      - name: Bump minor + patch of every direct dependency
+        # Also the minors `pnpm update` cannot take: 0.x caret ranges (^0.63 only
+        # allows 0.63.x), ~ ranges and exact pins. Majors stay with Renovate.
+        run: node .github/scripts/bump-minor.mjs
 
       - name: Detect changes
         id: diff
@@ -175,7 +180,7 @@ jobs:
           [ -n "$bumps" ] || bumps='_Only transitive dependencies (lockfile)._'
 
           body=$(cat <<EOF
-          In-range \`pnpm update\` on top of \`$(git rev-parse --short origin/main)\`. Rebuilt from main daily; [run]($RUN_URL).
+          Minor + patch bumps (\`pnpm update\` + \`.github/scripts/bump-minor.mjs\`) on top of \`$(git rev-parse --short origin/main)\`. Rebuilt from main daily; [run]($RUN_URL).
 
           $(icon "$TYPECHECK") typecheck · $(icon "$BUILD") build
 
