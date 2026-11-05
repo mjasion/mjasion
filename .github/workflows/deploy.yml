@@ -21,6 +21,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
+          # No later step pushes with git: the tag action and the release action
+          # both talk to the REST API with the github_token input.
+          persist-credentials: false
 
       - name: Bump version and push tag
         id: tag
@@ -39,11 +42,17 @@ jobs:
           generate_release_notes: true
 
       - name: Release summary
+        # Step outputs go through env, never expression syntax in the script: the
+        # changelog is built from commit messages and must stay plain data.
+        env:
+          NEW_TAG: ${{ steps.tag.outputs.new_tag }}
+          NEW_VERSION: ${{ steps.tag.outputs.new_version }}
+          CHANGELOG: ${{ steps.tag.outputs.changelog }}
         run: |
-          echo "## Release Created" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Tag:** ${{ steps.tag.outputs.new_tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.tag.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Changelog" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.tag.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+          {
+            printf '%s\n' "## Release Created" ""
+            printf '**Tag:** %s\n' "$NEW_TAG"
+            printf '**Version:** %s\n' "$NEW_VERSION"
+            printf '%s\n' "" "### Changelog"
+            printf '%s\n' "$CHANGELOG"
+          } >> "$GITHUB_STEP_SUMMARY"
