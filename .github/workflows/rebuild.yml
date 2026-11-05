@@ -5,15 +5,21 @@ on:
     - cron: "10 0 * * *"
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   rebuild:
     name: Trigger Cloudflare Pages Rebuild
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy hook
+        # A Pages deploy hook is authorized by its URL alone, so the URL is a
+        # secret and no Cloudflare API credentials are sent with it.
+        env:
+          HOOK_URL: ${{ secrets.CF_DEPLOY_HOOK_URL }}
         run: |
-          curl -sf -X POST \
-            -H "Content-Type: application/json;charset=UTF-8" \
-            -H "X-Auth-Email: ${{ secrets.CLOUDFLARE_EMAIL }}" \
-            -H "X-Auth-Key: ${{ secrets.CLOUDFLARE_API_KEY }}" \
-            "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/390200d2-5e3b-403a-a0d7-1d0926d5f961"
+          if [ -z "$HOOK_URL" ]; then
+            echo "::error::Repository secret CF_DEPLOY_HOOK_URL is not set (Cloudflare Pages deploy hook URL)."
+            exit 1
+          fi
+          curl -fsS -X POST "$HOOK_URL"

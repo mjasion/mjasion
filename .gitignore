@@ -75,3 +75,6 @@ resources/
 themes/toha/content/
 .pnpm-store/
 /.playwright-mcp/
+
+# Wrangler local secrets
+.dev.vars*
