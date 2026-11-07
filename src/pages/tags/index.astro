@@ -1,23 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { ArrowLeft } from '@lucide/astro';
-import { isVisible } from '@/utils/posts';
+import BackToBlog from '../../components/BackToBlog.astro';
+import { getSortedPosts, MIN_POSTS_FOR_TAG_PAGE, siteUrlOf, tagCounts } from '@/utils/posts';
 
-const MIN_POSTS_FOR_TAG_PAGE = 5;
-const posts = await getCollection('posts', isVisible);
+const posts = await getSortedPosts();
+const sortedTags = tagCounts(posts);
 
-const tagCounts = new Map<string, number>();
-for (const post of posts) {
-  for (const tag of post.data.tags) {
-    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-  }
-}
-
-const sortedTags = Array.from(tagCounts.entries())
-  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
+const siteUrl = siteUrlOf(Astro.site);
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -37,10 +26,7 @@ const breadcrumbSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
-    <a href="/" class="group inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-6">
-      <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
-      Back to blog
-    </a>
+    <BackToBlog class="mb-6" />
 
     <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Tags</h1>
     <p class="mt-3 max-w-2xl text-gray-600 dark:text-gray-300 leading-relaxed">

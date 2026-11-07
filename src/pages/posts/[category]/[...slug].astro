@@ -1,66 +1,40 @@
 ---
-import { getCollection, render } from 'astro:content';
+import type { InferGetStaticPropsType } from 'astro';
+import { render } from 'astro:content';
 import PostLayout from '../../../layouts/PostLayout.astro';
 import { getReadingTime } from '../../../data/portfolio';
-import { isVisible } from '@/utils/posts';
+import { getSortedPosts, popularTags as getPopularTags, postParams, postPath, type Post } from '@/utils/posts';
 
 export async function getStaticPaths() {
-  const MIN_POSTS_FOR_TAG_PAGE = 5;
-  const posts = (await getCollection('posts', isVisible))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-  // Count tags to determine which ones get pages
-  const tagCounts = new Map<string, number>();
-  for (const post of posts) {
-    for (const tag of post.data.tags) {
-      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-    }
-  }
-  const popularTags = new Set(
-    Array.from(tagCounts.entries())
-      .filter(([, count]) => count >= MIN_POSTS_FOR_TAG_PAGE)
-      .map(([tag]) => tag)
-  );
+  const posts = await getSortedPosts();
+  // Tags that have their own page, so the post header can link them
+  const popularTags = getPopularTags(posts);
+  const navPost = (p: Post | undefined) =>
+    p ? { title: p.data.title, href: postPath(p), category: p.data.category } : null;
 
   return posts.map((post, index) => {
-    const parts = post.id.split('/');
-    const category = parts[0];
-    const slug = parts.slice(1).join('/');
-
-    // Find related posts: same category, excluding current, up to 3
+    // Related posts: same category, excluding current, up to 3 (newest first)
     const related = posts
       .filter((p) => p.data.category === post.data.category && p.id !== post.id)
       .slice(0, 3)
-      .map((p) => ({
-        title: p.data.title,
-        href: `/posts/${p.id}/`,
-        category: p.data.category,
-        date: p.data.date,
-      }));
-
-    // Posts are sorted DESC (newest first), so older = index+1, newer = index-1
-    const olderPost = index < posts.length - 1
-      ? { title: posts[index + 1].data.title, href: `/posts/${posts[index + 1].id}/`, category: posts[index + 1].data.category }
-      : null;
-    const newerPost = index > 0
-      ? { title: posts[index - 1].data.title, href: `/posts/${posts[index - 1].id}/`, category: posts[index - 1].data.category }
-      : null;
+      .map((p) => ({ ...navPost(p)!, date: p.data.date }));
 
     return {
-      params: { category, slug },
-      props: { post, popularTags, relatedPosts: related, prevPost: olderPost, nextPost: newerPost },
+      params: postParams(post),
+      props: {
+        post,
+        popularTags,
+        relatedPosts: related,
+        // Posts are sorted DESC (newest first), so older = index+1, newer = index-1
+        prevPost: navPost(posts[index + 1]),
+        nextPost: navPost(posts[index - 1]),
+      },
     };
   });
 }
 
-const { post, popularTags, relatedPosts, prevPost, nextPost } = Astro.props;
+const { post, popularTags, relatedPosts, prevPost, nextPost } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
 const { Content, headings } = await render(post);
-const hero = post.data.hero;
-const heroSrc = hero
-  ? typeof hero === 'string'
-    ? hero
-    : hero.src
-  : undefined;
 const readingTime = getReadingTime(post.body);
 ---
 
@@ -72,8 +46,7 @@ const readingTime = getReadingTime(post.body);
   dateModified={post.data.dateModified}
   category={post.data.category}
   tags={post.data.tags}
-  heroSrc={heroSrc}
-  hero={hero}
+  hero={post.data.hero}
   headings={headings}
   readingTime={readingTime}
   popularTags={popularTags}

@@ -17,5 +17,37 @@
     "schedule": [],
     "prCreation": "immediate"
   },
-  "configMigration": true
+  "configMigration": true,
+  "packageRules": [
+    {
+      "description": "Astro and its integrations; the Shiki transformers must match the Shiki Astro bundles",
+      "groupName": "astro",
+      "matchPackageNames": ["astro", "@astrojs/**", "@shikijs/**"]
+    },
+    {
+      "description": "Tailwind CSS, its Vite plugin and the typography plugin",
+      "groupName": "tailwindcss",
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/**"]
+    },
+    {
+      "description": "OG image pipeline: satori lays out, resvg renders, Inter is the font",
+      "groupName": "og-image",
+      "matchPackageNames": ["satori", "@resvg/resvg-js", "@fontsource/inter"]
+    },
+    {
+      "description": "CV PDF: pdfmake with its types",
+      "groupName": "pdfmake",
+      "matchPackageNames": ["pdfmake", "@types/pdfmake"]
+    },
+    {
+      "description": "One PR for every GitHub Action (versions and pinned digests)",
+      "groupName": "github-actions",
+      "matchManagers": ["github-actions"]
+    },
+    {
+      "description": "Node.js and pnpm (packageManager, .node-version) in one PR",
+      "groupName": "node and pnpm",
+      "matchDepNames": ["node", "pnpm"]
+    }
+  ]
 }

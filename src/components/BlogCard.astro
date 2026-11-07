@@ -1,26 +1,18 @@
 ---
-import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import { categoryColors, getReadingTime } from '../data/portfolio';
+import { formatPostDate, postPath, type Post } from '@/utils/posts';
 
 interface Props {
-  post: CollectionEntry<'posts'>;
+  post: Post;
   priority?: boolean;
 }
 
 const { post, priority = false } = Astro.props;
 const { title, date, description, category, tags, hero } = post.data;
 
-import { categoryColors, getReadingTime } from '../data/portfolio';
-
-// post.id is like "cloud/how-to-setup-aws..." (includes category)
-const href = `/posts/${post.id}/`;
-
-const formattedDate = new Date(date).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-});
-
+const href = postPath(post);
+const formattedDate = formatPostDate(date);
 const readingTime = getReadingTime(post.body);
 ---
 

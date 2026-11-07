@@ -65,9 +65,19 @@
       const seconds = Math.round(performance.now() / 1000);
       if (percent >= 90 && seconds >= 30) {
         track('article_read', { read_seconds: seconds, page_path });
-        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('scroll', onScrollEvent);
       }
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // One measurement per frame at most - getBoundingClientRect forces a layout read
+    let ticking = false;
+    const onScrollEvent = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        onScroll();
+      });
+    };
+    window.addEventListener('scroll', onScrollEvent, { passive: true });
   }
 </script>

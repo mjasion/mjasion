@@ -1,60 +1,36 @@
-import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
+import type { APIRoute, InferGetStaticPropsType } from 'astro';
 import { categoryLabels } from '../../data/portfolio';
-import { isVisible } from '@/utils/posts';
+import { getSortedPosts, groupByCategory, isoDate, markdownResponse, oneLine, pluralPosts, postUrl } from '@/utils/posts';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('posts', isVisible))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-  const categories = new Map<string, typeof posts>();
-  for (const post of posts) {
-    const cat = post.data.category;
-    const existing = categories.get(cat) ?? [];
-    existing.push(post);
-    categories.set(cat, existing);
-  }
-
-  return Array.from(categories.entries()).map(([category, catPosts]) => ({
+  return groupByCategory(await getSortedPosts()).map(([category, posts]) => ({
     params: { category },
-    props: { category, posts: catPosts },
+    props: { category, posts },
   }));
 }
 
 export const GET: APIRoute = ({ props }) => {
-  const { category, posts } = props as {
-    category: string;
-    posts: Awaited<ReturnType<typeof getCollection<'posts'>>>;
-  };
+  const { category, posts } = props as InferGetStaticPropsType<typeof getStaticPaths>;
   const label = categoryLabels[category] ?? category;
 
   const lines: string[] = [
     '---',
     `title: "${label} posts - Marcin Jasion"`,
-    `description: ${JSON.stringify(`All ${label} posts by Marcin Jasion. ${posts.length} ${posts.length === 1 ? 'post' : 'posts'}.`)}`,
+    `description: ${JSON.stringify(`All ${label} posts by Marcin Jasion. ${pluralPosts(posts.length)}.`)}`,
     `canonical: https://mjasion.pl/posts/${category}/`,
     '---',
     '',
     `# ${label}`,
     '',
-    `${posts.length} ${posts.length === 1 ? 'post' : 'posts'} in this category.`,
+    `${pluralPosts(posts.length)} in this category.`,
     '',
   ];
 
   for (const post of posts) {
-    const date = post.data.date.toISOString().slice(0, 10);
-    lines.push(
-      `- ${date} - [${post.data.title}](https://mjasion.pl/posts/${post.id}/) - ${post.data.description.replace(/\n/g, ' ').trim()}`,
-    );
+    lines.push(`- ${isoDate(post.data.date)} - [${post.data.title}](${postUrl(post)}) - ${oneLine(post.data.description)}`);
   }
 
   lines.push('');
 
-  return new Response(lines.join('\n'), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-    },
-  });
+  return markdownResponse(lines);
 };

@@ -1,7 +1,7 @@
 import path from 'node:path';
-import type { APIRoute, ImageMetadata } from 'astro';
+import type { APIRoute, ImageMetadata, InferGetStaticPropsType } from 'astro';
 import { getCollection } from 'astro:content';
-import { isVisible } from '@/utils/posts';
+import { isoDate, isVisible, markdownResponse, postParams } from '@/utils/posts';
 
 // Co-located post images, keyed by project-root path (`/src/content/posts/...`).
 // The raw body links them relatively (`./chart.svg`), which resolves to a 404 next to
@@ -14,24 +14,14 @@ const images = import.meta.glob<ImageMetadata>('/src/content/posts/**/*.{png,jpg
 export async function getStaticPaths() {
   const posts = await getCollection('posts', isVisible);
 
-  return posts.map((post) => {
-    const parts = post.id.split('/');
-    const category = parts[0];
-    const slug = parts.slice(1).join('/');
-    return {
-      params: { category, slug },
-      props: { post },
-    };
-  });
+  return posts.map((post) => ({ params: postParams(post), props: { post } }));
 }
 
 export const GET: APIRoute = ({ props, site }) => {
-  const { post } = props as { post: Awaited<ReturnType<typeof getCollection<'posts'>>>[number] };
+  const { post } = props as InferGetStaticPropsType<typeof getStaticPaths>;
 
-  const fmDate = post.data.date.toISOString().slice(0, 10);
-  const fmDateModified = post.data.dateModified
-    ? post.data.dateModified.toISOString().slice(0, 10)
-    : undefined;
+  const fmDate = isoDate(post.data.date);
+  const fmDateModified = post.data.dateModified ? isoDate(post.data.dateModified) : undefined;
 
   const frontmatterLines = [
     '---',
@@ -65,11 +55,5 @@ export const GET: APIRoute = ({ props, site }) => {
 
   const markdown = frontmatter + bodyWithImages;
 
-  return new Response(markdown, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-    },
-  });
+  return markdownResponse([markdown]);
 };

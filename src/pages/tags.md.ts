@@ -1,22 +1,9 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
-import { isVisible } from '@/utils/posts';
-
-const MIN_POSTS_FOR_TAG_PAGE = 5;
+import { getSortedPosts, markdownResponse, MIN_POSTS_FOR_TAG_PAGE, pluralPosts, tagCounts } from '@/utils/posts';
 
 export const GET: APIRoute = async () => {
-  const posts = await getCollection('posts', isVisible);
-
-  const tagCounts = new Map<string, number>();
-  for (const post of posts) {
-    for (const tag of post.data.tags) {
-      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-    }
-  }
-
-  const sortedTags = Array.from(tagCounts.entries()).sort(
-    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
-  );
+  const posts = await getSortedPosts();
+  const sortedTags = tagCounts(posts);
 
   const lines: string[] = [
     '---',
@@ -32,21 +19,14 @@ export const GET: APIRoute = async () => {
   ];
 
   for (const [tag, count] of sortedTags) {
-    const isPopular = count >= MIN_POSTS_FOR_TAG_PAGE;
-    if (isPopular) {
+    if (count >= MIN_POSTS_FOR_TAG_PAGE) {
       lines.push(`- [${tag}](https://mjasion.pl/tags/${tag}/) - ${count} posts`);
     } else {
-      lines.push(`- ${tag} - ${count} ${count === 1 ? 'post' : 'posts'}`);
+      lines.push(`- ${tag} - ${pluralPosts(count)}`);
     }
   }
 
   lines.push('');
 
-  return new Response(lines.join('\n'), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-    },
-  });
+  return markdownResponse(lines);
 };

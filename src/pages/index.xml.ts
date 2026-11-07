@@ -1,12 +1,9 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
-import { isVisible } from '@/utils/posts';
+import { getSortedPosts, siteUrlOf } from '@/utils/posts';
 
 export const GET: APIRoute = async ({ site }) => {
-  const siteUrl = site?.toString().replace(/\/$/, '') ?? 'https://mjasion.pl';
-  const posts = (await getCollection('posts', isVisible))
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-    .slice(0, 10);
+  const siteUrl = siteUrlOf(site);
+  const posts = (await getSortedPosts()).slice(0, 10);
 
   const lastUpdated = posts[0]?.data.date ?? new Date();
 
@@ -26,7 +23,7 @@ export const GET: APIRoute = async ({ site }) => {
       <published>${post.data.date.toISOString()}</published>
       <updated>${post.data.date.toISOString()}</updated>
       <content type="html"><![CDATA[${desc}]]></content>
-      ${post.data.tags.map((t) => `<category term="${t}" label="${t}" />`).join('\n      ')}
+      ${post.data.tags.map((t) => `<category term="${escapeXml(t)}" label="${escapeXml(t)}" />`).join('\n      ')}
     </entry>`;
     })
     .join('\n');
