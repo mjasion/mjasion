@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
+import PageHeader from '../components/PageHeader.astro';
 import { author } from '../data/portfolio';
 import { getSortedPosts } from '@/utils/posts';
 
@@ -55,7 +56,10 @@ if (lcpHero && typeof lcpHero !== 'string') {
     })} />
   </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
-    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl mb-6">Latest Posts</h1>
+    <PageHeader
+      title="Latest Posts"
+      lead="Notes from SRE and platform work – observability, Kubernetes, cloud and AI agents."
+    />
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post, i) => (
         <div class={i < 3 ? '' : 'animate-bento-in'} style={i < 3 ? undefined : `animation-delay: ${75 + i * 75}ms`}>

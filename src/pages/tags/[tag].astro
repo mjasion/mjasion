@@ -2,7 +2,7 @@
 import type { InferGetStaticPropsType } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
-import BackToBlog from '../../components/BackToBlog.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import { getSortedPosts, groupByTag, MIN_POSTS_FOR_TAG_PAGE, pluralPosts, postItemList, siteUrlOf } from '@/utils/posts';
 
 export async function getStaticPaths() {
@@ -36,14 +36,11 @@ const collectionPageSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
   </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
-    <BackToBlog class="mb-6" />
+    <PageHeader back meta={pluralPosts(posts.length)}>
+      <Fragment slot="title">Posts tagged <span class="text-accent-600 dark:text-accent-400">'{tag}'</span></Fragment>
+    </PageHeader>
 
-    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
-      Posts tagged <span class="text-accent-600 dark:text-accent-400">'{tag}'</span>
-    </h1>
-    <p class="mt-2 text-gray-600 dark:text-gray-400">{pluralPosts(posts.length)}</p>
-
-    <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
         <BlogCard post={post} />
       ))}

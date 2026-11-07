@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
+import PageHeader from '../components/PageHeader.astro';
 import { Download } from '@lucide/astro';
 import { author, yearsSince, experiences, presentations } from '../data/portfolio';
 import { cvSummary, education, languages, publications, skillGroups, credentials, emphasizeMetrics } from '../data/cv';
@@ -27,26 +28,32 @@ import { cvSummary, education, languages, publications, skillGroups, credentials
       },
     })} />
   </Fragment>
-  <div class="mx-auto max-w-4xl px-4 py-12 print:px-0 print:py-0">
+  <div class="mx-auto max-w-6xl px-4 py-8 print:px-0 print:py-0">
 
-    <!-- Toolbar (hidden on print) -->
-    <div class="mb-6 flex justify-end print:hidden">
-      <a
-        href="/cv.pdf"
-        target="_blank"
-        rel="noopener"
-        class="group inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
-      >
-        <Download class="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-y-0.5" />
-        Download PDF
-      </a>
-    </div>
+    <!-- Page header (hidden on print: the printout starts with the name band) -->
+    <PageHeader
+      class="print:hidden"
+      title="CV"
+      lead="Experience, skills, certifications and talks – prints cleanly to A4, or grab the PDF."
+    >
+      <Fragment slot="actions">
+        <a
+          href="/cv.pdf"
+          target="_blank"
+          rel="noopener"
+          class="group inline-flex items-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
+        >
+          <Download class="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-y-0.5" />
+          Download PDF
+        </a>
+      </Fragment>
+    </PageHeader>
 
-    <article class="cv rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento print:rounded-none print:border-none print:bg-white print:p-0 print:shadow-none">
+    <article class="cv max-w-4xl rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-8 shadow-bento print:rounded-none print:border-none print:bg-white print:p-0 print:shadow-none">
 
-      <!-- Header band -->
-      <header class="cv-band -mx-8 -mt-8 rounded-t-[23px] px-8 pt-7 pb-5 print:mx-0 print:mt-0 print:rounded-none print:px-5 print:pt-5 print:pb-4">
-        <h1 class="text-3xl font-bold tracking-tight text-(--cv-band-text) print:text-2xl">{author.name}</h1>
+      <!-- Header band. The page h1 is "CV", so the name is an h2 here. -->
+      <header class="cv-band -mx-5 -mt-5 rounded-t-[23px] px-5 pt-6 pb-5 sm:-mx-8 sm:-mt-8 sm:px-8 sm:pt-7 print:mx-0 print:mt-0 print:rounded-none print:px-5 print:pt-5 print:pb-4">
+        <h2 class="text-3xl font-bold tracking-tight text-(--cv-band-text) print:text-2xl">{author.name}</h2>
         <p class="mt-1 text-lg text-(--cv-band-role) print:text-base">{author.role}</p>
         <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-(--cv-band-muted) print:text-xs">
           <span>Warsaw, Poland</span>

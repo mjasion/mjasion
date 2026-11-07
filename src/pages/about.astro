@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ObfuscatedEmail from '../components/ObfuscatedEmail.astro';
+import PageHeader from '../components/PageHeader.astro';
 import { Play, Workflow, FileCode, PiggyBank, ShieldCheck, ArrowUpRight } from '@lucide/astro';
 import { author, yearsSince, skills, platformPractices, experiences, projects, certifications, trainings, presentations, categoryColors } from '../data/portfolio';
 
@@ -74,13 +75,13 @@ const skillRows = skillRowDefs.map((row) =>
       },
     })} />
   </Fragment>
-  <div class="mx-auto max-w-5xl px-4 py-12 space-y-12">
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <PageHeader title="About Me" lead={author.role} />
 
-    <!-- Hero / Intro -->
-    <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-bento">
-      <h1 class="text-3xl font-bold">About Me</h1>
-      <p class="mt-1 text-lg text-gray-600 dark:text-gray-300">{author.role}</p>
-      <p class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+    <div class="max-w-5xl space-y-12">
+    <!-- Intro -->
+    <section class="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-8 shadow-bento">
+      <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
         {author.summary}
       </p>
       <div class="mt-4 flex flex-wrap items-center gap-3">
@@ -384,6 +385,6 @@ const skillRows = skillRowDefs.map((row) =>
         ))}
       </div>
     </section>
-
+    </div>
   </div>
 </BaseLayout>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BackToBlog from '../components/BackToBlog.astro';
+import PageHeader from '../components/PageHeader.astro';
 import { categoryColors } from '../data/portfolio';
 import { formatMonthDay, getSortedPosts, groupBy, pluralPosts, siteUrlOf } from '@/utils/posts';
 
@@ -30,12 +30,13 @@ const breadcrumbSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </Fragment>
   <div class="mx-auto max-w-6xl px-4 py-8">
-    <BackToBlog class="mb-6" />
+    <PageHeader
+      title="Archives"
+      lead="Every post in chronological order, newest first."
+      meta={`${posts.length} posts since ${oldestYear}`}
+    />
 
-    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Archives</h1>
-    <p class="mt-2 text-gray-600 dark:text-gray-400">{posts.length} posts since {oldestYear}</p>
-
-    <div class="mt-10 space-y-10">
+    <div class="space-y-10">
       {Array.from(postsByYear.entries()).map(([year, yearPosts]) => (
         <section>
           <h2 class="flex items-center gap-3 text-xl font-bold text-gray-900 dark:text-gray-100">

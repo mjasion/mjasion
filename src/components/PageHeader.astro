@@ -1,0 +1,45 @@
+---
+import BackToBlog from './BackToBlog.astro';
+
+// The one page header every page starts with, so the first screen reads the same
+// on Blog, Archives, Now, About, CV, tags and categories:
+//   [back link]  – sub-pages only (tags, categories); top-level nav pages skip it
+//   Title        – h1, text-3xl/4xl
+//   lead         – one sentence of context
+//   meta         – small muted line (counts, "last updated")
+//   actions      – buttons / pill links
+// Content below starts after the header's own mb-8, so pages don't add a top margin.
+interface Props {
+  title?: string;
+  lead?: string;
+  meta?: string;
+  back?: boolean;
+  class?: string;
+}
+
+const { title, lead, meta, back = false, class: className } = Astro.props;
+const hasLead = lead || Astro.slots.has('lead');
+const hasMeta = meta || Astro.slots.has('meta');
+---
+
+<header class:list={['mb-8', className]}>
+  {back && <BackToBlog class="mb-6" />}
+  <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
+    <slot name="title">{title}</slot>
+  </h1>
+  {hasLead && (
+    <p class="mt-3 max-w-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
+      <slot name="lead">{lead}</slot>
+    </p>
+  )}
+  {hasMeta && (
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+      <slot name="meta">{meta}</slot>
+    </p>
+  )}
+  {Astro.slots.has('actions') && (
+    <div class="mt-5 flex flex-wrap items-center gap-2">
+      <slot name="actions" />
+    </div>
+  )}
+</header>

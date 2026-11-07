@@ -32,7 +32,8 @@ src/
 │   ├── Footer.astro            # Footer with social links
 │   ├── SocialLinks.astro       # Social icon row (used by Sidebar + Footer)
 │   ├── ShareButtons.astro      # Post share buttons (X, LinkedIn, copy)
-│   ├── BackToBlog.astro        # "Back to blog" link (archives, tags, category pages, post header)
+│   ├── BackToBlog.astro        # "Back to blog" link (sub-pages: tags, category pages, post header)
+│   ├── PageHeader.astro        # Shared page header: [back] + h1 + lead + meta + actions (every page except posts)
 │   ├── Comments.astro          # Giscus comments (client-side)
 │   ├── Analytics.astro         # Custom GA4 events via Zaraz (outbound links, downloads, code copy, read depth)
 │   ├── ObfuscatedEmail.astro   # Email obfuscation (ROT13 + reverse)
@@ -276,6 +277,20 @@ The site uses a bento grid layout as its primary visual language. The landing pa
   <section>Presentations</section>
 </div>
 ```
+
+### Page Header - Required
+
+Every page opens with `PageHeader.astro` (posts use PostLayout's own header, built the same way),
+so the first screen looks the same on Blog, Archives, Now, About, CV, tags and categories:
+
+- Plain header, **not** a card: h1 (`text-3xl font-bold tracking-tight sm:text-4xl`), one-sentence
+  `lead`, optional muted `meta` line (counts, "last updated"), optional `actions` slot (buttons).
+- `back` (the "Back to blog" row) only on sub-pages (tags, categories). Top-level nav pages skip it.
+- Container is always `mx-auto max-w-6xl px-4 py-8`, so every h1 starts at the same x/y. A page
+  that wants narrower content caps the content (`max-w-3xl` / `max-w-4xl` / `max-w-5xl`) and keeps it
+  left-aligned, never a narrower centered container.
+- Content starts right after the header (it has `mb-8`): no extra top margin on the first block.
+- Large cards use `p-5 sm:p-8` (and `p-5 sm:p-6` for section cards), so mobile isn't squeezed.
 
 ### Card Sizing
 
