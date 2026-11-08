@@ -12,14 +12,23 @@ jobs:
     name: Trigger Cloudflare Pages Rebuild
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger deploy hook
-        # A Pages deploy hook is authorized by its URL alone, so the URL is a
-        # secret and no Cloudflare API credentials are sent with it.
+      # A Pages deploy hook is authorized by its URL alone, so the URL lives in
+      # 1Password and no Cloudflare API credentials are sent with it.
+      # Without export-env the value stays a (masked) step output instead of
+      # landing in the environment of every later step.
+      - name: Load deploy hook URL from 1Password
+        id: op
+        uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5.0.1
         env:
-          HOOK_URL: ${{ secrets.CF_DEPLOY_HOOK_URL }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          HOOK_URL: "op://GitHub Actions/Cloudflare Pages - mjasion deploy hook/build"
+
+      - name: Trigger deploy hook
+        env:
+          HOOK_URL: ${{ steps.op.outputs.HOOK_URL }}
         run: |
           if [ -z "$HOOK_URL" ]; then
-            echo "::error::Repository secret CF_DEPLOY_HOOK_URL is not set (Cloudflare Pages deploy hook URL)."
+            echo "::error::Deploy hook URL is empty (1Password: vault 'GitHub Actions', item 'Cloudflare Pages - mjasion deploy hook', field 'build')."
             exit 1
           fi
           curl -fsS -X POST "$HOOK_URL"
