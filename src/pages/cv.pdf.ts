@@ -80,7 +80,9 @@ const chipFont = fontkit.create(
 
 interface PdfMakeServer {
   fonts: Record<string, { normal: string; bold: string; italics: string; bolditalics: string }>;
-  virtualfs: { writeFileSync: (name: string, content: Buffer) => void };
+  // 0.3.14 renamed the singleton's `virtualfs` to `sharedVirtualfs` (each document now
+  // gets its own VFS layered on top of it).
+  sharedVirtualfs: { writeFileSync: (name: string, content: Buffer) => void };
   setUrlAccessPolicy: (callback: (url: string) => boolean) => void;
   setLocalAccessPolicy: (callback: (path: string) => boolean) => void;
   createPdf: (docDefinition: unknown) => { getBuffer: () => Promise<Buffer> };
@@ -107,10 +109,10 @@ async function loadPdfMake(): Promise<PdfMakeServer> {
   const weights = [400, 500, 600, 700] as const;
   for (const weight of weights) {
     const file = require.resolve(`@fontsource/inter/files/inter-latin-${weight}-normal.woff`);
-    pdfmake.virtualfs.writeFileSync(`Inter-${weight}.woff`, readFileSync(file));
+    pdfmake.sharedVirtualfs.writeFileSync(`Inter-${weight}.woff`, readFileSync(file));
   }
   const italic = require.resolve('@fontsource/inter/files/inter-latin-400-italic.woff');
-  pdfmake.virtualfs.writeFileSync('Inter-400-italic.woff', readFileSync(italic));
+  pdfmake.sharedVirtualfs.writeFileSync('Inter-400-italic.woff', readFileSync(italic));
 
   pdfmake.fonts = {
     // normal = 400, bold = 700 (page: font-bold)
