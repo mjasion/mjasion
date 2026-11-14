@@ -2,7 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import { ArrowUp, ChevronLeft, ChevronRight } from '@lucide/astro';
+import { ArrowUp, ChevronLeft, ChevronRight, X } from '@lucide/astro';
 import { author, categoryColors, categoryLabels } from '@/data/portfolio';
 import type { MarkdownHeading } from 'astro';
 import Comments from '@/components/Comments.astro';
@@ -100,17 +100,14 @@ const breadcrumbSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </Fragment>
-  <!-- Reading progress bar -->
+  <!-- Reading progress bar: decorative (screen readers report position themselves).
+       Driven by a CSS scroll timeline; the scroll script is only a fallback. -->
   <div
     id="reading-progress"
     class="fixed top-0 left-0 right-0 h-0.5 z-[60] pointer-events-none print:hidden"
-    role="progressbar"
-    aria-valuenow={0}
-    aria-valuemin={0}
-    aria-valuemax={100}
-    aria-label="Reading progress"
+    aria-hidden="true"
   >
-    <div id="reading-progress-bar" class="h-full bg-accent-500 transition-[width] duration-150 ease-out" style="width: 0%"></div>
+    <div id="reading-progress-bar" class="h-full w-full origin-left bg-accent-500" style="transform: scaleX(0)"></div>
   </div>
 
   <article class="mx-auto max-w-5xl px-4 py-8">
@@ -220,10 +217,10 @@ const breadcrumbSchema = {
               {prevPost ? (
                 <a
                   href={prevPost.href}
-                  class="group flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                  class="group flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg motion-safe:hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                    <ChevronLeft class="h-3 w-3 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
+                    <ChevronLeft class="h-3 w-3 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-x-0.5" />
                     Older post
                   </span>
                   <span class={`mt-1 inline-block self-start rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[prevPost.category] ?? ''}`}>
@@ -237,11 +234,11 @@ const breadcrumbSchema = {
               {nextPost ? (
                 <a
                   href={nextPost.href}
-                  class="group flex flex-col items-end text-right rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                  class="group flex flex-col items-end text-right rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 hover:shadow-lg motion-safe:hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     Newer post
-                    <ChevronRight class="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+                    <ChevronRight class="h-3 w-3 transition-transform duration-200 ease-out motion-safe:group-hover:translate-x-0.5" />
                   </span>
                   <span class={`mt-1 inline-block self-end rounded-full px-2 py-0.5 text-xs font-medium ${categoryColors[nextPost.category] ?? ''}`}>
                     {nextPost.category}
@@ -313,7 +310,7 @@ const breadcrumbSchema = {
           {relatedPosts.map((related) => (
             <a
               href={related.href}
-              class="block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              class="block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hover:shadow-md motion-safe:hover:-translate-y-0.5 transition-all duration-200"
             >
               <p class="text-sm font-medium leading-snug text-gray-900 dark:text-gray-100 line-clamp-2">
                 {related.title}
@@ -332,42 +329,67 @@ const breadcrumbSchema = {
   <!-- Back to top button with progress ring -->
   <button
     id="back-to-top"
-    class="group fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:shadow-xl print:hidden"
+    type="button"
+    class="group fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl print:hidden"
     aria-label="Back to top"
   >
     <svg class="h-14 w-14" viewBox="0 0 56 56">
       <circle cx="28" cy="28" r="24" fill="none" stroke-width="2.5" class="stroke-gray-200 dark:stroke-gray-700" />
       <circle id="btt-ring" cx="28" cy="28" r="24" fill="none" stroke-width="2.5" class="stroke-accent-500" stroke-linecap="round" stroke-dasharray="150.796" stroke-dashoffset="150.796" transform="rotate(-90 28 28)" />
     </svg>
-    <ArrowUp class="absolute inset-0 m-auto h-5 w-5 text-gray-600 dark:text-gray-300 transition-transform duration-200 ease-out group-hover:-translate-y-0.5" />
+    <ArrowUp class="absolute inset-0 m-auto h-5 w-5 text-gray-600 dark:text-gray-300 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5" />
   </button>
 
-  <!-- Lightbox overlay -->
-  <div
+  <!-- Lightbox: native modal dialog. A click anywhere (image or backdrop) closes it,
+       Esc and the back gesture close it natively. -->
+  <dialog
     id="lightbox"
-    class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm cursor-zoom-out print:hidden"
-    role="dialog"
-    aria-modal="true"
+    closedby="any"
     aria-label="Image preview"
-    tabindex="-1"
+    class="m-auto max-h-none max-w-none overflow-visible border-0 bg-transparent p-0 cursor-zoom-out backdrop:bg-black/80 backdrop:backdrop-blur-sm print:hidden"
   >
     <img id="lightbox-img" class="max-h-[90vh] max-w-[90vw] rounded-xl object-contain" alt="" />
-  </div>
+    <button
+      type="button"
+      class="group fixed top-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+      aria-label="Close image preview"
+    >
+      <X class="h-6 w-6 transition-transform duration-200 ease-out motion-safe:group-hover:rotate-90" aria-hidden="true" />
+    </button>
+  </dialog>
+
+  <!-- Live region for copy feedback (code blocks + copy link) -->
+  <span id="copy-status" class="sr-only" role="status"></span>
 </BaseLayout>
 
 <style>
   .toc-link.is-active {
     color: var(--color-accent-600, #2563eb);
   }
-  .prose :global(img) {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .prose :global(img:hover) {
-    transform: scale(1.03);
-  }
-
   :global(.dark) .toc-link.is-active {
     color: var(--color-accent-400, #60a5fa);
+  }
+
+  /* Prose images are wrapped in a <button> by the lightbox script (keyboard access) */
+  .prose :global(.lightbox-trigger) {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0.75rem;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: zoom-in;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .prose :global(.lightbox-trigger img) {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .prose :global(.lightbox-trigger:hover img) {
+      transform: scale(1.03);
+    }
   }
 
   /* Heading anchor links */
@@ -384,7 +406,8 @@ const breadcrumbSchema = {
   .prose :global(h3:hover .heading-anchor),
   .prose :global(h4:hover .heading-anchor),
   .prose :global(h5:hover .heading-anchor),
-  .prose :global(h6:hover .heading-anchor) {
+  .prose :global(h6:hover .heading-anchor),
+  .prose :global(.heading-anchor:focus-visible) {
     opacity: 1;
   }
   @media (hover: none) {
@@ -418,7 +441,12 @@ const breadcrumbSchema = {
     background: rgba(15, 23, 42, 0.7);
     color: var(--color-gray-400, #64748b);
   }
-  :global(pre:hover .copy-btn) {
+  /* Reveal on hover AND keyboard focus, and keep it shown while feedback is visible */
+  :global(pre:hover .copy-btn),
+  :global(pre:focus-within .copy-btn),
+  :global(.copy-btn:focus-visible),
+  :global(.copy-btn[data-copied]),
+  :global(.copy-btn[data-failed]) {
     opacity: 1;
   }
   :global(.copy-btn:hover) {
@@ -432,63 +460,111 @@ const breadcrumbSchema = {
       opacity: 1;
     }
   }
+
+  /* Back-to-top: hidden with visibility (not only opacity) so it leaves the tab order */
+  #back-to-top {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s, box-shadow 0.3s;
+  }
+  #back-to-top[data-visible] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Reading progress: compositor-driven scroll timeline where supported */
+  @supports (animation-timeline: scroll()) {
+    @keyframes reading-progress {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+    /* Longhands on purpose: given the `animation` shorthand, the CSS minifier folds
+       `animation-timeline` into it, a form Chrome rejects (no animation at all). */
+    #reading-progress-bar {
+      animation-name: reading-progress;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+  }
 </style>
 
 <script>
-  // Lightbox for prose images
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
-  let lightboxTrigger: HTMLElement | null = null;
-
-  function openLightbox(src: string, alt: string, trigger: HTMLElement) {
-    lightboxTrigger = trigger;
-    lightboxImg.src = src;
-    lightboxImg.alt = alt;
-    lightbox!.classList.remove('hidden');
-    lightbox!.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-    lightbox!.focus();
+  // Shared live region: copy feedback is announced to screen readers, not only shown.
+  const copyStatus = document.getElementById('copy-status');
+  let lastMessage = '';
+  function announce(message: string) {
+    if (!copyStatus) return;
+    // VoiceOver skips a message identical to the previous one; a no-break space makes it differ
+    if (message === lastMessage) message += ' ';
+    lastMessage = message;
+    copyStatus.textContent = '';
+    requestAnimationFrame(() => { copyStatus.textContent = message; });
+  }
+  const resetTimers = new WeakMap<Element, number>();
+  function resetLater(el: Element, reset: () => void) {
+    clearTimeout(resetTimers.get(el));
+    resetTimers.set(el, window.setTimeout(() => {
+      reset();
+      if (copyStatus) copyStatus.textContent = '';
+    }, 1500));
   }
 
-  function closeLightbox() {
-    lightbox!.classList.add('hidden');
-    lightbox!.classList.remove('flex');
-    document.body.style.overflow = '';
-    lightboxTrigger?.focus();
-    lightboxTrigger = null;
+  // Lightbox for prose images: each image is wrapped in a real <button> (keyboard
+  // reachable), and the preview is a native modal <dialog>, which handles focus,
+  // Esc/back gesture and returning focus to the image.
+  const lightbox = document.getElementById('lightbox') as HTMLDialogElement | null;
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+
+  if (lightbox && lightboxImg) {
+    document.querySelectorAll<HTMLImageElement>('.prose img').forEach((img) => {
+      if (img.closest('a, button')) return; // already interactive
+      const target = img.parentElement?.tagName === 'PICTURE' ? img.parentElement : img;
+      const trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'lightbox-trigger';
+      trigger.setAttribute('aria-label', img.alt ? `Enlarge image: ${img.alt}` : 'Enlarge image');
+      target.replaceWith(trigger);
+      trigger.append(target);
+      trigger.addEventListener('click', () => {
+        lightboxImg.src = img.currentSrc || img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.showModal();
+      });
+    });
+
+    // Click anywhere (image, close button or backdrop) closes, also where
+    // `closedby` is unsupported (Safari).
+    lightbox.addEventListener('click', () => lightbox.close());
+    lightbox.addEventListener('close', () => lightboxImg.removeAttribute('src'));
   }
-
-  document.querySelectorAll('.prose img').forEach((img) => {
-    const el = img as HTMLImageElement;
-    el.style.cursor = 'zoom-in';
-    el.addEventListener('click', () => openLightbox(el.src, el.alt, el));
-  });
-
-  lightbox?.addEventListener('click', closeLightbox);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !lightbox!.classList.contains('hidden')) {
-      closeLightbox();
-    }
-  });
 
   // Copy button on code blocks
   document.querySelectorAll('.prose pre').forEach((pre) => {
     const code = pre.querySelector('code');
     if (!code) return;
     const btn = document.createElement('button');
+    btn.type = 'button';
     btn.className = 'copy-btn';
     btn.textContent = 'Copy';
     btn.setAttribute('aria-label', 'Copy code');
     btn.addEventListener('click', async () => {
+      let ok = true;
       try {
         await navigator.clipboard.writeText(code.textContent ?? '');
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
       } catch {
-        btn.textContent = 'Error';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+        ok = false;
       }
+      btn.toggleAttribute('data-copied', ok);
+      btn.toggleAttribute('data-failed', !ok);
+      btn.textContent = ok ? 'Copied!' : 'Failed';
+      announce(ok ? 'Code copied' : 'Copy failed');
+      resetLater(btn, () => {
+        btn.textContent = 'Copy';
+        btn.removeAttribute('data-copied');
+        btn.removeAttribute('data-failed');
+      });
     });
     pre.appendChild(btn);
   });
@@ -505,11 +581,12 @@ const breadcrumbSchema = {
     el.prepend(anchor);
   });
 
-  // Scroll-driven UI: reading progress bar, back-to-top ring and the active TOC link.
-  // One passive listener, one requestAnimationFrame per frame, and the layout values
-  // (viewport, document height, heading positions) are read once for all three.
+  // Scroll-driven UI: reading progress bar (fallback only), back-to-top ring and the
+  // active TOC link. One passive listener, one requestAnimationFrame per frame, and the
+  // layout values (viewport, document height, heading positions) are read once for all three.
   const progressBar = document.getElementById('reading-progress-bar');
-  const progressContainer = document.getElementById('reading-progress');
+  // Where CSS scroll timelines work, the bar is animated in CSS (see <style>)
+  const nativeProgress = CSS.supports('animation-timeline', 'scroll()');
   const bttBtn = document.getElementById('back-to-top');
   const bttRing = document.getElementById('btt-ring');
   const CIRCUMFERENCE = 2 * Math.PI * 24; // r=24
@@ -543,10 +620,8 @@ const breadcrumbSchema = {
     const scrollable = document.documentElement.scrollHeight - viewport;
     const scrolled = scrollable > 0 ? Math.min(scrollY / scrollable, 1) : 0;
 
-    if (progressBar && progressContainer) {
-      const pct = Math.round(scrolled * 100);
-      progressBar.style.width = `${pct}%`;
-      progressContainer.setAttribute('aria-valuenow', String(pct));
+    if (progressBar && !nativeProgress) {
+      progressBar.style.transform = `scaleX(${scrolled})`;
     }
 
     if (bttBtn && bttRing) {
@@ -554,8 +629,7 @@ const breadcrumbSchema = {
       const visible = scrolled > 0.2;
       if (visible !== bttVisible) {
         bttVisible = visible;
-        bttBtn.style.opacity = visible ? '1' : '0';
-        bttBtn.style.pointerEvents = visible ? 'auto' : 'none';
+        bttBtn.toggleAttribute('data-visible', visible);
       }
     }
 
@@ -572,7 +646,17 @@ const breadcrumbSchema = {
     });
   }, { passive: true });
   bttBtn?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // The button hides once at the top, so move focus to the post title instead of
+    // dropping it to <body> (keyboard users would restart from the page start).
+    const title = document.querySelector<HTMLElement>('article h1');
+    if (title) {
+      title.tabIndex = -1;
+      title.addEventListener('blur', () => title.removeAttribute('tabindex'), { once: true });
+      title.focus({ preventScroll: true });
+    }
+    // behavior 'auto' follows the root's CSS scroll-behavior, which is smooth only
+    // under prefers-reduced-motion: no-preference (motion-safe:scroll-smooth).
+    window.scrollTo({ top: 0 });
   });
   onScrollFrame();
 
@@ -582,15 +666,21 @@ const breadcrumbSchema = {
     const check = btn.querySelector('.copy-link-check-el');
     if (!icon || !check) return;
     btn.addEventListener('click', async () => {
+      let ok = true;
       try {
         await navigator.clipboard.writeText(window.location.href);
+      } catch {
+        ok = false;
+      }
+      if (ok) {
         icon.classList.add('hidden');
         check.classList.remove('hidden');
-        setTimeout(() => {
-          icon.classList.remove('hidden');
-          check.classList.add('hidden');
-        }, 1500);
-      } catch {}
+      }
+      announce(ok ? 'Link copied' : 'Copy failed');
+      resetLater(btn, () => {
+        icon.classList.remove('hidden');
+        check.classList.add('hidden');
+      });
     });
   });
 </script>

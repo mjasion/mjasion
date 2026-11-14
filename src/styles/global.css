@@ -189,9 +189,20 @@
   }
 }
 
+/* Reduced motion is handled per effect: hover transforms use `motion-safe:`,
+   and the card entrance animation is switched off here. */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    --animate-bento-in: none !important;
-    animation: none !important;
+  :root {
+    --animate-bento-in: none;
   }
+}
+
+/* Native modal dialogs (lightbox, enlarged diagram): keep scroll gestures
+   over the backdrop or inside the dialog from scrolling the page behind. */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
 }

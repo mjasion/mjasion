@@ -352,7 +352,7 @@ class="hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
 
 Hero images zoom on hover:
 ```html
-class="group-hover:scale-105 transition-transform duration-300"
+class="motion-safe:group-hover:scale-105 transition-transform duration-300"
 ```
 
 Keep effects subtle. Never scale entire cards.
@@ -362,11 +362,11 @@ Keep effects subtle. Never scale entire cards.
 Every Lucide icon inside an interactive element (`<a>`, `<button>`, or a card with hover) MUST animate on hover of its parent. This is the project's signature feel; do not ship a new icon without it. The pattern is CSS-only (no JS, no extra deps):
 
 1. Add `group` to the parent interactive element.
-2. Add `transition-transform duration-200 ease-out` + a semantic `group-hover:*` transform on the icon.
+2. Add `transition-transform duration-200 ease-out` + a semantic `motion-safe:group-hover:*` transform on the icon.
 
 ```astro
 <a href="/" class="group inline-flex items-center gap-1 ...">
-  <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-x-0.5" />
+  <ArrowLeft class="h-4 w-4 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-x-0.5" />
   Back to blog
 </a>
 ```
@@ -375,19 +375,20 @@ Match the animation to the icon's semantics — the icon should look like it's *
 
 | Icon | Semantic motion | Tailwind |
 |---|---|---|
-| `ArrowLeft` / `ArrowRight` | slide in direction | `group-hover:-translate-x-0.5` / `group-hover:translate-x-0.5` |
-| `Clock` | tick / wind | `group-hover:rotate-[360deg] duration-700` |
-| `Briefcase` | tilt | `group-hover:-rotate-6 group-hover:scale-110` |
-| `Sparkles` | sparkle | `group-hover:rotate-12 group-hover:scale-125` |
-| `Hammer` | swing | `origin-bottom-left group-hover:-rotate-12` |
-| `Dumbbell` | press up | `group-hover:-translate-y-0.5 group-hover:rotate-12` |
-| `Headphones` | bob | `group-hover:scale-110 group-hover:-translate-y-0.5` |
-| `Printer` | nudge | `group-hover:scale-110 group-hover:-rotate-6` |
-| `Play` | push forward | `group-hover:scale-125 group-hover:translate-x-0.5` |
-| `MessageCircle`, social icons | scale | `group-hover:scale-110` |
+| `ArrowLeft` / `ArrowRight` | slide in direction | `motion-safe:group-hover:-translate-x-0.5` / `motion-safe:group-hover:translate-x-0.5` |
+| `Clock` | tick / wind | `motion-safe:group-hover:rotate-[360deg] duration-700` |
+| `Briefcase` | tilt | `motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110` |
+| `Sparkles` | sparkle | `motion-safe:group-hover:rotate-12 motion-safe:group-hover:scale-125` |
+| `Hammer` | swing | `origin-bottom-left motion-safe:group-hover:-rotate-12` |
+| `Dumbbell` | press up | `motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:rotate-12` |
+| `Headphones` | bob | `motion-safe:group-hover:scale-110 motion-safe:group-hover:-translate-y-0.5` |
+| `Printer` | nudge | `motion-safe:group-hover:scale-110 motion-safe:group-hover:-rotate-6` |
+| `Play` | push forward | `motion-safe:group-hover:scale-125 motion-safe:group-hover:translate-x-0.5` |
+| `MessageCircle`, social icons | scale | `motion-safe:group-hover:scale-110` |
 
 Rules:
 - Always pair the transform with `transition-transform duration-200 ease-out` (or `duration-300` for larger transforms like Clock's full rotation).
+- Always prefix hover transforms with `motion-safe:` (`motion-safe:group-hover:scale-110`) so they switch off under `prefers-reduced-motion: reduce`. Smooth scrolling (`motion-safe:scroll-smooth` on `<html>`) and the `bento-in` entrance (`--animate-bento-in: none` in `global.css`) follow the same rule.
 - Skip icons that are **purely informational** and not inside a hover target (e.g. icons in `Alert.astro`, status badges, decorative bullet points).
 - Reusable icon components (e.g. `SocialLinks.astro`) bake the animation into their default `iconClass` and put `group` in their `linkClass`, so consumers get it for free.
 - The animation must remain on the icon SVG itself — wrapping in an extra `<span>` is fine for icon tiles but the transform always sits on the icon.

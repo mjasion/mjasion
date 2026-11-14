@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/layouts/PostLayout.astro"
+        ],
+        "createdAt": "2026-11-14T20:44:47.405Z",
+        "reason": "Claude: lightbox <img> src is set by script when an image is opened (pre-existing pattern)"
+      }
+    ]
+  }
+}

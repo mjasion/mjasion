@@ -16,7 +16,7 @@ const sections = [
     heading: 'Work',
     icon: Briefcase,
     tone: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-    iconAnim: 'group-hover:-rotate-6 group-hover:scale-110',
+    iconAnim: 'motion-safe:group-hover:-rotate-6 motion-safe:group-hover:scale-110',
     body: `Senior SRE consultant at NatWest Boxed, working in an enabling team for 30+ squads that run 1000+ services. Right now:`,
     bullets: [
       `extending a journey monitoring service that tracks duration and success rate of 50+ business journeys across asynchronous services`,
@@ -28,28 +28,28 @@ const sections = [
     heading: 'Learning',
     icon: Sparkles,
     tone: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-    iconAnim: 'group-hover:rotate-12 group-hover:scale-125',
+    iconAnim: 'motion-safe:group-hover:rotate-12 motion-safe:group-hover:scale-125',
     body: `Currently playing with LLM-driven incident triage – can a model usefully pre-summarise an alert before a human looks at it?`,
   },
   {
     heading: 'Building',
     icon: Hammer,
     tone: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
-    iconAnim: 'origin-bottom-left group-hover:-rotate-12',
+    iconAnim: 'origin-bottom-left motion-safe:group-hover:-rotate-12',
     body: `Just refreshed this blog – new About, CV, and this page – mostly programmed with <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener noreferrer" class="text-accent-600 dark:text-accent-400 hover:underline">Claude Code</a>. On the side, a couple of family projects running entirely on Cloudflare Workers: a portal for tracking investment returns and computing taxes, and a meal-planning assistant for the family. Each exposes its own MCP server, so I can query and update them straight from Claude.`,
   },
   {
     heading: 'Sport',
     icon: Dumbbell,
     tone: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
-    iconAnim: 'group-hover:-translate-y-0.5 group-hover:rotate-12',
+    iconAnim: 'motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:rotate-12',
     body: `After two Hyrox finishes – solo in '25 and doubles in '26 here in Warsaw – I'm dialling CrossFit intensity back up and chasing a first strict muscle-up. Also putting more miles on the bike through 2026.`,
   },
   {
     heading: 'Reading',
     icon: Headphones,
     tone: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
-    iconAnim: 'group-hover:scale-110 group-hover:-translate-y-0.5',
+    iconAnim: 'motion-safe:group-hover:scale-110 motion-safe:group-hover:-translate-y-0.5',
     body: `Re-reading "Observability Engineering" (Majors, Fong-Jones, Miranda) – it lands differently when the system you operate has four digits of services. Switching between the book and audiobook of John Eldredge's "Wild at Heart" ("Dzikie serce. Tęsknoty męskiej duszy" in Polish). For fiction it's audiobooks: Terry Hayes' "I Am Pilgrim" and working through Jo Nesbø's catalogue.`,
   },
 ];
@@ -88,7 +88,7 @@ const description = "What Marcin Jasion is focused on right now – observabilit
 
     <!-- Sections -->
     {sections.map((s) => (
-      <section class="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-6 shadow-bento hover:shadow-bento-hover hover:-translate-y-0.5 transition-all duration-200">
+      <section class="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 sm:p-6 shadow-bento hover:shadow-bento-hover motion-safe:hover:-translate-y-0.5 transition-all duration-200">
         <div class="flex items-center gap-3">
           <span class:list={["flex h-10 w-10 items-center justify-center rounded-xl shrink-0", s.tone]}>
             <s.icon class:list={["h-5 w-5", iconBaseAnim, s.iconAnim]} />
@@ -108,7 +108,7 @@ const description = "What Marcin Jasion is focused on right now – observabilit
     <!-- Footer note -->
     <section class="group rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-5 sm:p-6 text-sm text-gray-500 dark:text-gray-400">
       <div class="flex items-start gap-3">
-        <MessageCircle class={`h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5 ${iconBaseAnim} group-hover:scale-110 group-hover:text-accent-500`} />
+        <MessageCircle class={`h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500 mt-0.5 ${iconBaseAnim} motion-safe:group-hover:scale-110 group-hover:text-accent-500`} />
         <p>Want to compare notes on observability, AI agents for operations, or building on Cloudflare? <a href="mailto:hello@mjasion.pl" class="text-accent-600 dark:text-accent-400 hover:underline">Reach out</a>.</p>
       </div>
     </section>
