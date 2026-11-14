@@ -1,7 +1,7 @@
 ---
 title: "How to Securely Expose a QNAP NAS App with Cloudflare Tunnel 🔒"
 seoTitle: "QNAP Cloudflare Tunnel: Expose a NAS App with No Open Ports"
-date: "2026-11-08"
+date: "2026-11-14"
 description: >-
   Port forwarding to a QNAP NAS invites ransomware. Expose a self-hosted app with
   Cloudflare Tunnel instead: zero open ports, free, with a login in front.
@@ -89,7 +89,7 @@ services:
     # no `ports:` section - the app is not published on the NAS at all [!code highlight]
 
   cloudflared:
-    image: cloudflare/cloudflared:2026.10.6   # pin a version, don't float on :latest [!code highlight]
+    image: cloudflare/cloudflared:latest   # Watchtower keeps it current, see below [!code highlight]
     container_name: cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run
@@ -119,12 +119,11 @@ Back in the dashboard the tunnel status should turn **Healthy**.
 
 ## Step 3: Add a Login with Cloudflare Access 🛡️
 
-A tunnel hides your origin; it doesn't authenticate anyone. The moment a hostname is published, anyone with the URL can open the app, so set up the login *first*. With [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/), visitors log in at Cloudflare's edge *before* a request reaches your NAS.
+A tunnel hides your origin; it doesn't authenticate anyone. The moment a hostname is published, anyone with the URL can open the app, so set up the login *first*. With Cloudflare Access, visitors log in at Cloudflare's edge *before* a request reaches your NAS.
 
-1. Enable a login method under **Zero Trust → Integrations → Identity providers**. **One-time PIN** sends a code to your email and needs no other account; Google and GitHub work on the free plan too.
-2. Go to **Zero Trust → Access controls → Applications → Create new application** and select **Self-hosted and private**.
-3. Select **Add public hostname** and enter `app.yourdomain.com`.
-4. Add a policy: action *Allow*, include rule **Emails**, value the exact addresses you want to let in. Access applications are deny by default, so nobody gets through without a matching Allow policy.
+Cloudflare's guide to [publishing a self-hosted application](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) walks through it step by step. In short: add a login method under **Zero Trust → Integrations → Identity providers**, create a **Self-hosted** application for `app.yourdomain.com`, and attach an *Allow* policy with an **Emails** rule that lists the exact addresses you want to let in. Access applications are deny by default, so nobody gets through without a matching Allow policy.
+
+I use three login methods: **One-time PIN** (a code sent to my email, no other account needed), **GitHub**, and a **passkey**.
 
 <Alert type="warning">
 Don't use **Emails ending in** with a shared domain like `gmail.com`, or **Login Methods: One-time PIN** on its own. Either one lets strangers in, because anyone with a matching address can request a code.
@@ -154,12 +153,71 @@ Open `https://app.yourdomain.com` in a private window. You should land on the Cl
 Your app is now reachable over HTTPS, behind a login, with no port forwarded. If it loads without asking you to log in, check that the hostname in the Access application matches the route exactly.
 </Alert>
 
+## Step 5: Tune the route for HTTPS origins and websockets 🔧
+
+The defaults are fine for a plain HTTP app like the `app:3000` example. Plenty of NAS apps, QNAP's own web UI included, only speak HTTPS with a self-signed certificate. In my setup, the defaults also broke websockets (the live parts of the UI). Edit the route and open **Additional application settings → TLS**:
+
+| Setting | Value | Why |
+|---|---|---|
+| **Service URL** | `https://nas:443` | The origin speaks HTTPS, so `cloudflared` has to as well. |
+| **Origin Server Name** | `nas.home.example.com` | The SNI name `cloudflared` sends, so it must match the name on the origin's certificate. |
+| **Disable TLS certificate verification** | On | The certificate is self-signed, so `cloudflared` can't verify it against a public CA. |
+| **Use HTTP/2 to origin** | On | `cloudflared` talks HTTP/2 to the origin. This only works with an `https://` service. |
+
+With these four set, the app's websocket connections work through the tunnel too.
+
+> 📸 **Screenshot — `07-route-tls.png`:** the *Edit published application* dialog with the TLS section expanded (Origin Server Name, Disable TLS verification, HTTP/2 to origin).
+
+<Alert type="info">
+Turning off verification is acceptable here because the hop it covers runs between two containers on the same NAS, not across the internet. If you'd rather keep verification on, mount your internal CA certificate into the `cloudflared` container and point **CA Pool** at that path.
+</Alert>
+
+## Step 6: Make the tunnel check Access too 🔐
+
+Access from Step 3 stops visitors at the edge, but it's tied to the hostname. If you later add a second route, rename the hostname or delete the Access application by mistake, the app is public again and nothing tells you. You can also make `cloudflared` itself refuse any request that didn't pass Access.
+
+1. Open your Access application (**Zero Trust → Access controls → Applications**) and copy its **Application Audience (AUD) tag**. It's a 64-character hex string under the application's additional settings.
+2. Edit the route in the tunnel and open **Additional application settings → Access**.
+3. Turn on **Protect with Access**, enter your **Team name** (the `your-team` part of `your-team.cloudflareaccess.com`) and paste the AUD tag, then press Enter to add it.
+
+Now `cloudflared` checks the signed Access token (`Cf-Access-Jwt-Assertion`) on every request and drops anything without a valid token for that application. Even a misconfigured edge can't let an anonymous request through to the NAS.
+
+> 📸 **Screenshot — `08-route-access.png`:** the Access section of the route with *Protect with Access* on, the team name and the AUD tag filled in.
+
+## Step 7: Keep containers updated with Watchtower 🔄
+
+A tunnel is only as safe as the software on both ends, and Container Station won't update images for you. I run [Watchtower](https://containrrr.dev/watchtower/) as one more Container Station application. It checks the registry on a schedule, pulls new images, and recreates any container whose image changed with the same settings:
+
+```yaml
+# docker-compose.yml (separate "watchtower" application)
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    command: --cleanup --schedule "0 0 * * * *"
+    environment:
+      - TZ=Europe/Warsaw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+
+- `--schedule` takes a cron expression with **seconds** as the first field, so `0 0 * * * *` runs at the top of every hour. Use something like `0 0 4 * * *` for once a day at 04:00.
+- `--cleanup` removes the old image after an update, so the NAS disk doesn't fill up with stale layers.
+- `TZ` makes the schedule and the logs use your local time.
+
+Watchtower only updates a container when the image behind its tag changes. That's why `cloudflared` uses `:latest` in Step 2: a pinned tag like `2026.10.6` never changes, so it would never get updated.
+
+<Alert type="warning">
+Watchtower needs `/var/run/docker.sock`, and access to the Docker socket is effectively root on the NAS. Only run an image you trust there. By default it updates **every** container. If some apps shouldn't move without you, add `--label-enable` to the command and put the label `com.centurylinklabs.watchtower.enable=true` only on the containers it may update.
+</Alert>
+
 ## A few hardening habits ✅
 
 - **Never expose the QTS admin UI** over the tunnel - manage the NAS over your LAN or a private VPN such as WireGuard or Tailscale. If you're linking networks rather than single devices, I also wrote up a [site-to-site VPN from a UniFi UDM to AWS](/posts/cloud/how-to-setup-aws-site-to-site-vpn-with-unifi-udm/).
 - **One hostname per service** - map only the port you mean to share, not the whole NAS.
 - **Close old port forwards** and disable UPnP so nothing re-opens them.
-- **Keep `cloudflared`, your apps and QTS patched, and back the NAS up.** The tunnel closes the inbound port, but a vulnerable app is still vulnerable to anyone who gets past the login, and backups are your last line of defence.
+- **Keep `cloudflared`, your apps and QTS patched, and back the NAS up.** Watchtower covers the containers; QTS updates are still on you. The tunnel closes the inbound port, but a vulnerable app is still vulnerable to anyone who gets past the login, and backups are your last line of defence.
 
 ## When not to use this ⚠️
 
